@@ -1,6 +1,17 @@
 from django.urls import path
-from . import views
+from .views import (
+    MindspaceListView,
+    MindspaceDetailView,
+    MindspaceCreateView,
+    MindspaceUpdateView,
+    MindspaceDeleteView,
+)
 
+app_name = 'mindspace'
 urlpatterns = [
-    path('home/', views.simpleView, name='home_page')
+    path('', MindspaceListView.as_view(), name='mindspace_list'),
+    path('<int:id>/', MindspaceDetailView.as_view(), name='mindspace_detail'),
+    path('create/', MindspaceCreateView.as_view(), name='mindspace_create'),
+    path('<int:id>/update/', MindspaceUpdateView.as_view(), name='mindspace_update'),
+    path('<int:id>/delete/', MindspaceDeleteView.as_view(), name='mindspace_delete'),
 ]
