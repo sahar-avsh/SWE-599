@@ -1,8 +1,10 @@
 from django.db import models
 from django.urls import reverse
+from profiles.models import Profile
 
 # Create your models here.
 class Mindspace(models.Model):
+    owner = models.OneToOneField(Profile, on_delete=models.CASCADE, related_name='mindspaces', null=True)
     title = models.CharField(max_length=220)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -18,4 +20,3 @@ class Resource(models.Model):
 
     def get_absolute_url(self):
         return reverse('mindspace:mindspace_detail', kwargs={'id': self.belongs_to.id})
-    

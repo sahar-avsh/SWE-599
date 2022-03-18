@@ -9,9 +9,10 @@ services:
       - POSTGRES_NAME=postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+    stop_grace_period: 10s
   web:
     build: .
-    command: python manage.py runserver 0.0.0.0:8000
+    command: bash -c 'while !</dev/tcp/db/5432; do sleep 1; done; python manage.py runserver 0.0.0.0:8000'
     volumes:
       - .:/code
     ports:

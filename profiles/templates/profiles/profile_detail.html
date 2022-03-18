@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{{object.f_name}} {{object.l_name}}</h1>
+    {% if object.mindspaces.count > 0 %}
+        {% for ms in object.mindspaces.all %}
+            <p> {{ms.title}} - {{ms.description}} </p>
+        {% endfor %}
+    {% else %}
+        <h2> No mindspaces available! </h2>
+    {% endif %}
+{% endblock content %}

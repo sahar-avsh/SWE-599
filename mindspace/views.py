@@ -1,6 +1,8 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from .models import (
     Mindspace,
     Resource,
@@ -21,18 +23,17 @@ from django.views.generic import (
 
 ##################### Mindspace #####################
 # Create your views here.
-class MindspaceCreateView(CreateView):
+class MindspaceCreateView(LoginRequiredMixin, CreateView):
     template_name = 'mindspace/mindspace_create.html'
     form_class = MindspaceModelForm
 
     def form_valid(self, form):
+        mindspace = form.save()
+        mindspace.owner = self.request.user.profile
         return super().form_valid(form)
 
-    # override default success redirect url
-"""     def get_success_url(self):
-        return '/' """
 
-class MindspaceUpdateView(UpdateView):
+class MindspaceUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'mindspace/mindspace_create.html'
     form_class = MindspaceModelForm
 
@@ -44,12 +45,15 @@ class MindspaceUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class MindspaceListView(ListView):
+class MindspaceListView(LoginRequiredMixin, ListView):
     template_name = 'mindspace/mindspace_list.html'
-    queryset = Mindspace.objects.all()
+
+    def get_queryset(self):
+        queryset = Mindspace.objects.filter(owner=self.request.user.profile)
+        return queryset
 
 
-class MindspaceDetailView(DetailView):
+class MindspaceDetailView(LoginRequiredMixin, DetailView):
     template_name = 'mindspace/mindspace_detail.html'
 
     def get_object(self):
@@ -57,7 +61,7 @@ class MindspaceDetailView(DetailView):
         return get_object_or_404(Mindspace, id=id_)
 
 
-class MindspaceDeleteView(DeleteView):
+class MindspaceDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'mindspace/mindspace_delete.html'
 
     def get_object(self):
@@ -68,7 +72,7 @@ class MindspaceDeleteView(DeleteView):
         return reverse('mindspace:mindspace_list')
 
 ##################### Resource #####################
-class ResourceCreateView(CreateView):
+class ResourceCreateView(LoginRequiredMixin, CreateView):
     template_name = 'mindspace/resource_create.html'
     form_class = ResourceModelForm
 
@@ -80,7 +84,7 @@ class ResourceCreateView(CreateView):
 """     def get_success_url(self):
         return '/' """
 
-class ResourceUpdateView(UpdateView):
+class ResourceUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'mindspace/resource_create.html'
     form_class = ResourceModelForm
 
@@ -92,12 +96,12 @@ class ResourceUpdateView(UpdateView):
         return super().form_valid(form)
 
 
-class ResourceListView(ListView):
+class ResourceListView(LoginRequiredMixin, ListView):
     template_name = 'mindspace/resource_list.html'
     queryset = Resource.objects.all()
 
 
-class ResourceDetailView(DetailView):
+class ResourceDetailView(LoginRequiredMixin, DetailView):
     template_name = 'mindspace/resource_detail.html'
 
     def get_object(self):
@@ -105,7 +109,7 @@ class ResourceDetailView(DetailView):
         return get_object_or_404(Resource, id=id_)
 
 
-class ResourceDeleteView(DeleteView):
+class ResourceDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'mindspace/resource_delete.html'
 
     def get_object(self):

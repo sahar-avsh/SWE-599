@@ -4,7 +4,7 @@
     <h1>{{object.title}}</h1>
     <p>{{object.description}}</p>
     {% if object.resources.count > 0 %}
-        {% for res in object.resources %}
+        {% for res in object.resources.all %}
             <p> {{res.title}} - {{res.description}} </p>
         {% endfor %}
     {% else %}
