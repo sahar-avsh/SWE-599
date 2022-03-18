@@ -1,7 +1,16 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
-from .models import Mindspace
-from .forms import MindspaceModelForm
+
+from .models import (
+    Mindspace,
+    Resource,
+)
+
+from .forms import (
+    MindspaceModelForm,
+    ResourceModelForm,
+)
+
 from django.views.generic import (
     CreateView,
     DetailView,
@@ -9,6 +18,8 @@ from django.views.generic import (
     UpdateView,
     DeleteView
 )
+
+##################### Mindspace #####################
 # Create your views here.
 class MindspaceCreateView(CreateView):
     template_name = 'mindspace/mindspace_create.html'
@@ -56,3 +67,50 @@ class MindspaceDeleteView(DeleteView):
     def get_success_url(self):
         return reverse('mindspace:mindspace_list')
 
+##################### Resource #####################
+class ResourceCreateView(CreateView):
+    template_name = 'mindspace/resource_create.html'
+    form_class = ResourceModelForm
+
+    def form_valid(self, form):
+        form.instance.belongs_to_id = self.kwargs.get('ms_id')
+        return super().form_valid(form)
+
+    # override default success redirect url
+"""     def get_success_url(self):
+        return '/' """
+
+class ResourceUpdateView(UpdateView):
+    template_name = 'mindspace/resource_create.html'
+    form_class = ResourceModelForm
+
+    def get_object(self):
+        id_ = self.kwargs.get('id')
+        return get_object_or_404(Resource, id=id_)
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+
+class ResourceListView(ListView):
+    template_name = 'mindspace/resource_list.html'
+    queryset = Resource.objects.all()
+
+
+class ResourceDetailView(DetailView):
+    template_name = 'mindspace/resource_detail.html'
+
+    def get_object(self):
+        id_ = self.kwargs.get('id')
+        return get_object_or_404(Resource, id=id_)
+
+
+class ResourceDeleteView(DeleteView):
+    template_name = 'mindspace/resource_delete.html'
+
+    def get_object(self):
+        id_ = self.kwargs.get('id')
+        return get_object_or_404(Resource, id=id_)
+
+    def get_success_url(self):
+        return reverse('mindspace:resource_list')
