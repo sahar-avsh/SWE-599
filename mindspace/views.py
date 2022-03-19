@@ -80,9 +80,11 @@ class ResourceCreateView(LoginRequiredMixin, CreateView):
         form.instance.belongs_to_id = self.kwargs.get('ms_id')
         return super().form_valid(form)
 
-    # override default success redirect url
-"""     def get_success_url(self):
-        return '/' """
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['parent'] = Mindspace.objects.get(id=self.kwargs.get('ms_id'))
+        return context
+
 
 class ResourceUpdateView(LoginRequiredMixin, UpdateView):
     template_name = 'mindspace/resource_create.html'
@@ -98,7 +100,16 @@ class ResourceUpdateView(LoginRequiredMixin, UpdateView):
 
 class ResourceListView(LoginRequiredMixin, ListView):
     template_name = 'mindspace/resource_list.html'
-    queryset = Resource.objects.all()
+
+    def get_queryset(self):
+        mindspace_id = self.kwargs.get('ms_id')
+        queryset = Resource.objects.filter(belongs_to_id=mindspace_id)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['parent'] = Mindspace.objects.get(id=self.kwargs.get('ms_id'))
+        return context
 
 
 class ResourceDetailView(LoginRequiredMixin, DetailView):
@@ -117,4 +128,5 @@ class ResourceDeleteView(LoginRequiredMixin, DeleteView):
         return get_object_or_404(Resource, id=id_)
 
     def get_success_url(self):
-        return reverse('mindspace:resource_list')
+        self.object = self.get_object()
+        return reverse('mindspace:resource_list', kwargs={'ms_id': self.object.belongs_to.id})

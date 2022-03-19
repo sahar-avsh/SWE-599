@@ -1,12 +1,27 @@
-{% extends 'base.html' %}
+{% extends 'profiles/base.html' %}
+
+{% block title %}
+    {{block.super}}
+{% endblock title %}
 
 {% block content %}
+
     <h1>{{object.f_name}} {{object.l_name}}</h1>
+
+    <button> <a href='{% url 'profiles:profile_update' id=object.id %}'>Update your profile</a> </button>
+    <button> <a href='{% url 'mindspace:mindspace_list' %}'>Go to your Dashboard</a> </button>
+
     {% if object.mindspaces.count > 0 %}
+        <h2>Your Mindspaces</h2>
         {% for ms in object.mindspaces.all %}
-            <p> {{ms.title}} - {{ms.description}} </p>
+            <li> <a href='{% url 'mindspace:mindspace_detail' id=ms.id %}'>{{ms.title}}</a> </li>
         {% endfor %}
     {% else %}
         <h2> No mindspaces available! </h2>
     {% endif %}
+
+    <br>
+
+    <button> <a href='{% url 'logout' %}'>Logout</a> </button>
+
 {% endblock content %}

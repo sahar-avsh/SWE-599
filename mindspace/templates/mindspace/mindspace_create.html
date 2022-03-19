@@ -1,12 +1,15 @@
-{% extends "base.html" %} 
+{% extends "mindspace/base.html" %} 
 
 {% block title %}
-    {{block.super}}
+    {{block.super}} - Create
 {% endblock title %}
 
 {% block content %}
-    <form action='.' method='POST'>{% csrf_token %}
-        {{form.as_p}}
-        <input type='submit' value='Save'/>
-    </form>
+    <div>
+        <h1> Create a new Mindspace </h1>
+        <form action='.' method='POST'>{% csrf_token %}
+            {{form.as_p}}
+            <input type='submit' value='Save'/>
+        </form>
+    </div>
 {% endblock content %}

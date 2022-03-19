@@ -36,7 +36,6 @@ class CustomLoginView(SuccessMessageMixin, FormView):
     template_name = 'profiles/user_login.html'
     form_class = UserLoginForm
     success_message = 'You have successfully logged in'
-    success_url = reverse_lazy('mindspace:mindspace_list')
 
     def form_valid(self, form):
         username = form.cleaned_data.get('username')
@@ -46,6 +45,12 @@ class CustomLoginView(SuccessMessageMixin, FormView):
             login(self.request, user)
             return super().form_valid(form)
         return super().form_invalid(form)
+
+    def get_success_url(self):
+        if 'next' in self.request.POST:
+            return self.request.POST.get('next')
+        else:
+            return reverse_lazy('mindspace:mindspace_list')
 
 
 class CustomSignUpView(SuccessMessageMixin, CreateView):

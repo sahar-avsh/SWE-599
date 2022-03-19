@@ -1,19 +1,27 @@
-{% extends "base.html" %} 
+{% extends "mindspace/base.html" %} 
 
 {% block title %}
-    {{block.super}}
+    {{block.super}} - Dashboard
 {% endblock title %}
 
 {% block content %}
-    <div>
-        <h1>Hello World!</h1>
-    </div>
+    <h1>Dashboard</h1>
+
+    <button> <a href='{% url 'mindspace:mindspace_create' %}'>Add a new Mindspace</a> </button>
 
     <div>
+        <h2>Your Mindspaces</h2>
         {% for instance in object_list %}
-            <p>Title is <a href='{{instance.get_absolute_url}}'> {{instance.title}} </a> </p>
-            <p>Description is {{instance.description}}</p>
+            <li> <a href='{{instance.get_absolute_url}}'> {{instance.title}} </a> </li>
+            <p> <b>Description:</b> {{instance.description}}</p>
+            {% if instance.resources.count > 0 %}
+                <p>- You have {{instance.resources.count}} resources in this mindspace -</p>
+            {% else %}
+                <h4>No resources yet!</h4>
+            {% endif %}
         {% endfor %}
     </div>
+
+    <button> <a href='{% url 'profiles:profile_detail' id=request.user.profile.id %}'>Go to Profile</a> </button>
 
 {% endblock content %}

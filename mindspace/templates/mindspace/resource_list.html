@@ -1,0 +1,17 @@
+{% extends "mindspace/base.html" %} 
+
+{% block title %}
+    {{block.super}} - Resources
+{% endblock title %}
+
+{% block content %}
+    <h1>Your Resources from <a href='{{parent.get_absolute_url}}'> {{parent.title}} </a> </h1>
+
+    <div>
+        {% for instance in object_list %}
+            <li> <a href='{{instance.get_absolute_url}}'> {{instance.title}} </a> </li>
+            <p> <b>Description:</b> {{instance.description}}</p>
+        {% endfor %}
+    </div>
+
+{% endblock content %}

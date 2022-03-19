@@ -1,12 +1,24 @@
-{% extends "base.html" %} 
+{% extends "profiles/base.html" %} 
+
+{% load static %}
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'profiles/user_login.css' %}">
+{% endblock styles %}
 
 {% block title %}
-    {{block.super}}
+    Login
 {% endblock title %}
 
 {% block content %}
+
     <form action='.' method='POST'>{% csrf_token %}
         {{form.as_p}}
+
+        {% if request.GET.next %}
+            <input type='hidden' name='next' value='{{request.GET.next}}'>
+        {% endif %}
+
         <input type='submit' value='Login'/>
     </form>
+
 {% endblock content %}

@@ -1,0 +1,16 @@
+{% extends 'mindspace/base.html' %}
+
+{% block title %}
+    {{block.super}} - Resource
+{% endblock title %}
+
+{% block content %}
+    <h1>{{object.title}}</h1>
+    <p>{{object.description}}</p>
+
+    <button> <a href='{{object.belongs_to.get_absolute_url}}'>Back to your Mindspace</a> </button>
+    <button> <a href='{% url 'mindspace:resource_list' ms_id=object.belongs_to.id %}'>Back to your resources</a> </button> <br>
+    <button> <a href='{% url 'mindspace:resource_update' ms_id=object.belongs_to.id id=object.id %}'>Update this resource</a> </button>
+    <button> <a href='{% url 'mindspace:resource_delete' ms_id=object.belongs_to.id id=object.id %}'> Delete this resource </a> </button>
+
+{% endblock content %}

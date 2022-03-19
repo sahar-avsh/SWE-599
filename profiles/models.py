@@ -11,4 +11,7 @@ class Profile(models.Model):
 
   def get_absolute_url(self):
     return reverse('profiles:profile_detail', kwargs={'id': self.id})
+
+  def __str__(self):
+      return self.f_name + ' ' + self.l_name
   

@@ -1,5 +1,13 @@
-{% extends 'base.html' %}
+{% extends 'mindspace/base.html' %}
+
+{% block title %}
+    Rememberall
+{% endblock title %}
 
 {% block content %}
-    <h1>REMEMBERALL</h1>
+    <h1>REMEMBERALL by Zahra Atrvash</h1>
+
+    <button> <a href='{% url 'login' %}'>Login</a> </button>
+    <button> <a href='{% url 'signup' %}'>Sign Up</a> </button>
+
 {% endblock content %}

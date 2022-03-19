@@ -20,4 +20,8 @@ urlpatterns = [
     path('<int:id>/update/', MindspaceUpdateView.as_view(), name='mindspace_update'),
     path('<int:id>/delete/', MindspaceDeleteView.as_view(), name='mindspace_delete'),
     path('<int:ms_id>/create-resource/', ResourceCreateView.as_view(), name='resource_create'),
+    path('<int:ms_id>/<int:id>/update-resource/', ResourceUpdateView.as_view(), name='resource_update'),
+    path('<int:ms_id>/<int:id>/', ResourceDetailView.as_view(), name='resource_detail'),
+    path('<int:ms_id>/resources/', ResourceListView.as_view(), name='resource_list'),
+    path('<int:ms_id>/<int:id>/delete/', ResourceDeleteView.as_view(), name='resource_delete'),
 ]
