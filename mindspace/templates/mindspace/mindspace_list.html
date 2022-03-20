@@ -1,27 +1,73 @@
 {% extends "mindspace/base.html" %} 
 
+{% load static %}
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_list.css' %}">
+{% endblock styles %}
+
 {% block title %}
     {{block.super}} - Dashboard
 {% endblock title %}
 
-{% block content %}
-    <h1>Dashboard</h1>
-
-    <button> <a href='{% url 'mindspace:mindspace_create' %}'>Add a new Mindspace</a> </button>
-
-    <div>
-        <h2>Your Mindspaces</h2>
-        {% for instance in object_list %}
-            <li> <a href='{{instance.get_absolute_url}}'> {{instance.title}} </a> </li>
-            <p> <b>Description:</b> {{instance.description}}</p>
-            {% if instance.resources.count > 0 %}
-                <p>- You have {{instance.resources.count}} resources in this mindspace -</p>
-            {% else %}
-                <h4>No resources yet!</h4>
-            {% endif %}
-        {% endfor %}
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+    <a class="navbar-brand" href="{% url 'main_page' %}">Rememberall</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="{% url 'mindspace:mindspace_list' %}">Dashboard <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'profiles:profile_detail' id=request.user.profile.id %}">Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="">Q&A</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Actions
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'mindspace:mindspace_create' %}">Add a new Mindspace</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+          </div>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
     </div>
+  </nav>
 
-    <button> <a href='{% url 'profiles:profile_detail' id=request.user.profile.id %}'>Go to Profile</a> </button>
+{% endblock navbar %}
+
+
+{% block content %}
+
+    <div class="container-fluid">
+      <h2 class="ms_header">Your Mindspaces</h2>
+
+      <div class="card-deck">
+        {% for object in object_list %}
+          <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title"> {{object.title}} </h5>
+              <p class="card-text"> {{object.description}} </p>
+              <a href="{{object.get_absolute_url}}" class="btn btn-primary">Go</a>
+            </div>
+            <div class="card-footer">
+              <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
 
 {% endblock content %}

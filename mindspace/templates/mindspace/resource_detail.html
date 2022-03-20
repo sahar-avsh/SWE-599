@@ -1,16 +1,81 @@
 {% extends 'mindspace/base.html' %}
 
+{% load static %}
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/resource_detail.css' %}">
+{% endblock styles %}
+
 {% block title %}
     {{block.super}} - Resource
 {% endblock title %}
 
-{% block content %}
-    <h1>{{object.title}}</h1>
-    <p>{{object.description}}</p>
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+    <a class="navbar-brand" href="{% url 'main_page' %}">Rememberall</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mindspace:mindspace_list' %}">Dashboard </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'profiles:profile_detail' id=request.user.profile.id %}">Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="">Q&A</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Actions
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="#">Add a Note</a>
+            <a class="dropdown-item" href="{% url 'mindspace:resource_update' ms_id=object.belongs_to.id id=object.id %}">Update this Resource</a>
+            <a class="dropdown-item" href="#">Share this Resource</a>
+            <a class="dropdown-item" href="{% url 'mindspace:resource_delete' ms_id=object.belongs_to.id id=object.id %}">Delete this Resource</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+          </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{object.belongs_to.get_absolute_url}}">Back to your Mindspace </a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+{% endblock navbar %}
 
-    <button> <a href='{{object.belongs_to.get_absolute_url}}'>Back to your Mindspace</a> </button>
-    <button> <a href='{% url 'mindspace:resource_list' ms_id=object.belongs_to.id %}'>Back to your resources</a> </button> <br>
-    <button> <a href='{% url 'mindspace:resource_update' ms_id=object.belongs_to.id id=object.id %}'>Update this resource</a> </button>
-    <button> <a href='{% url 'mindspace:resource_delete' ms_id=object.belongs_to.id id=object.id %}'> Delete this resource </a> </button>
+{% block content %}
+
+  <div class="container-fluid">
+
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{object.belongs_to.get_absolute_url}}"> {{object.belongs_to.title}} </a></li>
+        <li class="breadcrumb-item active" aria-current="page"> {{object.title}} </li>
+      </ol>
+
+    <div class="card text-center">
+      <div class="card-header">
+        Resource
+      </div>
+      <div class="card-body">
+        <h5 class="card-title"> {{object.title}} </h5>
+        <p class="card-text"> {{object.description}} </p>
+      </div>
+      <div class="card-footer text-muted">
+        Created at {{object.created_at|date:"l j M Y - H:i"}}
+      </div>
+    </div>
+
+    <h2>Your Notes</h2>
+
+  </div>
 
 {% endblock content %}

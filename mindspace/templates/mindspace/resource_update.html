@@ -3,7 +3,7 @@
 {% load crispy_forms_tags %}
 
 {% block title %}
-    {{block.super}} - Create
+    {{block.super}} - Update a Resource
 {% endblock title %}
 
 {% block navbar %}
@@ -39,13 +39,13 @@
 
 {% block content %}
 
-  <div class="container-fluid">
-    <h1> Create a new Mindspace </h1>
-    <form action='.' method='POST'>{% csrf_token %}
-        {{form|crispy}}
-        <input type='submit' class='btn btn-success' value='Save'/>
-        <a class="btn btn-secondary" href="{% url 'mindspace:mindspace_list' %}" role="button">Cancel</a>
-    </form>
-  </div>
+    <div class="container-fluid">
+        <h1> Update {{object.title}} </h1>
+        <form action='.' method='POST'>{% csrf_token %}
+            {{form|crispy}}
+            <input type='submit' class='btn btn-success' value='Save'/>
+            <a class="btn btn-secondary" href="{{object.get_absolute_url}}" role="button">Cancel</a>
+        </form>
+    </div>
 
 {% endblock content %}

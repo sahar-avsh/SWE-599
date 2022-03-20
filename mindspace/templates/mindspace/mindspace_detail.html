@@ -1,24 +1,94 @@
 {% extends 'mindspace/base.html' %}
 
+{% load static %}
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_detail.css' %}">
+{% endblock styles %}
+
 {% block title %}
     {{block.super}}
 {% endblock title %}
 
-{% block content %}
-    <h1>{{object.title}}</h1>
-    <p>{{object.description}}</p>
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+    <a class="navbar-brand" href="{% url 'main_page' %}">Rememberall</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'mindspace:mindspace_list' %}">Dashboard </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'profiles:profile_detail' id=request.user.profile.id %}">Profile</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="">Q&A</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Actions
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{% url 'mindspace:resource_create' ms_id=object.id %}">Add a Resource</a>
+            <a class="dropdown-item" href="{% url 'mindspace:mindspace_update' id=object.id %}">Update this Mindspace</a>
+            <a class="dropdown-item" href="#">Share this Mindspace</a>
+            <a class="dropdown-item" href="{% url 'mindspace:mindspace_delete' id=object.id %}">Delete this Mindspace</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+          </div>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      </form>
+    </div>
+  </nav>
+{% endblock navbar %}
 
-    <button> <a href='{% url 'mindspace:mindspace_list' %}'>Back to Dashboard</a> </button>
-    <button> <a href='{% url 'mindspace:mindspace_update' id=object.id %}'>Update this Mindspace</a> </button>
-    <button> <a href='{% url 'mindspace:mindspace_delete' id=object.id %}'>Delete this Mindspace</a> </button>
+{% block content %}
+
+  <div class="container-fluid">
+
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item active" aria-current="page"> {{object.title}} </li>
+    </ol>
+
+    <div class="card text-center">
+      <div class="card-header">
+        Mindspace
+      </div>
+      <div class="card-body">
+        <h5 class="card-title"> {{object.title}} </h5>
+        <p class="card-text"> {{object.description}} </p>
+      </div>
+      <div class="card-footer text-muted">
+        Created at {{object.created_at|date:"l j M Y - H:i"}}
+      </div>
+    </div>
+
+    <h2>Your Resources</h2>
 
     {% if object.resources.count > 0 %}
-        <h2>Resources</h2>
-        {% for res in object.resources.all %}
-            <li> <a href='{{res.get_absolute_url}}'> {{res.title}} </a> - {{res.description}} </li><br>
-        {% endfor %}
-        <button type=button> <a href='{% url 'mindspace:resource_create' ms_id=object.id %}'>Add a new resource</a> </button>
-    {% else %}
-        <h2> No resources available! <a href='{% url 'mindspace:resource_create' ms_id=object.id %}'>Add your first resource!</a> </h2>
+    <div class="card-deck">
+      {% for res in object.resources.all %}
+        <div class="card">
+          <img class="card-img-top" src="..." alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title"> {{res.title}} </h5>
+            <p class="card-text"> {{res.description}} </p>
+            <a href="{{res.get_absolute_url}}" class="btn btn-primary">Go</a>
+          </div>
+          <div class="card-footer">
+            <small class="text-muted">Last updated 3 mins ago</small>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
     {% endif %}
+  </div>
+    
 {% endblock content %}

@@ -2,6 +2,8 @@ from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib import messages
 
 from .models import (
     Mindspace,
@@ -23,9 +25,10 @@ from django.views.generic import (
 
 ##################### Mindspace #####################
 # Create your views here.
-class MindspaceCreateView(LoginRequiredMixin, CreateView):
+class MindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     template_name = 'mindspace/mindspace_create.html'
     form_class = MindspaceModelForm
+    success_message = 'Your Mindspace was created successfully'
 
     def form_valid(self, form):
         mindspace = form.save()
@@ -33,9 +36,10 @@ class MindspaceCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class MindspaceUpdateView(LoginRequiredMixin, UpdateView):
-    template_name = 'mindspace/mindspace_create.html'
+class MindspaceUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    template_name = 'mindspace/mindspace_update.html'
     form_class = MindspaceModelForm
+    success_message = 'Your Mindspace was updated successfully'
 
     def get_object(self):
         id_ = self.kwargs.get('id')
@@ -63,18 +67,24 @@ class MindspaceDetailView(LoginRequiredMixin, DetailView):
 
 class MindspaceDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'mindspace/mindspace_delete.html'
+    success_message = 'Your Mindspace was deleted successfully'
 
     def get_object(self):
         id_ = self.kwargs.get('id')
         return get_object_or_404(Mindspace, id=id_)
 
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super().delete(request, *args, **kwargs)
+
     def get_success_url(self):
         return reverse('mindspace:mindspace_list')
 
 ##################### Resource #####################
-class ResourceCreateView(LoginRequiredMixin, CreateView):
+class ResourceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     template_name = 'mindspace/resource_create.html'
     form_class = ResourceModelForm
+    success_message = 'Your Resource was created successfully'
 
     def form_valid(self, form):
         form.instance.belongs_to_id = self.kwargs.get('ms_id')
@@ -86,9 +96,10 @@ class ResourceCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-class ResourceUpdateView(LoginRequiredMixin, UpdateView):
-    template_name = 'mindspace/resource_create.html'
+class ResourceUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    template_name = 'mindspace/resource_update.html'
     form_class = ResourceModelForm
+    success_message = 'Your Resource was updated successfully'
 
     def get_object(self):
         id_ = self.kwargs.get('id')
@@ -122,11 +133,16 @@ class ResourceDetailView(LoginRequiredMixin, DetailView):
 
 class ResourceDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'mindspace/resource_delete.html'
+    success_message = 'Your Resource was deleted successfully'
 
     def get_object(self):
         id_ = self.kwargs.get('id')
         return get_object_or_404(Resource, id=id_)
 
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super().delete(request, *args, **kwargs)
+
     def get_success_url(self):
         self.object = self.get_object()
-        return reverse('mindspace:resource_list', kwargs={'ms_id': self.object.belongs_to.id})
+        return reverse('mindspace:mindspace_detail', kwargs={'id': self.object.belongs_to.id})

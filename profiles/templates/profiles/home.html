@@ -5,9 +5,21 @@
 {% endblock title %}
 
 {% block content %}
-    <h1>REMEMBERALL by Zahra Atrvash</h1>
 
-    <button> <a href='{% url 'login' %}'>Login</a> </button>
-    <button> <a href='{% url 'signup' %}'>Sign Up</a> </button>
+    <div class="jumbotron">
+        <h1 class="display-4">Welcome to your Mindspace!</h1>
+        <p class="lead">Here is a convenient space where you can organize your learning goals.</p>
+        <hr class="my-4">
+        <p>Empty your mind to the Mindspace allocated to your specific goal and let us keep it organized for you.</p>
+        <p class="lead">
+        {% if request.user.is_authenticated %}
+            <a class="btn btn-primary btn-lg" href="{% url 'mindspace:mindspace_list' %}" role="button">Your Dashboard</a>
+            <a class="btn btn-primary btn-lg" href="" role="button">Q&A</a>
+        {% else %}
+            <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login</a>
+            <a class="btn btn-primary btn-lg" href="{% url 'signup' %}" role="button">Sign Up</a>
+        {% endif %}
+        </p>
+    </div>
 
 {% endblock content %}

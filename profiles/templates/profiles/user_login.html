@@ -1,5 +1,7 @@
 {% extends "profiles/base.html" %} 
 
+{% load crispy_forms_tags %}
+
 {% load static %}
 {% block styles %}
   <link rel="stylesheet" type="text/css" href="{% static 'profiles/user_login.css' %}">
@@ -9,16 +11,37 @@
     Login
 {% endblock title %}
 
+{% block navbar %}
+    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
+    <a class="navbar-brand" href="{% url 'main_page' %}">Rememberall</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+            <a class="nav-link" href="">Q&A</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+{% endblock navbar %}
+
 {% block content %}
 
-    <form action='.' method='POST'>{% csrf_token %}
-        {{form.as_p}}
+    <div class="container-fluid">
+        <form action='.' method='POST'>{% csrf_token %}
+            {{form|crispy}}
 
-        {% if request.GET.next %}
-            <input type='hidden' name='next' value='{{request.GET.next}}'>
-        {% endif %}
+            {% if request.GET.next %}
+                <input type='hidden' name='next' value='{{request.GET.next}}'>
+            {% endif %}
 
-        <input type='submit' value='Login'/>
-    </form>
+            <input type='submit' class="btn btn-primary" value='Login'/>
+            <a class="btn btn-secondary" href='{% url 'signup' %}'>Don't have an account?</a>
+            <a class="btn btn-secondary" href='#'>Forgot your password?</a>
+        </form>
+    </div>
 
 {% endblock content %}

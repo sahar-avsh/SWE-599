@@ -65,9 +65,10 @@ class CustomSignUpView(SuccessMessageMixin, CreateView):
         return super().form_valid(form)
 
 
-class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+class ProfileUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     template_name = 'profiles/profile_update.html'
     form_class = ProfileModelForm
+    success_message = 'Your profile was updated succesfully'
 
     def get_object(self):
         id_ = self.kwargs.get('id')

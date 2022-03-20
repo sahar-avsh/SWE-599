@@ -24,3 +24,8 @@ class ProfileModelForm(forms.ModelForm):
         'f_name',
         'l_name'
     ]
+
+    labels = {
+      'f_name': 'First name',
+      'l_name': 'Last name'
+    }
