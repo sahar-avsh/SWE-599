@@ -4,6 +4,9 @@ from django.shortcuts import redirect
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.views import (
+    PasswordResetView,
+)
 
 from django.contrib.auth import login, authenticate
 
@@ -63,6 +66,17 @@ class CustomSignUpView(SuccessMessageMixin, CreateView):
         user = form.save()
         Profile.objects.create(created_by=user, f_name=user.first_name, l_name=user.last_name)
         return super().form_valid(form)
+
+
+class CustomResetPasswordView(SuccessMessageMixin, PasswordResetView):
+    template_name = 'profiles/password_reset.html'
+    email_template_name = 'profiles/password_reset_email.html'
+    subject_template_name = 'profiles/password_reset_subject.txt'
+    success_message = "We've emailed you instructions for setting up your password, " \
+                      "if an account exists with the email you entered, you should receive them shortly." \
+                      " If you don't receive an email, " \
+                      "please make sure you've entered the address you had registered with, and check your spam folder."
+    success_url = reverse_lazy('main_page')
 
 
 class ProfileUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
