@@ -63,7 +63,11 @@
               <a href="{{object.get_absolute_url}}" class="btn btn-primary">Go</a>
             </div>
             <div class="card-footer">
-              <small class="text-muted">Last updated 3 mins ago</small>
+              {% if object.is_recent %}
+                <small class="text-muted"> Updated just now </small>
+              {% else %}
+                <small class="text-muted">Last updated {{object.updated_at|timesince}} ago </small>
+              {% endif %}
             </div>
           </div>
         {% endfor %}
