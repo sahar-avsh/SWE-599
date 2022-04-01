@@ -1,60 +1,77 @@
 body{
     background-image: url("log-in.jpg");
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-
+  
   }
-  
-  
   
   /*  ***************************************************************** 
   Heading part */
-  .heading{
+
+  .h1{
     color: rgb(77, 77, 77);
     margin: auto;
     width: 28%;
     padding: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 0;
     padding-bottom: 0;
+    margin-top: 25px;
   }
   
+  .h2{
+    color: rgb(77, 77, 77);
+    margin: auto;
+    width: 28%;
+    padding: 10px;
+    margin-bottom: 5px;
+    padding-bottom: 0;
+    margin-top: 10px;
   
-  .h1{
-    margin-top: 5px;
-    margin-bottom: 10px;
   }
 
   .main_name {
     text-decoration: none;
     color: rgb(77, 77, 77);
+    font-size: 50px;
   }
 
   .main_name:hover {
     text-decoration: none;
   }
   
-  .h3{
-    padding-top: 0;
-    margin-top: 0;
-  }
   
   /*  ***************************************************************** 
-  Log-in part */
+  content part */
   
-  .log_in{
+  .sign_up{
+  
     color: rgb(77, 77, 77);
     margin: auto;
     width: 28%;
     padding: 10px;
-    margin-top: 0;
-    padding-top: 0;
+    margin-bottom: 10px;
+    padding-bottom: 0;
+    display: flex;
+    align-content: space-between;
+    margin-top: 5px;
+  }
+
+  .second{
+    margin-left: 10%;
+  }
+
+  .third{
+    margin-left: 10%;
   }
   
+  
   .log_in_requirements{
-    margin-bottom: 2px;
+    margin-top: 0;
+    margin-bottom: 5px;
   }
   
   .inputs{
     background-color: rgb(255, 255, 235);
+    margin-bottom: 15px;
   }
   
   
@@ -76,7 +93,7 @@ body{
     color: rgb(77, 77, 77);
     background-color: rgb(253, 255, 118);
     cursor: pointer;
-    text-decoration: none;
+  
   }
 
   .button a {
@@ -94,11 +111,3 @@ body{
     transition: 0.5s;
     
   }
-  
-  .forgot{
-    font-size: 10px;
-    padding-left: 2.5px;
-    color:  rgb(77, 77, 77);
-    text-decoration: none;
-  }
-  

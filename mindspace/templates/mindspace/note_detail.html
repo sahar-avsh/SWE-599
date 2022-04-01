@@ -6,7 +6,7 @@
 {% endblock styles %}
 
 {% block title %}
-    {{block.super}} - Resource
+    {{block.super}} - Note
 {% endblock title %}
 
 {% block navbar %}
@@ -32,16 +32,15 @@
             Actions
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'mindspace:note_create' ms_id=object.belongs_to.id r_id=object.id %}">Add a Note</a>
-            <a class="dropdown-item" href="{% url 'mindspace:resource_update' ms_id=object.belongs_to.id id=object.id %}">Update this Resource</a>
-            <a class="dropdown-item" href="#">Share this Resource</a>
-            <a class="dropdown-item" href="{% url 'mindspace:resource_delete' ms_id=object.belongs_to.id id=object.id %}">Delete this Resource</a>
+            <a class="dropdown-item" href="{% url 'mindspace:note_update' ms_id=object.belongs_to.belongs_to.id r_id=object.belongs_to.id id=object.id %}">Update this Note</a>
+            <a class="dropdown-item" href="#">Share this Note</a>
+            <a class="dropdown-item" href="{% url 'mindspace:note_delete' ms_id=object.belongs_to.belongs_to.id r_id=object.belongs_to.id id=object.id %}">Delete this Note</a>
             <div class="dropdown-divider"></div>
             <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
           </div>
         </li>
         <li class="nav-item">
-            <a class="nav-link" href="{{object.belongs_to.get_absolute_url}}">Back to your Mindspace </a>
+            <a class="nav-link" href="{{object.belongs_to.get_absolute_url}}">Back to your Resource</a>
         </li>
       </ul>
       <form class="form-inline my-2 my-lg-0">
@@ -57,13 +56,18 @@
   <div class="container-fluid">
 
       <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{{object.belongs_to.belongs_to.get_absolute_url}}"> {{object.belongs_to.belongs_to.title}} </a></li>
         <li class="breadcrumb-item"><a href="{{object.belongs_to.get_absolute_url}}"> {{object.belongs_to.title}} </a></li>
-        <li class="breadcrumb-item active" aria-current="page"> {{object.title}} </li>
+        {% if object.title %}
+            <li class="breadcrumb-item active" aria-current="page"> {{object.title}} </li>
+        {% else %}
+            <li class="breadcrumb-item active" aria-current="page"> Note </li>
+        {% endif %}
       </ol>
 
     <div class="card text-center">
       <div class="card-header">
-        Resource
+        Note
       </div>
       <div class="card-body">
         <h5 class="card-title"> {{object.title}} </h5>
@@ -74,7 +78,7 @@
       </div>
     </div>
 
-    <h2>Your Notes</h2>
+    <h2>Content</h2>
 
   </div>
 

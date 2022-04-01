@@ -2,6 +2,7 @@ from django import forms
 from .models import (
     Mindspace,
     Resource,
+    Note,
 )
 
 class MindspaceModelForm(forms.ModelForm):
@@ -18,4 +19,13 @@ class ResourceModelForm(forms.ModelForm):
         fields = [
             'title',
             'description'
+        ]
+
+class NoteModelForm(forms.ModelForm):
+    class Meta:
+        model = Note
+        fields = [
+            'title',
+            'description',
+            'content'
         ]

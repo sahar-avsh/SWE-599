@@ -1,25 +1,46 @@
 {% extends 'mindspace/base.html' %}
 
+{% load static %}
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'profiles/home.css' %}">
+{% endblock styles %}
+
 {% block title %}
     Rememberall
 {% endblock title %}
 
 {% block content %}
 
-    <div class="jumbotron">
-        <h1 class="display-4">Welcome to your Mindspace!</h1>
-        <p class="lead">Here is a convenient space where you can organize your learning goals.</p>
-        <hr class="my-4">
-        <p>Empty your mind to the Mindspace allocated to your specific goal and let us keep it organized for you.</p>
-        <p class="lead">
-        {% if request.user.is_authenticated %}
-            <a class="btn btn-primary btn-lg" href="{% url 'mindspace:mindspace_list' %}" role="button">Your Dashboard</a>
-            <a class="btn btn-primary btn-lg" href="" role="button">Q&A</a>
-        {% else %}
-            <a class="btn btn-primary btn-lg" href="{% url 'login' %}" role="button">Login</a>
-            <a class="btn btn-primary btn-lg" href="{% url 'signup' %}" role="button">Sign Up</a>
-        {% endif %}
-        </p>
-    </div>
+    <div class="heading">
+        <h1 class="h1" >Rememberall</h1>
+        <h3>a convenient space for tracking your learning while keeping organized in a world of resources</h3>
+          <div class="head_child">
+            <ul>
+                <li>
+                    <h4>Experience collaborative learning with others</h4>
+                </li>
+                <li>
+                    <h4>Share your journey</h4>
+                </li>
+                <li>
+                <h4>Get answers for your burning questions</h4>
+            </li>
+            </ul>
+      
+          </div>
+        </div>
+      
+        <!-- ***************************************************************** -->
+        <!-- buttons part -->
+      
+        <div class="buttons"> 
+            {% if request.user.is_authenticated %}
+                <button class="button"> <a href={% url 'mindspace:mindspace_list' %}>Go to Dashboard</a></button>
+                <button class="button"> <a href="#">Go to Q&A</a></button>
+            {% else %}
+                <button class="button"> <a href={% url 'login' %}>Go to Login</a></button>
+                <button class="button"> <a href={% url 'signup' %}>Go to Sign Up</a></button>
+            {% endif %}
+        </div>
 
 {% endblock content %}

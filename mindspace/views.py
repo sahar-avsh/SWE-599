@@ -8,11 +8,13 @@ from django.contrib import messages
 from .models import (
     Mindspace,
     Resource,
+    Note,
 )
 
 from .forms import (
     MindspaceModelForm,
     ResourceModelForm,
+    NoteModelForm
 )
 
 from django.views.generic import (
@@ -146,3 +148,71 @@ class ResourceDeleteView(LoginRequiredMixin, DeleteView):
     def get_success_url(self):
         self.object = self.get_object()
         return reverse('mindspace:mindspace_detail', kwargs={'id': self.object.belongs_to.id})
+
+
+##################### Note #####################
+class NoteCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+    template_name = 'mindspace/note_create.html'
+    form_class = NoteModelForm
+    success_message = 'Your Note was created successfully'
+
+    def form_valid(self, form):
+        form.instance.belongs_to_id = self.kwargs.get('r_id')
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['parent'] = Resource.objects.get(id=self.kwargs.get('r_id'))
+        return context
+
+
+class NoteUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+    template_name = 'mindspace/note_update.html'
+    form_class = NoteModelForm
+    success_message = 'Your Note was updated successfully'
+
+    def get_object(self):
+        id_ = self.kwargs.get('id')
+        return get_object_or_404(Note, id=id_)
+
+    def form_valid(self, form):
+        return super().form_valid(form)
+
+
+class NoteListView(LoginRequiredMixin, ListView):
+    template_name = 'mindspace/note_list.html'
+
+    def get_queryset(self):
+        resource_id = self.kwargs.get('r_id')
+        queryset = Note.objects.filter(belongs_to_id=resource_id)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['parent'] = Resource.objects.get(id=self.kwargs.get('r_id'))
+        return context
+
+
+class NoteDetailView(LoginRequiredMixin, DetailView):
+    template_name = 'mindspace/note_detail.html'
+
+    def get_object(self):
+        id_ = self.kwargs.get('id')
+        return get_object_or_404(Note, id=id_)
+
+
+class NoteDeleteView(LoginRequiredMixin, DeleteView):
+    template_name = 'mindspace/note_delete.html'
+    success_message = 'Your Note was deleted successfully'
+
+    def get_object(self):
+        id_ = self.kwargs.get('id')
+        return get_object_or_404(Note, id=id_)
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(self.request, self.success_message)
+        return super().delete(request, *args, **kwargs)
+
+    def get_success_url(self):
+        self.object = self.get_object()
+        return reverse('mindspace:resource_detail', kwargs={'id': self.object.belongs_to.id})
