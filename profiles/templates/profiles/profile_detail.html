@@ -1,52 +1,48 @@
 {% extends 'profiles/base.html' %}
 
+{% load static %}
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'profiles/profile_detail.css' %}">
+{% endblock styles %}
+{% block js %}
+  <script src="{% static 'profiles/dropdown.js' %}"></script>
+{% endblock js %}
+
 {% block title %}
     {{block.super}}
 {% endblock title %}
 
 {% block navbar %}
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
-    <a class="navbar-brand" href="{% url 'main_page' %}">Rememberall</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'mindspace:mindspace_list' %}">Dashboard </a>
-        </li>
-        <li class="nav-item active">
-          <a class="nav-link" href="{% url 'profiles:profile_detail' id=request.user.profile.id %}">Profile <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="">Q&A</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Actions
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'profiles:profile_update' id=object.id %}">Update your profile</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-          </div>
-        </li>
-      </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
+<ul>
+  <li><a href={% url 'main_page' %}>Home</a></li>
+  <li><a href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
+  <li><a class="active" href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
+  <li><a href="#">Q&A</a></li>
+  <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
+
+  <div class="dropdown">
+    <button onclick="myFunction()" class="dropbtn">Actions</button>
+    <div id="myDropdown" class="dropdown-content">
+      <a href={% url 'profiles:profile_update' id=request.user.profile.id %}>Edit your profile</a>
+      <a href="#about">Clicked</a>
+      <a href="#contact">Clicked</a>
     </div>
-  </nav>
+  </div>
+</ul>
 {% endblock navbar %}
 
 {% block content %}
 
   <div class="container-fluid">
 
+    {% if object.image != Null %}
+      <img src="{{ object.image.url }}">
+    {% endif %}
+    
     <h1>{{object.f_name}} {{object.l_name}}</h1>
+    <p> <b>Bio:</b> {{object.bio}} </p>
+    <p> <b>Company:</b> {{object.company}} </p>
 
-    </div>
+  </div>
 
 {% endblock content %}

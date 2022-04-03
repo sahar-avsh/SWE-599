@@ -11,6 +11,8 @@ class Mindspace(models.Model):
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    # editors = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='can_edit', null=True)
+    # viewers = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='can_view', null=True)
 
     def get_absolute_url(self):
         return reverse('mindspace:mindspace_detail', kwargs={'id': self.id})

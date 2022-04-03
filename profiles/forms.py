@@ -77,10 +77,16 @@ class ProfileModelForm(forms.ModelForm):
     model = Profile
     fields = [
         'f_name',
-        'l_name'
+        'l_name',
+        'company',
+        'bio',
+        'image'
     ]
 
     labels = {
       'f_name': 'First name',
-      'l_name': 'Last name'
+      'l_name': 'Last name',
+      'company': 'Your company',
+      'bio': 'Bio',
+      'image': 'Upload profile picture'
     }

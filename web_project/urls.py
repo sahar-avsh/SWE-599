@@ -16,6 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, reverse_lazy
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 from django.contrib.auth.views import LogoutView, PasswordResetConfirmView, PasswordResetCompleteView
 
 from profiles.views import (
@@ -41,4 +44,4 @@ urlpatterns = [
         name='password_reset_complete'),
     path('home/', HomeView.as_view(), name='main_page'),
     path('', HomeView.as_view(), name='main_page'),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
