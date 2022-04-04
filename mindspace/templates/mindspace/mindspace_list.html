@@ -57,4 +57,28 @@
       </div>
     </div>
 
+    <div class="container-fluid">
+      <h2 class="ms_header">Mindspaces shared with you</h2>
+
+      <div class="card-deck">
+        {% for object in object_list_edit %}
+          <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title"> {{object.title}} </h5>
+              <p class="card-text"> {{object.description}} </p>
+              <a href="{{object.get_absolute_url}}" class="btn btn-primary">Go</a>
+            </div>
+            <div class="card-footer">
+              {% if object.is_recent %}
+                <small class="text-muted"> Updated just now </small>
+              {% else %}
+                <small class="text-muted">Last updated {{object.updated_at|timesince}} ago </small>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
 {% endblock content %}

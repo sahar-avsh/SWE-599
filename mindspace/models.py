@@ -11,8 +11,10 @@ class Mindspace(models.Model):
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    # editors = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='can_edit', null=True)
-    # viewers = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='can_view', null=True)
+    is_public = models.BooleanField(default=True)
+    editors = models.ManyToManyField(Profile, related_name='can_edit')
+    viewers = models.ManyToManyField(Profile, related_name='can_view')
+    commenters = models.ManyToManyField(Profile, related_name='can_comment')
 
     def get_absolute_url(self):
         return reverse('mindspace:mindspace_detail', kwargs={'id': self.id})
@@ -31,6 +33,22 @@ class Resource(models.Model):
     belongs_to = models.ForeignKey(Mindspace, on_delete=models.CASCADE, related_name='resources')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # FORMAT_CHOICES = (
+    #     ('Video', 'Video'),
+    #     ('Image', 'Image'),
+    #     ('Document', 'Document'),
+    #     ('Quote', 'Quote'),
+    #     ('Link', 'Link to external source')
+    # )
+
+    # res_format = models.CharField(max_length=8, choices=FORMAT_CHOICES)
+
+    # video = models.FileField(blank=True, null=True, upload_to='mindspace/resource_video')
+    # image = models.ImageField(blank=True, null=True, upload_to='mindspace/resource_image')
+    # document = models.FileField(blank=True, null=True, upload_to='mindspace/resource_document')
+    # quote = models.TextField(blank=True, null=True)
+    # link = models.URLField(blank=True, null=True, max_length=200)
 
     def get_absolute_url(self):
         return reverse('mindspace:resource_detail', kwargs={'ms_id': self.belongs_to.id, 'id': self.id})

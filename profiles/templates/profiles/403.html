@@ -1,0 +1,38 @@
+{% extends 'profiles/base.html' %}
+
+{% load static %}
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'profiles/profile_detail.css' %}">
+{% endblock styles %}
+{% block js %}
+  <script src="{% static 'mindspace/dropdown.js' %}"></script>
+{% endblock js %}
+
+{% block title %}
+    {{block.super}} - Forbidden
+{% endblock title %}
+
+{% block navbar %}
+<ul>
+  <li><a href={% url 'main_page' %}>Home</a></li>
+  <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
+  <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
+  <li><a href="#">Q&A</a></li>
+  <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
+
+  <div class="dropdown">
+    <button onclick="myFunction()" class="dropbtn">Actions</button>
+    <div id="myDropdown" class="dropdown-content">
+      <a href={% url 'mindspace:mindspace_create' %}>Create new Mindspace</a>
+      <a href="#">Share</a>
+      <a href="#">Edit</a>
+    </div>
+  </div>
+</ul>
+{% endblock navbar %}
+
+{% block content %}
+
+    <h1>403, It is forbidden BRUH!</h1>
+
+{% endblock content %}

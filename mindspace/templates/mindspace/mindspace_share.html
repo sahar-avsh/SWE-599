@@ -4,18 +4,17 @@
 
 {% load static %}
 {% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_update.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_share.css' %}">
 {% endblock styles %}
 {% block js %}
   <script src="{% static 'mindspace/dropdown.js' %}"></script>
 {% endblock js %}
 
 {% block title %}
-    {{block.super}} - Update
+    {{block.super}} - Dashboard
 {% endblock title %}
 
 {% block navbar %}
-
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
     <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
@@ -32,18 +31,17 @@
       </div>
     </div>
   </ul>
-
 {% endblock navbar %}
 
 {% block content %}
 
-  <div class="container-fluid">
-    <h1> Update {{object.title}} </h1>
-    <form action='.' method='POST'>{% csrf_token %}
-        {{form|crispy}}
-        <input type='submit' class='btn btn-success' value='Save'/>
-        <a class="btn btn-secondary" href="{{object.get_absolute_url}}" role="button">Cancel</a>
-    </form>
-  </div>
+    <div class="container-fluid">
+        <h1> Share {{object.title}} </h1>
+        <form action='.' method='POST'>{% csrf_token %}
+            {{form|crispy}}
+            <input type='submit' class='btn btn-success' value='Save'/>
+            <a class="btn btn-secondary" href="{{object.get_absolute_url}}" role="button">Cancel</a>
+        </form>
+    </div>
 
 {% endblock content %}

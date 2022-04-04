@@ -20,6 +20,10 @@
     <!-- Log-in part -->
     <form action='.' method='POST'>{% csrf_token %}
       <div class="log_in">
+        {% if form.errors %}
+          <p>Wrong e-mail or password!</p>
+        {% endif %}
+        
         <p class="log_in_requirements">Username</p>
         {{form.username}}
         <p class="log_in_requirements">Password</p>

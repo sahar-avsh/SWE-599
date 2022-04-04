@@ -10,6 +10,8 @@ from django.contrib.auth.views import (
 
 from django.contrib.auth import login, authenticate
 
+from django.core.exceptions import PermissionDenied
+
 from .models import (
   Profile
 )
@@ -91,6 +93,11 @@ class ProfileUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     def form_valid(self, form):
         return super().form_valid(form)
 
+    def dispatch(self, request, *args, **kwargs):
+        object = Profile.objects.get(id=self.kwargs.get('id'))
+        if request.user.profile != object:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
 
 class ProfileDetailView(LoginRequiredMixin, DetailView):
     template_name = 'profiles/profile_detail.html'
