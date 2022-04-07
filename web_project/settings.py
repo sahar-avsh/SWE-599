@@ -44,9 +44,12 @@ INSTALLED_APPS = [
     'mindspace',
     'profiles',
     'crispy_forms',
+    'embed_video',
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

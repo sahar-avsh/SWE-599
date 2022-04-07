@@ -1,55 +1,40 @@
 {% extends 'mindspace/base.html' %}
 
+{% load resource_filename_filter %}
+{% load embed_video_tags %}
+
 {% load static %}
 {% block styles %}
   <link rel="stylesheet" type="text/css" href="{% static 'mindspace/resource_detail.css' %}">
 {% endblock styles %}
+{% block js %}
+  <script src="{% static 'mindspace/dropdown.js' %}"></script>
+{% endblock js %}
 
 {% block title %}
     {{block.super}} - Resource
 {% endblock title %}
 
 {% block navbar %}
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
-    <a class="navbar-brand" href="{% url 'main_page' %}">Rememberall</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'mindspace:mindspace_list' %}">Dashboard </a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'profiles:profile_detail' id=request.user.profile.id %}">Profile</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="">Q&A</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Actions
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <a class="dropdown-item" href="{% url 'mindspace:note_create' ms_id=object.belongs_to.id r_id=object.id %}">Add a Note</a>
-            <a class="dropdown-item" href="{% url 'mindspace:resource_update' ms_id=object.belongs_to.id id=object.id %}">Update this Resource</a>
-            <a class="dropdown-item" href="#">Share this Resource</a>
-            <a class="dropdown-item" href="{% url 'mindspace:resource_delete' ms_id=object.belongs_to.id id=object.id %}">Delete this Resource</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-          </div>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{{object.belongs_to.get_absolute_url}}">Back to your Mindspace </a>
-        </li>
-      </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
+
+  <ul>
+    <li><a href={% url 'main_page' %}>Home</a></li>
+    <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
+    <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
+    <li><a href="#">Q&A</a></li>
+    <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
+    <li style="float:right"><a href="#">Notifications</a></li>
+
+    <div class="dropdown">
+      <button onclick="myFunction()" class="dropbtn">Actions</button>
+      <div id="myDropdown" class="dropdown-content">
+        <a href={% url 'mindspace:resource_update' ms_id=object.belongs_to.id id=object.id %}>Edit</a>
+        <a href={% url 'mindspace:resource_delete' ms_id=object.belongs_to.id id=object.id %}>Delete</a>
+        <a href="#contact">Clicked</a>
+      </div>
     </div>
-  </nav>
+  </ul>
+
 {% endblock navbar %}
 
 {% block content %}
@@ -57,7 +42,7 @@
   <div class="container-fluid">
 
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{{object.belongs_to.get_absolute_url}}"> {{object.belongs_to.title}} </a></li>
+        <li class="breadcrumb-item"><a class="breadcrumb-parent" href="{{object.belongs_to.get_absolute_url}}"> {{object.belongs_to.title}} </a></li>
         <li class="breadcrumb-item active" aria-current="page"> {{object.title}} </li>
       </ol>
 
@@ -67,6 +52,45 @@
       </div>
       <div class="card-body">
         <h5 class="card-title"> {{object.title}} </h5>
+        {% comment %} Format is an uploaded image {% endcomment %}
+        {% if object.res_format == 'Image' and object.image %}
+          <img src="{{ object.image.url }}" width='600' height='400'>
+        {% comment %} Format is an uploaded video {% endcomment %}
+        {% elif object.res_format == 'Video' and object.video %}
+          <video width='600' controls>
+            <source src="{{ object.video.url }}" type='video/mp4'>
+            Your browser does not support the video tag.
+          </video>
+        {% comment %} Format is a link-provided Youtube/Vimeo video {% endcomment %}
+        {% elif object.res_format == 'Video' and object.link %}
+          <!-- The video tag: -->
+          {% video object.link as my_video %}
+{% comment %}             URL: {{ my_video.url }}
+            Thumbnail: {{ my_video.thumbnail }}
+            Backend: {{ my_video.backend }} {% endcomment %}
+            {% video my_video "medium" %}
+          {% endvideo %}
+        {% comment %} Format is a PDF document {% endcomment %}
+        {% elif object.res_format == 'Document' and object.document %}
+          {% comment %} <embed src="{{ object.document.url }}" width="500" height="375" type="application/pdf"> {% endcomment %}
+          <div id="adobe-dc-view"></div>
+          <script src="https://documentcloud.adobe.com/view-sdk/main.js"></script>
+          <script type="text/javascript">
+            document.addEventListener("adobe_dc_view_sdk.ready", function()
+            {
+                var adobeDCView = new AdobeDC.View({clientId: "a0ddab820a7e4146a30c262d3d77bf55", divId: "adobe-dc-view"});
+                adobeDCView.previewFile(
+                {
+                  content:   {location: {url: "{{ object.document.url }}"}},
+                  metaData: {fileName: "{{ object.document.name|modify_filename }}"}
+                });
+            });
+          </script>
+        {% elif object.res_format == 'Quote' and object.quote %}
+          <p class="lead"> {{ object.quote }} </p>
+        {% elif object.res_format == 'Link' and object.link %}
+          <a href="{{object.link}}" class="link-field" target="_blank" rel="noopener"> {{object.link}} </a> 
+        {% endif %}
         <p class="card-text"> {{object.description}} </p>
       </div>
       <div class="card-footer text-muted">

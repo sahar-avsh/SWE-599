@@ -3,3 +3,5 @@ psycopg2>=2.8
 Pillow>=9.0.1
 django-crispy-forms>=1.9.0
 python-dotenv>=0.19.2
+django-embed-video>=1.4.2
+python-magic>=0.4.25

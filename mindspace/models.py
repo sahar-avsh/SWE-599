@@ -27,6 +27,14 @@ class Mindspace(models.Model):
         now = datetime.now(timezone.utc)
         return now - self.updated_at <= timedelta(seconds=60)
 
+FORMAT_CHOICES = (
+    ('Video', 'Video'),
+    ('Image', 'Image'),
+    ('Document', 'Document'),
+    ('Quote', 'Quote'),
+    ('Link', 'Link to external source')
+)
+
 class Resource(models.Model):
     title = models.CharField(max_length=220)
     description = models.TextField(blank=True, null=True)
@@ -34,21 +42,13 @@ class Resource(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
-    # FORMAT_CHOICES = (
-    #     ('Video', 'Video'),
-    #     ('Image', 'Image'),
-    #     ('Document', 'Document'),
-    #     ('Quote', 'Quote'),
-    #     ('Link', 'Link to external source')
-    # )
+    res_format = models.CharField(max_length=8, choices=FORMAT_CHOICES, default='Link')
 
-    # res_format = models.CharField(max_length=8, choices=FORMAT_CHOICES)
-
-    # video = models.FileField(blank=True, null=True, upload_to='mindspace/resource_video')
-    # image = models.ImageField(blank=True, null=True, upload_to='mindspace/resource_image')
-    # document = models.FileField(blank=True, null=True, upload_to='mindspace/resource_document')
-    # quote = models.TextField(blank=True, null=True)
-    # link = models.URLField(blank=True, null=True, max_length=200)
+    video = models.FileField(blank=True, null=True, upload_to='mindspace/resource_video')
+    image = models.ImageField(blank=True, null=True, upload_to='mindspace/resource_image')
+    document = models.FileField(blank=True, null=True, upload_to='mindspace/resource_document')
+    quote = models.TextField(blank=True, null=True)
+    link = models.URLField(blank=True, null=True, max_length=200)
 
     def get_absolute_url(self):
         return reverse('mindspace:resource_detail', kwargs={'ms_id': self.belongs_to.id, 'id': self.id})
