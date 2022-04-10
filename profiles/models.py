@@ -2,8 +2,6 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 
-from mindspace.models import *
-
 from datetime import datetime, timedelta, timezone
 
 # Create your models here.
@@ -57,12 +55,12 @@ class Profile(models.Model):
 #   recipient = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='recipient_notifications')
 
 #   notification_type = models.CharField(max_length=17, choices=NOTIFICATION_TYPE_CHOICES)
-#   question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='question_notification', null=True)
-#   answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name='answer_notification', null=True)
-#   mindspace = models.ForeignKey(Mindspace, on_delete=models.CASCADE, related_name='mindspace_notification', null=True)
-#   resource = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name='resource_notification', null=True)
-#   note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name='note_notification', null=True)
-#   comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_notification', null=True)
+#   question = models.ForeignKey("qna.Question", on_delete=models.CASCADE, related_name='question_notification', null=True)
+#   answer = models.ForeignKey("qna.Answer", on_delete=models.CASCADE, related_name='answer_notification', null=True)
+#   mindspace = models.ForeignKey("mindspace.Mindspace", on_delete=models.CASCADE, related_name='mindspace_notification', null=True)
+#   resource = models.ForeignKey("mindspace.Resource", on_delete=models.CASCADE, related_name='resource_notification', null=True)
+#   note = models.ForeignKey("mindspace.Note", on_delete=models.CASCADE, related_name='note_notification', null=True)
+#   #comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_notification', null=True)
 
 #   read_date = models.DateTimeField(null=True)
 #   sent_date = models.DateTimeField(auto_now_add=True)

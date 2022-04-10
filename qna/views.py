@@ -125,7 +125,7 @@ class AnswerCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     success_message = 'Your answer was created successfully'
 
     def form_valid(self, form):
-        question_id = self.kwargs.get('id')
+        question_id = self.kwargs.get('q_id')
         # assign owner to the answer
         form.instance.owner = self.request.user.profile
         # assign question to the answer
@@ -185,7 +185,7 @@ class AnswerUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
 #         return get_object_or_404(Question, id=id_)
 
 class AnswerDeleteView(LoginRequiredMixin, DeleteView):
-    template_name = 'qna/answer_delete.html'
+    # template_name = 'qna/answer_delete.html'
     success_message = 'Your answer was deleted successfully'
 
     def get_object(self):
@@ -197,7 +197,8 @@ class AnswerDeleteView(LoginRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
     def get_success_url(self):
-        return reverse('qna:question_detail', kwargs={'id': Question.objects.get(id=self.kwargs.get('q_id'))})
+        question = Question.objects.get(id=self.kwargs.get('q_id'))
+        return reverse('qna:question_detail', kwargs={'id': question.id})
 
     def dispatch(self, request, *args, **kwargs):
         object = Answer.objects.get(id=self.kwargs.get('id'))

@@ -1,20 +1,19 @@
 from django.db import models
 from django.urls import reverse
-from profiles.models import Profile
 
 from datetime import datetime, timedelta, timezone
 
 # Create your models here.
 class Mindspace(models.Model):
-    owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='mindspaces', null=True)
+    owner = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE, related_name='mindspaces', null=True)
     title = models.CharField(max_length=220)
     description = models.TextField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_public = models.BooleanField(default=True)
-    editors = models.ManyToManyField(Profile, related_name='can_edit')
-    viewers = models.ManyToManyField(Profile, related_name='can_view')
-    commenters = models.ManyToManyField(Profile, related_name='can_comment')
+    editors = models.ManyToManyField("profiles.Profile", related_name='can_edit')
+    viewers = models.ManyToManyField("profiles.Profile", related_name='can_view')
+    commenters = models.ManyToManyField("profiles.Profile", related_name='can_comment')
 
     def get_absolute_url(self):
         return reverse('mindspace:mindspace_detail', kwargs={'id': self.id})
