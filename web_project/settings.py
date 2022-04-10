@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'mindspace',
     'profiles',
+    'qna',
     'crispy_forms',
     'embed_video',
 ]

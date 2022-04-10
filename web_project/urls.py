@@ -28,10 +28,14 @@ from profiles.views import (
     CustomResetPasswordView,
 )
 
+from qna.views import LoadResources
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('mindspace/', include('mindspace.urls')),
     path('profiles/', include('profiles.urls')),
+    path('questions/', include('qna.urls')),
+    path('ajax/load-resources/', LoadResources.as_view(), name='ajax_load_resources'),
     path('accounts/signup/', CustomSignUpView.as_view(), name='signup'),
     path('accounts/login/', CustomLoginView.as_view(), name='login'),
     path('accounts/logout/', LogoutView.as_view(next_page=reverse_lazy('main_page')),  name='logout'),

@@ -2,6 +2,8 @@ from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
 
+from mindspace.models import *
+
 from datetime import datetime, timedelta, timezone
 
 # Create your models here.
@@ -42,5 +44,30 @@ class Profile(models.Model):
 
     image_field.file = image_file
     super().save(*args, **kwargs)
+
+# NOTIFICATION_TYPE_CHOICES = (
+#     ('qna', 'qna'),
+#     ('mindspace_share', 'mindspace_share'),
+#     ('mindspace_edit', 'mindspace_edit'),
+#     ('mindspace_comment', 'mindspace_comment')
+# )
+
+# class Notification(models.Model):
+#   sender = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sender_notifications')
+#   recipient = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='recipient_notifications')
+
+#   notification_type = models.CharField(max_length=17, choices=NOTIFICATION_TYPE_CHOICES)
+#   question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='question_notification', null=True)
+#   answer = models.ForeignKey(Answer, on_delete=models.CASCADE, related_name='answer_notification', null=True)
+#   mindspace = models.ForeignKey(Mindspace, on_delete=models.CASCADE, related_name='mindspace_notification', null=True)
+#   resource = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name='resource_notification', null=True)
+#   note = models.ForeignKey(Note, on_delete=models.CASCADE, related_name='note_notification', null=True)
+#   comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='comment_notification', null=True)
+
+#   read_date = models.DateTimeField(null=True)
+#   sent_date = models.DateTimeField(auto_now_add=True)
+
+#   def __str__(self):
+#       return self.sender.f_name + '->' + self.recipient.f_name
 
   

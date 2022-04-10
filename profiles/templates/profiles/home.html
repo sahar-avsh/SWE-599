@@ -36,7 +36,7 @@
         <div class="buttons"> 
             {% if request.user.is_authenticated %}
                 <button class="button"> <a href={% url 'mindspace:mindspace_list' %}>Go to Dashboard</a></button>
-                <button class="button"> <a href="#">Go to Q&A</a></button>
+                <button class="button"> <a href={% url 'qna:question_list' %}>Go to Q&A</a></button>
             {% else %}
                 <button class="button"> <a href={% url 'login' %}>Go to Login</a></button>
                 <button class="button"> <a href={% url 'signup' %}>Go to Sign Up</a></button>

@@ -1,11 +1,11 @@
-{% extends "mindspace/base.html" %} 
+{% extends "qna/base.html" %} 
 
 {% load static %}
 {% block styles %}
   <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_list.css' %}">
 {% endblock styles %}
 {% block js %}
-  <script src="{% static 'mindspace/dropdown.js' %}"></script>
+  <script src="{% static 'qna/dropdown.js' %}"></script>
 {% endblock js %}
 
 {% block title %}
@@ -15,15 +15,15 @@
 {% block navbar %}
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
-    <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
+    <li><a href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
     <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-    <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
+    <li><a class="active" href={% url 'qna:question_list' %}>Q&A</a></li>
     <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
 
     <div class="dropdown">
       <button onclick="myFunction()" class="dropbtn">Actions</button>
       <div id="myDropdown" class="dropdown-content">
-        <a href={% url 'mindspace:mindspace_create' %}>Create a new Mindspace</a>
+        <a href={% url 'qna:question_create' %}>Ask a question</a>
         <a href="#about">Clicked</a>
         <a href="#contact">Clicked</a>
       </div>
@@ -34,49 +34,47 @@
 {% block content %}
 
     <div class="container-fluid">
-      <h2 class="ms_header">Your Mindspaces</h2>
+      <h2 class="ms_header">Your Questions</h2>
 
       <div class="card-deck">
         {% for object in object_list %}
           <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="..." alt="Card image cap">
             <div class="card-body">
               <h5 class="card-title"> {{object.title}} </h5>
-              <p class="card-text"> {{object.description}} </p>
+              <p class="card-text"> {{object.body}} </p>
               <a href="{{object.get_absolute_url}}" class="btn btn-primary">Go</a>
             </div>
             <div class="card-footer">
               {% if object.is_recent %}
                 <small class="text-muted"> Updated just now </small>
               {% else %}
-                <small class="text-muted">Last updated {{object.updated_at|timesince}} ago </small>
+                <small class="text-muted">Last updated {{object.updated_date|timesince}} ago </small>
               {% endif %}
             </div>
           </div>
+        {% empty %}
+            <p>No questions</p>
         {% endfor %}
       </div>
-    </div>
 
-    <div class="container-fluid">
-      <h2 class="ms_header">Mindspaces shared with you</h2>
-
+      <h2 class="ms_header">Questions Asked by Community</h2>
       <div class="card-deck">
-        {% for object in object_list_edit %}
+        {% for q in object_list_questions %}
           <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="..." alt="Card image cap">
             <div class="card-body">
-              <h5 class="card-title"> {{object.title}} </h5>
-              <p class="card-text"> {{object.description}} </p>
-              <a href="{{object.get_absolute_url}}" class="btn btn-primary">Go</a>
+              <h5 class="card-title"> {{q.title}} </h5>
+              <p class="card-text"> {{q.body}} </p>
+              <a href="{{q.get_absolute_url}}" class="btn btn-primary">Go</a>
             </div>
             <div class="card-footer">
-              {% if object.is_recent %}
+              {% if q.is_recent %}
                 <small class="text-muted"> Updated just now </small>
               {% else %}
-                <small class="text-muted">Last updated {{object.updated_at|timesince}} ago </small>
+                <small class="text-muted">Last updated {{q.updated_date|timesince}} ago </small>
               {% endif %}
             </div>
           </div>
+        {% empty %}
         {% endfor %}
       </div>
     </div>

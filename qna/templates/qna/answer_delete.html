@@ -1,0 +1,45 @@
+{% extends 'qna/base.html' %}
+
+{% load static %}
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/resource_create.css' %}">
+{% endblock styles %}
+{% block js %}
+  <script src="{% static 'qna/dropdown.js' %}"></script>
+  <script src="{% static 'qna/resource_dropdown_list.js' %}"></script>
+{% endblock js %}
+
+{% block title %}
+    {{block.super}} - Delete
+{% endblock title %}
+
+{% block navbar %}
+
+    <ul>
+        <li><a href={% url 'main_page' %}>Home</a></li>
+        <li><a href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
+        <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
+        <li><a class="active" href={% url 'qna:question_list' %}>Q&A</a></li>
+        <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
+
+        <div class="dropdown">
+        <button onclick="myFunction()" class="dropbtn">Actions</button>
+        <div id="myDropdown" class="dropdown-content">
+            <a href="#home">Clicked</a>
+            <a href="#about">Clicked</a>
+            <a href="#contact">Clicked</a>
+        </div>
+        </div>
+    </ul>
+
+{% endblock navbar %}
+
+{% block content %}
+    <div class="container-fluid">
+        <form action='.' method='POST'>{% csrf_token %}
+            <h2>Do you want to delete answer?</h2>
+            <p>Important: You won't be able to take back this action.</p>
+            <p><input type='submit' class="btn btn-primary" value='Yes'/> <a class="btn btn-secondary" href='{{object.get_absolute_url}}'>Cancel</a></p>
+        </form>
+    </div>
+{% endblock content %}

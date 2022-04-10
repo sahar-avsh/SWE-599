@@ -1,0 +1,64 @@
+{% extends 'qna/base.html' %}
+
+{% load static %}
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/resource_create.css' %}">
+{% endblock styles %}
+{% block js %}
+  <script src="{% static 'qna/dropdown.js' %}"></script>
+  <script src="{% static 'qna/resource_dropdown_list.js' %}"></script>
+{% endblock js %}
+
+{% block title %}
+    {{block.super}} - Delete
+{% endblock title %}
+
+{% block navbar %}
+
+    <ul>
+        <li><a href={% url 'main_page' %}>Home</a></li>
+        <li><a href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
+        <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
+        <li><a class="active" href={% url 'qna:question_list' %}>Q&A</a></li>
+        <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
+
+        <div class="dropdown">
+        <button onclick="myFunction()" class="dropbtn">Actions</button>
+        <div id="myDropdown" class="dropdown-content">
+            <a href="#home">Clicked</a>
+            <a href="#about">Clicked</a>
+            <a href="#contact">Clicked</a>
+        </div>
+        </div>
+    </ul>
+
+{% endblock navbar %}
+
+{% block content %}
+    <div class="container-fluid">
+        <form action='.' method='POST'>{% csrf_token %}
+            <h2>Do you want to delete {{object.title}}?</h2>
+            <p>Important: All answers belonging to this question will be deleted as well.</p>
+            <p><input type='submit' class="btn btn-primary" value='Yes'/> <a class="btn btn-secondary" href='{{object.get_absolute_url}}'>Cancel</a></p>
+        </form>
+          
+        {% for ans in object.answers.all %}
+          <h3>Answers belonging to this Mindspace</h3>
+          <div class="card-deck">
+              <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title"> Answered by <a href={% url 'profiles:profile_detail' id=ans.owner.id %}>{{ans.owner.f_name}}</a></h5>
+                  <p class="card-text"> {{ans.body}} </p>
+                  <a href="{{ans.get_absolute_url}}" class="btn btn-primary">Go</a>
+                </div>
+                <div class="card-footer">
+                  <small class="text-muted">Answered at {{ans.replied_date|date:"l j M Y - H:i"}} </small>
+                </div>
+              </div>
+          </div>
+          {% empty %}
+            <h3>There is no answer belonging to this question.</h3>
+          {% endfor %}
+
+    </div>
+{% endblock content %}

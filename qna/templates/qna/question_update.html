@@ -1,26 +1,27 @@
-{% extends "mindspace/base.html" %} 
+{% extends "qna/base.html" %} 
 
 {% load static %}
 {% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_create.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/resource_create.css' %}">
 {% endblock styles %}
 {% block js %}
-  <script src="{% static 'mindspace/dropdown.js' %}"></script>
+  <script src="{% static 'qna/resource_dropdown_list.js' %}"></script>
+  <script src="{% static 'qna/dropdown.js' %}"></script>
 {% endblock js %}
 
 {% load crispy_forms_tags %}
 
 {% block title %}
-    {{block.super}} - Create
+    {{block.super}} - Update Question
 {% endblock title %}
 
 {% block navbar %}
-    
+
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
     <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
     <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-    <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
+    <li><a href="#">Q&A</a></li>
     <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
 
     <div class="dropdown">
@@ -37,13 +38,14 @@
 
 {% block content %}
 
-  <div class="container-fluid">
-    <h1> Create a new Mindspace </h1>
-    <form action='.' method='POST'>{% csrf_token %}
-        {{form|crispy}}
-        <input type='submit' class='btn btn-success' value='Save'/>
-        <a class="btn btn-secondary" href="{% url 'mindspace:mindspace_list' %}" role="button">Cancel</a>
-    </form>
-  </div>
+    <div class="container-fluid">
+        <h1> Create a new Question </h1>
+        <form action='.' id='question_form' method='POST' data-resources-url="{% url 'ajax_load_resources' %}" novalidate>
+        {% csrf_token %}
+            {{form|crispy}}
+            <input type='submit' class='btn btn-success' value='Save'/>
+            <a class="btn btn-secondary" href="{{object.get_absolute_url}}" role="button">Cancel</a>
+        </form>
+    </div>
 
 {% endblock content %}

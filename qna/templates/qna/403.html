@@ -1,4 +1,4 @@
-{% extends 'mindspace/base.html' %}
+{% extends 'qna/base.html' %}
 
 {% load static %}
 {% block styles %}
@@ -23,7 +23,7 @@
   <div class="dropdown">
     <button onclick="myFunction()" class="dropbtn">Actions</button>
     <div id="myDropdown" class="dropdown-content">
-      <a href="#">Create</a>
+      <a href={% url 'mindspace:mindspace_create' %}>Create new Mindspace</a>
       <a href="#">Share</a>
       <a href="#">Edit</a>
     </div>

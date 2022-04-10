@@ -1,0 +1,91 @@
+{% extends 'qna/base.html' %}
+
+{% load static %}
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_detail.css' %}">
+{% endblock styles %}
+{% block js %}
+  <script src="{% static 'qna/dropdown.js' %}"></script>
+{% endblock js %}
+
+{% block title %}
+    {{block.super}}
+{% endblock title %}
+
+{% block navbar %}
+<ul>
+  <li><a href={% url 'main_page' %}>Home</a></li>
+  <li><a href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
+  <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
+  <li><a class="active" href={% url 'qna:question_list' %}>Q&A</a></li>
+  <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
+
+  <div class="dropdown">
+    <button onclick="myFunction()" class="dropbtn">Actions</button>
+    <div id="myDropdown" class="dropdown-content">
+      {% if object.owner == request.user.profile %}
+        <a href="#">Resolve</a>
+        <a href={% url 'qna:question_update' id=object.id %}>Update</a>
+        <a href={% url 'qna:question_delete' id=object.id %}>Delete</a>
+      {% else %}
+        <a href={% url 'qna:answer_create' q_id=object.id %}>Answer</a>
+        <a href="#">Report</a>
+      {% endif %}
+    </div>
+  </div>
+</ul>
+{% endblock navbar %}
+
+{% block content %}
+
+  <div class="container-fluid">
+
+    <div class="card text-center">
+      <div class="card-header">
+        Question
+      </div>
+      <div class="card-body">
+        <h5 class="card-title"> {{object.title}} </h5>
+        <p class="card-text"> {{object.body}} </p>
+        {% if object.tagged_resource %}
+          <p class="card-text">Tagged Resource: <a href="{{object.tagged_resource.get_absolute_url}}"> {{object.tagged_resource.title}} </a> </p>
+        {% elif object.tagged_mindspace %}
+          <p class="card-text">Tagged Mindspace: <a href="{{object.tagged_mindspace.get_absolute_url}}"> {{object.tagged_mindspace.title}} </a> </p>
+        {% endif %}
+      </div>
+      <div class="card-footer text-muted">
+        Asked at {{object.asked_date|date:"l j M Y - H:i"}}
+        {% if object.updated_date %}
+          | Updated at {{object.updated_date|date:"l j M Y - H:i"}}
+        {% endif %}
+      </div>
+    </div>
+
+    <h2>Answers</h2>
+
+    {% for answer in object.answers.all %}
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title"> Answered by <a href={% url 'profiles:profile_detail' id=answer.owner.id %}> {{answer.owner.f_name}} </a> </h5>
+          <p class="card-text"> {{answer.reply}} </p>
+          {% if answer.owner == request.user.profile %}
+            <a href={% url 'qna:answer_update' q_id=object.id id=answer.id %} class="btn btn-primary">Update</a>
+            <a href={% url 'qna:answer_delete' q_id=object.id id=answer.id %} class="btn btn-primary">Delete</a>
+          {% endif %}
+          {% if answer.tagged_resource %}
+            <p class="card-text">Tagged Resource: <a href="{{answer.tagged_resource.get_absolute_url}}"> {{answer.tagged_resource.title}} </a> </p>
+          {% elif answer.tagged_mindspace %}
+            <p class="card-text">Tagged Mindspace: <a href="{{answer.tagged_mindspace.get_absolute_url}}"> {{answer.tagged_mindspace.title}} </a> </p>
+          {% endif %}
+        </div>
+        <div class="card-footer text-muted">
+          Asked at {{answer.replied_date|date:"l j M Y - H:i"}}
+          {% if answer.updated_date %}
+            | Updated at {{answer.updated_date|date:"l j M Y - H:i"}}
+          {% endif %}
+        </div>
+      </div>
+    {% empty %}
+    {% endfor %}
+
+{% endblock content %}
