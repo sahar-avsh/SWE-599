@@ -1,5 +1,8 @@
+from typing import Generic
 from django.db import models
 from django.urls import reverse
+
+from django.contrib.contenttypes.fields import GenericRelation
 
 from datetime import datetime, timedelta, timezone
 
@@ -14,6 +17,8 @@ class Mindspace(models.Model):
     editors = models.ManyToManyField("profiles.Profile", related_name='can_edit')
     viewers = models.ManyToManyField("profiles.Profile", related_name='can_view')
     commenters = models.ManyToManyField("profiles.Profile", related_name='can_comment')
+
+    # shares = GenericRelation("profiles.Notification", related_query_name='mindspace_shares')
 
     def get_absolute_url(self):
         return reverse('mindspace:mindspace_detail', kwargs={'id': self.id})
@@ -49,6 +54,8 @@ class Resource(models.Model):
     quote = models.TextField(blank=True, null=True)
     link = models.URLField(blank=True, null=True, max_length=200)
 
+    # edits = GenericRelation("profiles.Notification", related_query_name='resource_edits')
+
     def get_absolute_url(self):
         return reverse('mindspace:resource_detail', kwargs={'ms_id': self.belongs_to.id, 'id': self.id})
 
@@ -67,6 +74,8 @@ class Note(models.Model):
     belongs_to = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name='notes')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # edits = GenericRelation("profiles.Notification", related_query_name='note_edits')
 
     def get_absolute_url(self):
         return reverse('mindspace:note_detail', \

@@ -36,8 +36,8 @@
     <div class="container-fluid">
       <h2 class="ms_header">Your Questions</h2>
 
-      <div class="card-deck">
-        {% for object in object_list %}
+      {% for object in object_list %}
+        <div class="card-deck">
           <div class="card" style="width: 18rem;">
             <div class="card-body">
               <h5 class="card-title"> {{object.title}} </h5>
@@ -52,10 +52,10 @@
               {% endif %}
             </div>
           </div>
-        {% empty %}
-            <p>No questions</p>
-        {% endfor %}
-      </div>
+        </div>
+      {% empty %}
+        <p>No questions</p>
+      {% endfor %}
 
       <h2 class="ms_header">Questions Asked by Community</h2>
       <div class="card-deck">

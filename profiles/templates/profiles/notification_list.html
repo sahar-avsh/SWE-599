@@ -1,0 +1,81 @@
+{% extends "profiles/base.html" %} 
+
+{% load static %}
+{% block styles %}
+  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_list.css' %}">
+{% endblock styles %}
+{% block js %}
+  <script src="{% static 'mindspace/dropdown.js' %}"></script>
+{% endblock js %}
+
+{% block title %}
+    {{block.super}} - Dashboard
+{% endblock title %}
+
+{% block navbar %}
+  <ul>
+    <li><a href={% url 'main_page' %}>Home</a></li>
+    <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
+    <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
+    <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
+    <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
+    <li style="float:right"><a href={% url 'logout' %}>Notifications</a></li>
+
+    <div class="dropdown">
+      <button onclick="myFunction()" class="dropbtn">Actions</button>
+      <div id="myDropdown" class="dropdown-content">
+        <a href={% url 'mindspace:mindspace_create' %}>Create a new Mindspace</a>
+        <a href="#about">Clicked</a>
+        <a href="#contact">Clicked</a>
+      </div>
+    </div>
+  </ul>
+{% endblock navbar %}
+
+{% block content %}
+
+    <div class="container-fluid">
+      <h2 class="ms_header">Notifications</h2>
+
+      {% for object in object_list %}
+        <div class="card-deck">
+          <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                {% if object.read_date == Null %}
+                    <h5 class="card-title"> New Notification* </h5>
+                {% else %}
+                    <h5 class="card-title"> Notification </h5>
+                {% endif %}
+                {% if object.notification_type == 'UA' %}
+                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> updated the answer for your question <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
+                    <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-primary">Go to question</a>
+                {% elif object.notification_type == 'PA' %}
+                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> posted an answer for your question <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
+                    <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-primary">Go to question</a>
+                {% elif object.notification_type == 'AE' %}
+                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as an editor for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                    <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
+                {% elif object.notification_type == 'RE' %}
+                    {% if object.subject_mindspace.public %}
+                        <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from editors for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                        <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
+                    {% else %}
+                        <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from editors for "{{object.subject_mindspace.title}}"</p>
+                    {% endif %}
+                {% elif object.notification_type == 'AC' %}
+                {% elif object.notification_type == 'RC' %}
+                {% elif object.notification_type == 'AV' %}
+                {% elif object.notification_type == 'RV' %}
+                {% endif %}
+            </div>
+            <div class="card-footer">
+                <small class="text-muted"> {{object.sent_date|timesince}} ago </small>
+            </div>
+          </div>
+        </div>
+        {% empty %}
+            <p>You have no notifications</p>
+        {% endfor %} 
+    </div>
+
+{% endblock content %}

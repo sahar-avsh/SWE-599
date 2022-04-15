@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
 
+from django.contrib.contenttypes.fields import GenericRelation
+
 from datetime import datetime, timedelta, timezone
 
 # Create your models here.
@@ -32,6 +34,8 @@ class Answer(models.Model):
     tagged_resource = models.ForeignKey("mindspace.Resource", on_delete=models.CASCADE, related_name='resource_answers', null=True)
     replied_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+
+    # activity = GenericRelation("profiles.Notification", related_query_name='answer_activities')
 
     def __str__(self):
         return self.owner.f_name + '-' + self.question.title

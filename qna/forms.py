@@ -1,3 +1,4 @@
+from logging import NullHandler
 from django import forms
 
 from .models import Question, Answer
@@ -67,5 +68,6 @@ class AnswerModelForm(forms.ModelForm):
             except (ValueError, TypeError):
                 pass
         elif self.instance.id:
-            self.fields['tagged_resource'].queryset = self.instance.tagged_mindspace.resources.order_by('title')
-            self.fields['tagged_resource'].label_from_instance = lambda obj: "%s" % obj.title
+            if self.instance.tagged_mindspace is not None:
+                self.fields['tagged_resource'].queryset = self.instance.tagged_mindspace.resources.order_by('title')
+                self.fields['tagged_resource'].label_from_instance = lambda obj: "%s" % obj.title

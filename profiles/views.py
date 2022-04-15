@@ -13,7 +13,8 @@ from django.contrib.auth import login, authenticate
 from django.core.exceptions import PermissionDenied
 
 from .models import (
-  Profile
+  Profile,
+  Notification
 )
 
 from .forms import (
@@ -105,3 +106,10 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     def get_object(self):
         id_ = self.kwargs.get('id')
         return get_object_or_404(Profile, id=id_)
+
+class NotificationListView(LoginRequiredMixin, ListView):
+    template_name = 'profiles/notification_list.html'
+
+    def get_queryset(self):
+        queryset = Notification.objects.filter(received_by=self.request.user.profile).order_by('sent_date')
+        return queryset
