@@ -33,6 +33,7 @@ from django.views.generic import (
     FormView
 )
 
+from datetime import datetime, timezone
 
 class HomeView(TemplateView):
     template_name = 'profiles/home.html'
@@ -109,7 +110,11 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 
 class NotificationListView(LoginRequiredMixin, ListView):
     template_name = 'profiles/notification_list.html'
+    model = Notification
+    paginate_by = 10
 
     def get_queryset(self):
-        queryset = Notification.objects.filter(received_by=self.request.user.profile).order_by('sent_date')
+        queryset = self.model.objects.filter(received_by=self.request.user.profile).order_by('sent_date')
+        now = datetime.now(timezone.utc)
+        queryset.update(read_date=now)
         return queryset

@@ -9,7 +9,7 @@
 {% endblock js %}
 
 {% block title %}
-    {{block.super}} - Dashboard
+    {{block.super}} - Notifications
 {% endblock title %}
 
 {% block navbar %}
@@ -63,9 +63,25 @@
                         <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from editors for "{{object.subject_mindspace.title}}"</p>
                     {% endif %}
                 {% elif object.notification_type == 'AC' %}
+                  <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as a commenter for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                  <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
                 {% elif object.notification_type == 'RC' %}
+                  {% if object.subject_mindspace.public %}
+                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from commenters for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                    <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
+                  {% else %}
+                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from commenters for "{{object.subject_mindspace.title}}"</p>
+                  {% endif %}
                 {% elif object.notification_type == 'AV' %}
+                  <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as a viewer for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                  <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
                 {% elif object.notification_type == 'RV' %}
+                  {% if object.subject_mindspace.public %}
+                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from viewers for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                    <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
+                  {% else %}
+                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from viewers for "{{object.subject_mindspace.title}}"</p>
+                  {% endif %}
                 {% endif %}
             </div>
             <div class="card-footer">
@@ -73,9 +89,26 @@
             </div>
           </div>
         </div>
-        {% empty %}
-            <p>You have no notifications</p>
-        {% endfor %} 
+      {% empty %}
+        <p>You have no notifications</p>
+      {% endfor %} 
+
+      {% if is_paginated %}
+        <div class="pagination">
+          <span class="page-links">
+            {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+            {% endif %}
+            <span class="page-current">
+              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">next</a>
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+
     </div>
 
 {% endblock content %}

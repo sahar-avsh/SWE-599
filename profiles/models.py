@@ -22,6 +22,11 @@ class Profile(models.Model):
     now = datetime.now(timezone.utc)
     return (now - self.created_at).days
 
+  @property
+  def unseen_notifs(self):
+    qs = Notification.objects.filter(received_by=self).filter(read_date__isnull=True)
+    return len(qs)
+
   def get_absolute_url(self):
     return reverse('profiles:profile_detail', kwargs={'id': self.id})
 

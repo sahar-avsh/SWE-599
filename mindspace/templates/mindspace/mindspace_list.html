@@ -19,7 +19,9 @@
     <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
     <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
     <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
-    <li style="float:right"><a href={% url 'profiles:profile_notifications' id=request.user.profile.id %}>Notifications</a></li>
+    <li style="float:right"><a href={% url 'profiles:profile_notifications' id=request.user.profile.id %}>Notifications
+        <span class="badge badge-light"> {{request.user.profile.unseen_notifs}} </span>
+    </a></li>
 
     <div class="dropdown">
       <button onclick="myFunction()" class="dropbtn">Actions</button>
