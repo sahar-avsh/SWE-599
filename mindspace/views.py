@@ -1,5 +1,9 @@
+from mimetypes import init
+from os import access
+import profile
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
+from django.http import HttpResponseRedirect
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -13,13 +17,16 @@ from .models import (
     Mindspace,
     Resource,
     Note,
+    ShareMindspace,
 )
 
 from .forms import (
     MindspaceModelForm,
     ResourceModelForm,
     NoteModelForm,
-    ShareMindspaceForm
+    # ShareMindspaceForm,
+    ShareMindspaceModelForm,
+    ShareMindspaceModelFormSet,
 )
 
 from django.views.generic import (
@@ -58,7 +65,8 @@ class MindspaceUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('id'))
-        if request.user.profile != object.owner and request.user.profile not in object.editors.all():
+        allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile, access_level=ShareMindspace.editor).exists()
+        if request.user.profile != object.owner and not allowed:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
@@ -71,9 +79,12 @@ class MindspaceListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        view = self.request.user.profile.can_view.all()
-        comment = self.request.user.profile.can_comment.all()
-        edit = self.request.user.profile.can_edit.all()
+        # view = self.request.user.profile.can_view.all()
+        # comment = self.request.user.profile.can_comment.all()
+        # edit = self.request.user.profile.can_edit.all()
+        view = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.viewer)
+        comment = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.commenter)
+        edit = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.editor)
         context['object_list_view'] = view
         context['object_list_comment'] = comment
         context['object_list_edit'] = edit
@@ -88,10 +99,11 @@ class MindspaceDetailView(LoginRequiredMixin, DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('id'))
-        all_permissions = object.editors.all() | object.commenters.all() | object.viewers.all()
+        # all_permissions = object.editors.all() | object.commenters.all() | object.viewers.all()
+        allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile).exists()
         if not object.is_public:
             if request.user.profile != object.owner:
-                if request.user.profile not in all_permissions:
+                if not allowed:
                     raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
@@ -112,43 +124,124 @@ class MindspaceDeleteView(LoginRequiredMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('id'))
-        if request.user.profile != object.owner and request.user.profile not in object.editors.all():
+        if request.user.profile != object.owner:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
-class ShareMindspaceView(LoginRequiredMixin, SuccessMessageMixin, FormView):
+class ShareMindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     template_name = 'mindspace/mindspace_share.html'
-    form_class = ShareMindspaceForm
-    success_message = 'Your Mindspace was shared successfully'
-    success_url = reverse_lazy('mindspace:mindspace_list')
+    form_class = ShareMindspaceModelForm
+    model = ShareMindspace
+    success_message = "Your Mindspace's access levels have been updated"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        id_ = self.kwargs.get('id')
-        context['object'] = Mindspace.objects.get(id=id_)
+        mindspace = Mindspace.objects.get(id=self.kwargs.get('id'))
+        sm = ShareMindspace.objects.filter(mindspace=mindspace)
+        # sm_shared_with = [s.shared_with.created_by.email for s in sm]
+        # initial_data = {}
+        # for i in range(len(sm)):
+        #     initial_data['access_level'] = sm[i].access_level
+        #     initial_data['shared_with_info'] = sm_shared_with[i]
+        # print(initial_data)
+        # context['formset'] = ShareMindspaceModelFormSet(initial=shared_profiles, queryset=ShareMindspace.objects.none())
+        # context['formset'] = ShareMindspaceModelFormSet(initial=[initial_data], queryset=ShareMindspace.objects.none())
+        context['formset'] = ShareMindspaceModelFormSet(queryset=sm)
+        context['mindspace'] = mindspace
         return context
 
-    def form_valid(self, form):
-        if form.cleaned_data['profile_to_share'] not in [p.created_by.email for p in Profile.objects.all()]:
-            form.add_error('profile_to_share', 'This profile does not exist.')
-            return self.form_invalid(form)
+    def post(self, request, *args, **kwargs):
+        formset = ShareMindspaceModelFormSet(request.POST)
+        if formset.is_valid():
+            return self.form_valid(formset)
         else:
-            profile = Profile.objects.get(created_by__email=form.cleaned_data['profile_to_share'])
-            id_ = self.kwargs.get('id')
-            mindspace = Mindspace.objects.get(id=id_)
-            if form.cleaned_data['access_level'] == 'viewer':
-                mindspace.viewers.add(profile)
-            elif form.cleaned_data['access_level'] == 'commenter':
-                mindspace.commenters.add(profile)
-            else:
-                mindspace.editors.add(profile)
-            return super().form_valid(form)
+            self.object = None
+            return self.form_invalid(formset)
+            # return super().post(self, request, *args, **kwargs)
+
+    def form_valid(self, formset):
+        # instances = formset.save(commit=False)
+        for instance in formset:
+            if instance.has_changed():
+                if instance.cleaned_data['shared_with_info'] not in [p.created_by.email for p in Profile.objects.all()] and instance.cleaned_data['shared_with_info'] not in [p.created_by.username for p in Profile.objects.all()]:
+                    instance.add_error('shared_with_info', 'This profile does not exist.')
+                    return self.form_invalid(formset)
+                else:
+                    form = instance.save(commit=False)
+                    form.shared_by = self.request.user.profile
+                    try:
+                        profile = Profile.objects.get(created_by__email=instance.cleaned_data['shared_with_info'])
+                    except (Profile.DoesNotExist):
+                        profile = Profile.objects.get(created_by__username=instance.cleaned_data['shared_with_info'])
+                    form.shared_with = profile
+                    form.shared_with_info = profile.created_by.username
+                    form.mindspace = Mindspace.objects.get(id=self.kwargs.get('id'))
+                    #form.save()
+        # formset.save()
+        return super().form_valid(formset)
+        #return HttpResponseRedirect(reverse('mindspace:mindspace_detail', kwargs={'id': self.kwargs.get('id')}))
+
+    def form_invalid(self, formset):
+        form_errors = formset.errors
+        err_msgs = {}
+        for index, error in enumerate(form_errors):
+            if error:
+                error_list = error.as_text().split('*')
+                err_msg = error_list[-1].strip()
+                err_msgs[index] = err_msg
+        self.object = None
+        return self.render_to_response(self.get_context_data(formset=formset, form_errors=form_errors, err_msgs=err_msgs))
+
+    def get_success_url(self):
+        return reverse('mindspace:mindspace_detail', kwargs={'id': self.kwargs.get('id')})
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('id'))
         if request.user.profile != object.owner:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
+
+# class ShareMindspaceView(LoginRequiredMixin, SuccessMessageMixin, FormView):
+#     template_name = 'mindspace/mindspace_share.html'
+#     form_class = ShareMindspaceForm
+#     success_message = 'Your Mindspace was shared successfully'
+#     success_url = reverse_lazy('mindspace:mindspace_list')
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         id_ = self.kwargs.get('id')
+#         object = Mindspace.objects.get(id=id_)
+#         context['object'] = object
+#         editors = object.editors.all()
+#         context['editors'] = editors
+#         commenters = object.commenters.all()
+#         context['commenters'] = commenters
+#         viewers = object.viewers.all()
+#         context['viewers'] = viewers
+#         context['access_levels'] = self.form_class.ACCESS_LEVELS
+#         return context
+
+#     def form_valid(self, form):
+#         if form.cleaned_data['profile_to_share'] not in [p.created_by.email for p in Profile.objects.all()]:
+#             form.add_error('profile_to_share', 'This profile does not exist.')
+#             return self.form_invalid(form)
+#         else:
+#             profile = Profile.objects.get(created_by__email=form.cleaned_data['profile_to_share'])
+#             id_ = self.kwargs.get('id')
+#             mindspace = Mindspace.objects.get(id=id_)
+#             if form.cleaned_data['access_level'] == 'viewer':
+#                 mindspace.viewers.add(profile)
+#             elif form.cleaned_data['access_level'] == 'commenter':
+#                 mindspace.commenters.add(profile)
+#             else:
+#                 mindspace.editors.add(profile)
+#             return super().form_valid(form)
+
+#     def dispatch(self, request, *args, **kwargs):
+#         object = Mindspace.objects.get(id=self.kwargs.get('id'))
+#         if request.user.profile != object.owner:
+#             raise PermissionDenied
+#         return super().dispatch(request, *args, **kwargs)
 
 ##################### Resource #####################
 class ResourceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
@@ -167,7 +260,8 @@ class ResourceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('ms_id'))
-        if request.user.profile != object.owner and request.user.profile not in object.editors.all():
+        allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile, access_level=ShareMindspace.editor).exists()
+        if request.user.profile != object.owner and not allowed:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
@@ -185,7 +279,8 @@ class ResourceUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('ms_id'))
-        if request.user.profile != object.owner and request.user.profile not in object.editors.all():
+        allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile, access_level=ShareMindspace.editor).exists()
+        if request.user.profile != object.owner and not allowed:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
@@ -204,10 +299,11 @@ class ResourceListView(LoginRequiredMixin, ListView):
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('ms_id'))
-        all_permissions = object.editors.all() | object.commenters.all() | object.viewers.all()
+        allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile).exists()
+        # all_permissions = object.editors.all() | object.commenters.all() | object.viewers.all()
         if not object.is_public:
             if request.user.profile != object.owner:
-                if request.user.profile not in all_permissions:
+                if not allowed:
                     raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
@@ -220,10 +316,11 @@ class ResourceDetailView(LoginRequiredMixin, DetailView):
     
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('ms_id'))
-        all_permissions = object.editors.all() | object.commenters.all() | object.viewers.all()
+        allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile).exists()
+        # all_permissions = object.editors.all() | object.commenters.all() | object.viewers.all()
         if not object.is_public:
             if request.user.profile != object.owner:
-                if request.user.profile not in all_permissions:
+                if not allowed:
                     raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
@@ -245,7 +342,7 @@ class ResourceDeleteView(LoginRequiredMixin, DeleteView):
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('ms_id'))
-        if request.user.profile != object.owner and request.user.profile not in object.editors.all():
+        if request.user.profile != object.owner:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 

@@ -13,9 +13,9 @@ class Mindspace(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     is_public = models.BooleanField(default=True)
-    editors = models.ManyToManyField("profiles.Profile", related_name='can_edit')
-    viewers = models.ManyToManyField("profiles.Profile", related_name='can_view')
-    commenters = models.ManyToManyField("profiles.Profile", related_name='can_comment')
+    # editors = models.ManyToManyField("profiles.Profile", related_name='can_edit')
+    # viewers = models.ManyToManyField("profiles.Profile", related_name='can_view')
+    # commenters = models.ManyToManyField("profiles.Profile", related_name='can_comment')
 
     # shares = GenericRelation("profiles.Notification", related_query_name='mindspace_shares')
 
@@ -87,4 +87,28 @@ class Note(models.Model):
     def is_recent(self):
         now = datetime.now(timezone.utc)
         return now - self.updated_at <= timedelta(seconds=60)
+
+
+class ShareMindspace(models.Model):
+    mindspace = models.ForeignKey(Mindspace, on_delete=models.CASCADE, related_name='shares')
+    shared_by = models.ForeignKey('profiles.Profile', on_delete=models.CASCADE, related_name='shared_by')
+    shared_with = models.ForeignKey('profiles.Profile', on_delete=models.CASCADE, related_name='shared_with')
+    shared_with_info = models.CharField(max_length=100)
+
+    viewer = 'viewer'
+    editor = 'editor'
+    commenter = 'commenter'
+
+    ACCESS_LEVELS = (
+        (viewer,'VIEW'),
+        (editor, 'EDIT'),
+        (commenter, 'COMMENT')
+    )
+
+    access_level = models.CharField(max_length=9, choices=ACCESS_LEVELS)
+    shared_date = models.DateTimeField(auto_now_add=True)
+    updated_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.shared_by.f_name + ':' + self.mindspace.title + ':' + self.shared_with.f_name + ':' + self.access_level
     

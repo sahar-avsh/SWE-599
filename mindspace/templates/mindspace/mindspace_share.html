@@ -2,6 +2,9 @@
 
 {% load crispy_forms_tags %}
 
+{% load index %}
+{% load get_item %}
+
 {% load static %}
 {% block styles %}
   <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_share.css' %}">
@@ -11,7 +14,7 @@
 {% endblock js %}
 
 {% block title %}
-    {{block.super}} - Dashboard
+    {{block.super}} - Share
 {% endblock title %}
 
 {% block navbar %}
@@ -19,13 +22,13 @@
     <li><a href={% url 'main_page' %}>Home</a></li>
     <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
     <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-    <li><a href="#">Q&A</a></li>
+    <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
     <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
 
     <div class="dropdown">
       <button onclick="myFunction()" class="dropbtn">Actions</button>
       <div id="myDropdown" class="dropdown-content">
-        <a href="#home">Create a new Mindspace</a>
+        <a href="#home">Clicked</a>
         <a href="#about">Clicked</a>
         <a href="#contact">Clicked</a>
       </div>
@@ -35,12 +38,26 @@
 
 {% block content %}
 
-    <div class="container-fluid">
-        <h1> Share {{object.title}} </h1>
+    <div class="container">
+        <h1> Share {{mindspace.title}} </h1>
         <form action='.' method='POST'>{% csrf_token %}
-            {{form|crispy}}
-            <input type='submit' class='btn btn-success' value='Save'/>
-            <a class="btn btn-secondary" href="{{object.get_absolute_url}}" role="button">Cancel</a>
+          {{formset.management_form|crispy}}
+            {% for form in formset %}
+              {{ form.id }}
+              {{ form|crispy }}
+              {% if form_errors %}
+                {% if err_msgs|get_item:forloop.counter0 %}
+                  <div class="alert alert-danger">
+                    <strong> {{ err_msgs|get_item:forloop.counter0|escape }} </strong>
+                  </div>
+                {% endif %}
+              {% endif %}
+            {% endfor %}
+
+            <div class="buttons">
+              <input type='submit' class='btn btn-success' value='Save'/>
+              <a class="btn btn-secondary" href="{{mindspace.get_absolute_url}}" role="button">Cancel</a>
+            </div>
         </form>
     </div>
 

@@ -70,7 +70,9 @@ class CustomSignUpView(SuccessMessageMixin, CreateView):
         user = form.save()
         Profile.objects.create(created_by=user, f_name=user.first_name, l_name=user.last_name)
         return super().form_valid(form)
-
+    
+    def form_invalid(self, form):
+        return super().form_invalid(form)
 
 class CustomResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'profiles/password_reset.html'

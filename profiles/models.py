@@ -34,21 +34,22 @@ class Profile(models.Model):
     return self.f_name + ' ' + self.l_name
 
   def save(self, *args, **kwargs):
-    from io import StringIO, BytesIO
-    from PIL import Image
+    if self.image:
+      from io import StringIO, BytesIO
+      from PIL import Image
 
-    image_field = self.image
-    # image_field = self.cleaned_data.get('image')
-    image_file = BytesIO(image_field.read())
-    image = Image.open(image_file)
-    # w, h = image.size
+      image_field = self.image
+      # image_field = self.cleaned_data.get('image')
+      image_file = BytesIO(image_field.read())
+      image = Image.open(image_file)
+      # w, h = image.size
 
-    image = image.resize((200, 200), Image.ANTIALIAS)
+      image = image.resize((200, 200), Image.ANTIALIAS)
 
-    image_file = BytesIO()
-    image.save(image_file, 'JPEG', quality=90)
+      image_file = BytesIO()
+      image.save(image_file, 'JPEG', quality=90)
 
-    image_field.file = image_file
+      image_field.file = image_file
     super().save(*args, **kwargs)
 
 

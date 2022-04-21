@@ -3,10 +3,14 @@ from .models import (
     Mindspace,
     Resource,
     Note,
+    ShareMindspace,
 )
 
 from django.core.exceptions import ValidationError
 import magic
+
+from django.forms.models import BaseModelFormSet
+from django.forms.formsets import DELETION_FIELD_NAME
 
 class MindspaceModelForm(forms.ModelForm):
     class Meta:
@@ -62,19 +66,45 @@ class NoteModelForm(forms.ModelForm):
             'content'
         ]
 
-class ShareMindspaceForm(forms.Form):
-    profile_to_share = forms.EmailField(required=True)
+# class ShareMindspaceForm(forms.Form):
+#     profile_to_share = forms.EmailField(required=True)
 
-    ACCESS_LEVELS = (
-        ('viewer','VIEW'),
-        ('editor', 'EDIT'),
-        ('commenter', 'COMMENT')
-    )
+#     ACCESS_LEVELS = (
+#         ('viewer','VIEW'),
+#         ('editor', 'EDIT'),
+#         ('commenter', 'COMMENT')
+#     )
 
-    access_level = forms.ChoiceField(choices=ACCESS_LEVELS, required=True)
+#     access_level = forms.ChoiceField(choices=ACCESS_LEVELS, required=True)
+
+#     def __init__(self, *args, **kwargs):
+#         super().__init__(*args, **kwargs)
+#         self.fields['profile_to_share'].widget = forms.EmailInput(attrs={
+#             'id': 'profile_to_share_field',
+#             'placeholder': 'Enter an email'})
+
+class ShareMindspaceModelForm(forms.ModelForm):
+    # shared_with_info = forms.EmailField()
+    class Meta:
+        model = ShareMindspace
+        fields = [
+            'access_level',
+            'shared_with_info'
+        ]
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['profile_to_share'].widget = forms.EmailInput(attrs={
-            'id': 'profile_to_share_field',
-            'placeholder': 'Enter an email'})
+        self.fields['shared_with_info'].widget = forms.TextInput(attrs={
+            'id': 'id-shared-with-info',
+            'placeholder': 'Enter a valid email or username'})
+        self.fields['shared_with_info'].label = 'Share with'
+
+
+class BaseShareMindspaceModelFormSet(BaseModelFormSet):
+    def add_fields(self, form, index):
+        super(BaseShareMindspaceModelFormSet, self).add_fields(form, index)
+        if DELETION_FIELD_NAME in form.fields.keys():
+            form.fields[DELETION_FIELD_NAME].label = 'Remove access'
+
+ShareMindspaceModelFormSet = forms.modelformset_factory(ShareMindspace, form=ShareMindspaceModelForm, formset=BaseShareMindspaceModelFormSet, extra=1, can_delete=True, can_delete_extra=False)
+
