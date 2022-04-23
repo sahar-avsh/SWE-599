@@ -61,8 +61,6 @@ class NoteModelForm(forms.ModelForm):
     class Meta:
         model = Note
         fields = [
-            'title',
-            'description',
             'content'
         ]
 

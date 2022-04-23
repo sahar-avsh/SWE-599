@@ -67,9 +67,10 @@ class Resource(models.Model):
         return now - self.updated_at <= timedelta(seconds=60)
 
 class Note(models.Model):
-    title = models.CharField(max_length=220, blank=True)
-    description = models.TextField(blank=True)
+    # title = models.CharField(max_length=220, blank=True)
+    # description = models.TextField(blank=True)
     content = models.TextField()
+    written_by = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE, related_name='written_notes')
     belongs_to = models.ForeignKey(Resource, on_delete=models.CASCADE, related_name='notes')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -81,7 +82,7 @@ class Note(models.Model):
             kwargs={'ms_id': self.belongs_to.belongs_to.id, 'r_id': self.belongs_to.id, 'id': self.id})
     
     def __str__(self):
-        return self.id + ' - ' + self.belongs_to.title
+        return str(self.id) + ' - ' + self.belongs_to.title
 
     @property
     def is_recent(self):
@@ -108,6 +109,9 @@ class ShareMindspace(models.Model):
     access_level = models.CharField(max_length=9, choices=ACCESS_LEVELS)
     shared_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        unique_together = ('mindspace', 'shared_with')
 
     def __str__(self):
         return self.shared_by.f_name + ':' + self.mindspace.title + ':' + self.shared_with.f_name + ':' + self.access_level

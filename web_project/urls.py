@@ -29,6 +29,7 @@ from profiles.views import (
 )
 
 from qna.views import LoadResources
+from mindspace.views import NoteFormAjax
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -36,6 +37,7 @@ urlpatterns = [
     path('profiles/', include('profiles.urls')),
     path('questions/', include('qna.urls')),
     path('ajax/load-resources/', LoadResources.as_view(), name='ajax_load_resources'),
+    path('ajax/load-note-form/', NoteFormAjax.as_view(), name='ajax_render_note_form'),
     path('accounts/signup/', CustomSignUpView.as_view(), name='signup'),
     path('accounts/login/', CustomLoginView.as_view(), name='login'),
     path('accounts/logout/', LogoutView.as_view(next_page=reverse_lazy('main_page')),  name='logout'),
