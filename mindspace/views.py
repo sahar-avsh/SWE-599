@@ -1,6 +1,3 @@
-from mimetypes import init
-from os import access
-import profile
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
@@ -314,6 +311,12 @@ class ResourceDetailView(LoginRequiredMixin, DetailView):
     def get_object(self):
         id_ = self.kwargs.get('id')
         return get_object_or_404(Resource, id=id_)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        qs = Note.objects.filter(belongs_to=self.get_object())
+        context['notes'] = qs
+        return context
     
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('ms_id'))
@@ -348,8 +351,19 @@ class ResourceDeleteView(LoginRequiredMixin, DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 ##################### Note #####################
+class NotesAjaxView(TemplateView):
+    template_name = 'mindspace/notes_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        resource_id = self.request.GET.get('resource')
+        qs = Note.objects.filter(belongs_to_id=resource_id).order_by('created_at')
+        context['note_list'] = qs
+        return context
+
+
 from django.http import JsonResponse
-class AjaxableResponseMixin:
+class AjaxableResponseMixin(object):
     """
     Mixin to add AJAX support to a form.
     Must be used with an object-based FormView (e.g. CreateView)
@@ -374,6 +388,7 @@ class AjaxableResponseMixin:
         else:
             return response
 
+
 class NoteFormAjax(TemplateView):
     template_name = 'mindspace/note_form_ajax.html'
     
@@ -383,68 +398,87 @@ class NoteFormAjax(TemplateView):
         return context
 
 
-class NoteCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+class NoteCreateView(SuccessMessageMixin, LoginRequiredMixin, AjaxableResponseMixin, CreateView):
     template_name = 'mindspace/note_create.html'
+    model = Note
     form_class = NoteModelForm
     success_message = 'Your Note was created successfully'
 
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        return super().post(request, *args, **kwargs)
+
+    def get_success_url(self):
+        return reverse_lazy('mindspace:resource_detail', kwargs={'ms_id': self.kwargs.get('ms_id'), 'id': self.kwargs.get('r_id')})
+
     def form_valid(self, form):
-        form.instance.belongs_to_id = self.kwargs.get('r_id')
+        form.instance.belongs_to = Resource.objects.get(id=self.kwargs.get('r_id'))
+        form.instance.written_by = self.request.user.profile
         return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['parent'] = Resource.objects.get(id=self.kwargs.get('r_id'))
-        return context
+
+# class NoteUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+#     template_name = 'mindspace/note_update.html'
+#     form_class = NoteModelForm
+#     success_message = 'Your Note was updated successfully'
+
+#     def get_object(self):
+#         id_ = self.kwargs.get('id')
+#         return get_object_or_404(Note, id=id_)
+
+#     def form_valid(self, form):
+#         return super().form_valid(form)
 
 
-class NoteUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
+# class NoteListView(LoginRequiredMixin, ListView):
+#     template_name = 'mindspace/note_list.html'
+
+#     def get_queryset(self):
+#         resource_id = self.kwargs.get('r_id')
+#         queryset = Note.objects.filter(belongs_to_id=resource_id)
+#         return queryset
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['parent'] = Resource.objects.get(id=self.kwargs.get('r_id'))
+#         return context
+
+
+# class NoteDetailView(LoginRequiredMixin, DetailView):
+#     template_name = 'mindspace/note_detail.html'
+
+#     def get_object(self):
+#         id_ = self.request.GET.get('note_id')
+#         # id_ = self.kwargs.get('id')
+#         return get_object_or_404(Note, id=id_)
+
+
+class NoteUpdateView(SuccessMessageMixin, LoginRequiredMixin, AjaxableResponseMixin, UpdateView):
     template_name = 'mindspace/note_update.html'
     form_class = NoteModelForm
+    model = Note
     success_message = 'Your Note was updated successfully'
 
     def get_object(self):
         id_ = self.kwargs.get('id')
         return get_object_or_404(Note, id=id_)
 
-    def form_valid(self, form):
-        return super().form_valid(form)
+    def get_success_url(self):
+        return reverse_lazy('mindspace:resource_detail', kwargs={'ms_id': self.kwargs.get('ms_id'), 'id': self.kwargs.get('r_id')})
 
 
-class NoteListView(LoginRequiredMixin, ListView):
-    template_name = 'mindspace/note_list.html'
-
-    def get_queryset(self):
-        resource_id = self.kwargs.get('r_id')
-        queryset = Note.objects.filter(belongs_to_id=resource_id)
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['parent'] = Resource.objects.get(id=self.kwargs.get('r_id'))
-        return context
-
-
-class NoteDetailView(LoginRequiredMixin, DetailView):
-    template_name = 'mindspace/note_detail.html'
-
-    def get_object(self):
-        id_ = self.kwargs.get('id')
-        return get_object_or_404(Note, id=id_)
-
-
-class NoteDeleteView(LoginRequiredMixin, DeleteView):
-    template_name = 'mindspace/note_delete.html'
-    success_message = 'Your Note was deleted successfully'
+class NoteDeleteView(LoginRequiredMixin, AjaxableResponseMixin, DeleteView):
+    # template_name = 'mindspace/note_delete.html'
+    # success_message = 'Your Note was deleted successfully'
 
     def get_object(self):
         id_ = self.kwargs.get('id')
         return get_object_or_404(Note, id=id_)
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
+        # messages.success(self.request, self.success_message)
         return super().delete(request, *args, **kwargs)
 
     def get_success_url(self):
         self.object = self.get_object()
-        return reverse('mindspace:resource_detail', kwargs={'id': self.object.belongs_to.id})
+        return reverse_lazy('mindspace:resource_detail', kwargs={'ms_id': self.object.belongs_to.belongs_to.id, 'id': self.object.belongs_to.id})

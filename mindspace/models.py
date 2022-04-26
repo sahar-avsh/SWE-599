@@ -77,9 +77,9 @@ class Note(models.Model):
 
     # edits = GenericRelation("profiles.Notification", related_query_name='note_edits')
 
-    def get_absolute_url(self):
-        return reverse('mindspace:note_detail', \
-            kwargs={'ms_id': self.belongs_to.belongs_to.id, 'r_id': self.belongs_to.id, 'id': self.id})
+    # def get_absolute_url(self):
+    #     return reverse('mindspace:note_detail', \
+    #         kwargs={'ms_id': self.belongs_to.belongs_to.id, 'r_id': self.belongs_to.id, 'id': self.id})
     
     def __str__(self):
         return str(self.id) + ' - ' + self.belongs_to.title

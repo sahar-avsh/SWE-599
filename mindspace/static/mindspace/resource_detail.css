@@ -1,3 +1,40 @@
+.note {
+  border: 1px grey solid;
+  padding: 5px;
+  display: block;
+  width: 100%;
+  overflow:auto;
+}
+
+.note-timestamp {
+  font-size: 12px;
+}
+
+.edit-note {
+  width: 50px;
+  height: 15px;
+  float: right;
+}
+
+.edit {
+  width: 15px;
+  height: 15px;
+}
+
+.delete {
+  width: 15px;
+  height: 15px;
+}
+
+.content {
+  margin-bottom: 0;
+  width: 97%;
+}
+
+.btn-info {
+  margin-bottom: 25px !important;
+}
+
 #id-cancel-note-form {
   color: white;
 }

@@ -5,7 +5,6 @@ $("#id-create-note-button").click(function () {
       url: url,
       success: function (data) {
         $("#form-fields").html(data);
-        console.log('im working');
       }
     });
     document.getElementById("id-form").style.display = "";
@@ -13,6 +12,7 @@ $("#id-create-note-button").click(function () {
   });
 
   $("#id-cancel-note-form").click(function () {
+    $("#form-fields").html("");
     document.getElementById("id-form").style.display = "none";
     document.getElementById("id-create-note-button").style.display = "";
   })
