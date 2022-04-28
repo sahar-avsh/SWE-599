@@ -8,6 +8,8 @@ from .views import (
     AnswerCreateView,
     AnswerUpdateView,
     AnswerDeleteView,
+    AnswersAjaxView,
+    AnswerFormAjax
 )
 
 app_name = 'qna'
@@ -20,4 +22,6 @@ urlpatterns = [
     path('<int:q_id>/answer/', AnswerCreateView.as_view(), name='answer_create'),
     path('<int:q_id>/<int:id>/update/', AnswerUpdateView.as_view(), name='answer_update'),
     path('<int:q_id>/<int:id>/delete/', AnswerDeleteView.as_view(), name='answer_delete'),
+    path('<int:q_id>/ajax/load-answers/', AnswersAjaxView.as_view(), name='answer_list'),
+    path('ajax/answer-form/', AnswerFormAjax.as_view(), name='ajax_render_answer_form'),
 ]

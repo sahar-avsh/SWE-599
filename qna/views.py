@@ -96,6 +96,12 @@ class QuestionDetailView(LoginRequiredMixin, DetailView):
         id_ = self.kwargs.get('id')
         return get_object_or_404(Question, id=id_)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        qs = self.get_object().answers.all()
+        context['answers'] = qs
+        return context
+
 class QuestionDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'qna/question_delete.html'
     success_message = 'Your question was deleted successfully'
@@ -118,11 +124,59 @@ class QuestionDeleteView(LoginRequiredMixin, DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 ############################ Answer ############################
-class AnswerCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+class AnswersAjaxView(TemplateView):
+    template_name = 'qna/answers_ajax.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        question_id = self.request.GET.get('question')
+        qs = Answer.objects.filter(question_id=question_id).order_by('replied_date')
+        context['answer_list'] = qs
+        return context
+
+class AnswerFormAjax(TemplateView):
+    template_name = 'qna/answer_form_ajax.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = AnswerModelForm(profile=self.request.user.profile)
+        return context
+
+from django.http import JsonResponse
+class AjaxableResponseMixin(object):
+    """
+    Mixin to add AJAX support to a form.
+    Must be used with an object-based FormView (e.g. CreateView)
+    """
+    def form_invalid(self, form):
+        response = super().form_invalid(form)
+        if self.request.is_ajax():
+            return JsonResponse(form.errors, status=400)
+        else:
+            return response
+
+    def form_valid(self, form):
+        # We make sure to call the parent's form_valid() method because
+        # it might do some processing (in the case of CreateView, it will
+        # call form.save() for example).
+        response = super().form_valid(form)
+        if self.request.is_ajax():
+            data = {
+                'id': self.object.id,
+            }
+            return JsonResponse(data)
+        else:
+            return response
+
+class AnswerCreateView(SuccessMessageMixin, LoginRequiredMixin, AjaxableResponseMixin, CreateView):
     template_name = 'qna/answer_create.html'
     model = Answer
     form_class = AnswerModelForm
     success_message = 'Your answer was created successfully'
+
+    def post(self, request, *args, **kwargs):
+        self.object = None
+        return super().post(request, *args, **kwargs)
 
     def form_valid(self, form):
         question_id = self.kwargs.get('q_id')
@@ -135,24 +189,47 @@ class AnswerCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['profile'] = self.request.user.profile # pass the 'profile' in kwargs
-        return kwargs 
+        return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy('qna:question_detail', kwargs={'id': self.kwargs.get('q_id')})
+
+# class AnswerCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
+#     template_name = 'qna/answer_create.html'
+#     model = Answer
+#     form_class = AnswerModelForm
+#     success_message = 'Your answer was created successfully'
+
+#     def form_valid(self, form):
+#         question_id = self.kwargs.get('q_id')
+#         # assign owner to the answer
+#         form.instance.owner = self.request.user.profile
+#         # assign question to the answer
+#         form.instance.question = Question.objects.get(id=question_id)
+#         return super().form_valid(form)
+
+#     def get_form_kwargs(self):
+#         kwargs = super().get_form_kwargs()
+#         kwargs['profile'] = self.request.user.profile # pass the 'profile' in kwargs
+#         return kwargs 
 
 class AnswerUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     template_name = 'qna/answer_update.html'
     form_class = AnswerModelForm
+    model = Answer
     success_message = 'Your answer was updated successfully'
 
     def get_object(self):
         id_ = self.kwargs.get('id')
         return get_object_or_404(Answer, id=id_)
 
-    def form_valid(self, form):
-        return super().form_valid(form)
-
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['profile'] = self.request.user.profile # pass the 'profile' in kwargs
         return kwargs
+
+    def get_success_url(self):
+        return reverse_lazy('qna:question_detail', kwargs={'id': self.kwargs.get('q_id')})
 
     def dispatch(self, request, *args, **kwargs):
         object = Answer.objects.get(id=self.kwargs.get('id'))
@@ -186,14 +263,14 @@ class AnswerUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
 
 class AnswerDeleteView(LoginRequiredMixin, DeleteView):
     # template_name = 'qna/answer_delete.html'
-    success_message = 'Your answer was deleted successfully'
+    # success_message = 'Your answer was deleted successfully'
 
     def get_object(self):
         id_ = self.kwargs.get('id')
         return get_object_or_404(Answer, id=id_)
 
     def delete(self, request, *args, **kwargs):
-        messages.success(self.request, self.success_message)
+        # messages.success(self.request, self.success_message)
         return super().delete(request, *args, **kwargs)
 
     def get_success_url(self):
