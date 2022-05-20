@@ -1,3 +1,4 @@
+from itertools import chain
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.http import HttpResponseRedirect
@@ -5,6 +6,7 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
+from django.db.models import Q
 
 from django.core.exceptions import PermissionDenied
 
@@ -24,6 +26,7 @@ from .forms import (
     # ShareMindspaceForm,
     ShareMindspaceModelForm,
     ShareMindspaceModelFormSet,
+    MindspaceSearchForm,
 )
 
 from django.views.generic import (
@@ -33,7 +36,8 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
     FormView,
-    TemplateView
+    TemplateView,
+    View,
 )
 
 ##################### Mindspace #####################
@@ -240,6 +244,47 @@ class ShareMindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateVi
 #         if request.user.profile != object.owner:
 #             raise PermissionDenied
 #         return super().dispatch(request, *args, **kwargs)
+
+class AjaxMindspaceSearch(LoginRequiredMixin, View):
+    def get(self, request):
+        context = {}
+        result = Mindspace.objects.all().exclude(owner=request.user.profile)
+
+        keyword_query = request.GET.get('keyword_query')
+        owner_query = request.GET.get('owner_query')
+
+        # filter by title
+        if keyword_query:
+            result = result.filter(
+                Q(title__icontains=keyword_query) | Q(description__icontains=keyword_query) | Q(resources__title__icontains=keyword_query) | Q(resources__description__icontains=keyword_query)
+            )
+        # filter by owner
+        if owner_query:
+            result = result.filter(owner__username__icontains=owner_query)
+
+        context['filter_flag'] = False
+        for key, value in self.request.GET.items():
+            if key in ['keyword_query', 'owner_query'] and value:
+                context[key] = value
+                context['filter_flag'] = True
+
+        context['result_list'] = result.distinct()
+
+        return render(request, 'mindspace/ajax_mindspace_results.html', context)
+
+class MindspaceSearchListView(LoginRequiredMixin, ListView):
+    model = Mindspace
+    template_name = 'mindspace/mindspace_search_list.html'
+
+    def get_queryset(self):
+        result = Mindspace.objects.all().exclude(owner=self.request.user.profile)
+        return result
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        form = MindspaceSearchForm()
+        context['form'] = form
+        return context
 
 ##################### Resource #####################
 class ResourceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):

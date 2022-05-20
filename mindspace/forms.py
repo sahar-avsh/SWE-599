@@ -64,6 +64,19 @@ class NoteModelForm(forms.ModelForm):
             'content'
         ]
 
+class MindspaceSearchForm(forms.Form):
+    keyword = forms.CharField(widget=forms.TextInput(attrs={
+        'id': 'id-search-keyword',
+        'class': 'search-keyword',
+        'placeholder': 'Search by keyword'
+    }), required=False)
+    owner = forms.CharField(widget=forms.TextInput(attrs={
+        'id': 'id-search-owner',
+        'class': 'search-owner',
+        'placeholder': 'Search by username'
+    }), required=False)
+
+
 # class ShareMindspaceForm(forms.Form):
 #     profile_to_share = forms.EmailField(required=True)
 
