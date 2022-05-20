@@ -47,9 +47,9 @@ class Resource(models.Model):
 
     res_format = models.CharField(max_length=8, choices=FORMAT_CHOICES, default='Link')
 
-    video = models.FileField(blank=True, null=True, upload_to='mindspace/resource_video')
-    image = models.ImageField(blank=True, null=True, upload_to='mindspace/resource_image')
-    document = models.FileField(blank=True, null=True, upload_to='mindspace/resource_document')
+    video = models.FileField(blank=True, null=True)
+    image = models.ImageField(blank=True, null=True)
+    document = models.FileField(blank=True, null=True)
     quote = models.TextField(blank=True, null=True)
     link = models.URLField(blank=True, null=True, max_length=200)
 

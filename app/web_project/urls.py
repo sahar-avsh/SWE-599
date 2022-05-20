@@ -50,4 +50,10 @@ urlpatterns = [
         name='password_reset_complete'),
     path('home/', HomeView.as_view(), name='main_page'),
     path('', HomeView.as_view(), name='main_page'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+if settings.DEBUG:
+    urlpatterns += static(
+        settings.MEDIA_URL,
+        document_root=settings.MEDIA_ROOT,
+    )

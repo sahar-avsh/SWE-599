@@ -14,7 +14,7 @@ class Profile(models.Model):
   l_name = models.CharField(max_length=80)
   company = models.CharField(blank=True, max_length=100, null=True)
   bio = models.TextField(blank=True, null=True)
-  image = models.ImageField(blank=True, upload_to='profiles/', null=True)
+  image = models.ImageField(blank=True, null=True)
   created_at = models.DateTimeField(auto_now_add=True)
 
   @property
