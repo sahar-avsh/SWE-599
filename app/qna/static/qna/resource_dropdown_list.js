@@ -14,4 +14,20 @@ $(document).ready(function() {
       }
     });
   });
+
+  $("#id_tagged_mindspace_answer").change(function () {
+    var url = $("[id*=id-answer-form]").attr("data-resources-url");
+    var mindspaceId = $(this).val();
+
+    $.ajax({
+      type: 'GET',
+      url: url,
+      data: {
+        'mindspace': mindspaceId
+      },
+      success: function (data) {
+        $("#id_tagged_resource_answer").html(data);
+      }
+    });
+  });
 });

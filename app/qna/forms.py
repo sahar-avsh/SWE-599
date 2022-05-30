@@ -67,6 +67,13 @@ class AnswerModelForm(forms.ModelForm):
         self.fields['reply'].widget = forms.TextInput(attrs={
             'id': 'reply_field',
             'placeholder': 'Enter your reply'})
+        
+        self.fields['tagged_mindspace'].widget.attrs.update({
+            'id': 'id_tagged_mindspace_answer'
+        })
+        self.fields['tagged_resource'].widget.attrs.update({
+            'id': 'id_tagged_resource_answer'
+        })
         self.fields['tagged_mindspace'].queryset = Mindspace.objects.filter(owner=profile)
         self.fields['tagged_resource'].queryset = Resource.objects.none()
         self.fields['tagged_mindspace'].required = False
