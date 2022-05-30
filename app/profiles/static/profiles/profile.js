@@ -1,3 +1,9 @@
+if ($(".alert").length) {
+    $(".alert").fadeTo(4000, 500).slideUp(500, function() {
+        $(".alert").slideUp(500);
+    });
+}
+
 $(document).ready(function() {
     $("#id-profile-link").click(function(e) {
         e.preventDefault();

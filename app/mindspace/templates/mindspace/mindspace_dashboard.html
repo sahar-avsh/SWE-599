@@ -1,0 +1,71 @@
+{% extends "mindspace/base.html" %} 
+
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'mindspace/dashboard.css' %}">
+{% endblock styles %}
+
+{% block js %}
+    <script src="{% static 'mindspace/dashboard.js' %}"></script>
+{% endblock js %}
+
+{% block title %}Dashboard{% endblock title %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+    <div class="main-container">
+
+        <div class="mindspace-sidebar">
+            <div class="mindspace-create">
+                <h4> Create a new Mindspace </h4>
+                <form action="{% url 'mindspace:mindspace_create' %}" id='id-mindspace-form'> {% csrf_token %}
+                    {{form_create|crispy}}
+                    <input type='submit' class='btn btn-secondary' value='Save'/>
+                </form>
+            </div>
+
+            <div class="mindspace-search">
+                <h4> Search a Mindspace </h4>
+                <form action="{% url 'mindspace:ajax_load_search_results' %}" id='id-mindspace-search-form' autocomplete="off">
+                    {{form_search|crispy}}
+                    <input type='submit' id="id-question-search-submit-button" class='btn btn-secondary' value='Search'/>
+                </form>
+            </div>
+
+        </div>
+
+        <div class="mindspace-results">
+            <div class="section-buttons">
+                <button type="button" id="id-sharedmindspaces-button" class="btn btn-info btn-lg btn-block disabled">Mindspaces Shared With You</button>
+                <button type="button" id="id-mymindspaces-button" class="btn btn-secondary btn-lg btn-block active">My Mindspaces</button>
+            </div>
+
+            <!-- My Mindspaces section - Visible by default -->
+
+            <div class="my-mindspaces">
+                {% for m in object_list %}
+                    <div id="id-{{m.id}}">
+                        <h2 class="mindspace-title" id="id-mindspace-title-{{m.id}}"> <a style="text-decoration: none; color: black;" href="{{m.get_absolute_url}}"> {{ m.title }} </a> </h2>
+                    </div>
+                {% empty %}
+                    <h2 style="padding: 30px;">No mindspaces.</h2>
+                {% endfor %}
+            </div>
+
+            <div class="shared-mindspaces" style="display: none;">
+                {% for edit in object_list_edit %}
+                    <div id="id-{{edit.mindspace.id}}">
+                        <h2 class="mindspace-title" id="id-mindspace-title-{{edit.mindspace.id}}"> <a style="text-decoration: none; color: black;" href="{{edit.mindspace.get_absolute_url}}"> {{ edit.mindspace.title }} </a> </h2>
+                    </div>
+                {% empty %}
+                    <h2 style="padding: 30px;">No shared mindspaces.</h2>
+                {% endfor %}
+            </div>
+
+            <div class="mindspace-search-results" style="display: none;"></div>
+        </div>
+    </div>
+
+{% endblock content %}

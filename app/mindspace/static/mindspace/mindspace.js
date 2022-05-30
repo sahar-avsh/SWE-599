@@ -108,6 +108,7 @@ $(document).ready(function() {
 
     $("#id-ask-mindspace-link").click(function(e) {
         e.preventDefault();
+        console.log($(this).attr("href"));
         
         $.ajax({
             type: 'GET',
@@ -262,4 +263,23 @@ $(document).ready(function() {
             }
         });
     });
+
+    // $(document).on("submit", "#id-navbar-search", function(e) {
+    //     e.preventDefault();
+    //     window.location.replace($(this).attr("redirect-url"));
+        
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: $(this).attr("action"),
+    //         data: {
+    //             keyword_query: $("#id-navbar-search-input").val()
+    //         },
+    //         success: function(response) {
+    //             if (!$("#id-search-results-button").length) {
+    //                 $(".section-buttons").append('<button type="button" id="id-search-results-button" class="btn btn-light btn-lg btn-block disabled">Search Results</button>')
+    //             }
+    //             $(".mindspace-search-results").html(response);
+    //         }
+    //     });
+    // });
 });

@@ -2,15 +2,15 @@
 
 {% load static %}
 {% block styles %}
-  {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_list.css' %}"> {% endcomment %}
+  <link rel="stylesheet" type="text/css" href="{% static 'profiles/notification_list.css' %}">
 {% endblock styles %}
 
-{% block js %}
+{% comment %} {% block js %}
   <script src="{% static 'mindspace/dropdown.js' %}"></script>
-{% endblock js %}
+{% endblock js %} {% endcomment %}
 
 {% block title %}
-    {{block.super}} - Notifications
+    Notifications
 {% endblock title %}
 
 {% comment %} {% block navbar %}
@@ -35,12 +35,12 @@
 
 {% block content %}
 
-    <div class="container-fluid">
+    <div class="container-fluid" style="background-color: rgba(255, 248, 220, 0.815);">
       <h2 class="ms_header">Notifications</h2>
-
-      {% for object in object_list %}
-        <div class="card-deck">
-          <div class="card" style="width: 18rem;">
+      
+      {% comment %} <div class="card-deck"> {% endcomment %}
+        {% for object in object_list %}
+          <div class="card bg-transparent border-success">
             <div class="card-body">
                 {% if object.read_date == Null %}
                     <h5 class="card-title"> New Notification* </h5>
@@ -85,14 +85,15 @@
                   {% endif %}
                 {% endif %}
             </div>
-            <div class="card-footer">
+            <div class="card-footer bg-transparent border-success">
                 <small class="text-muted"> {{object.sent_date|timesince}} ago </small>
             </div>
           </div>
-        </div>
-      {% empty %}
-        <p>You have no notifications</p>
-      {% endfor %} 
+        
+        {% empty %}
+          <p>You have no notifications</p>
+        {% endfor %} 
+      {% comment %} </div> {% endcomment %}
 
       {% if is_paginated %}
         <div class="pagination">

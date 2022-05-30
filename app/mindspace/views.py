@@ -75,7 +75,8 @@ class MindspaceUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         return super().dispatch(request, *args, **kwargs)
 
 class MindspaceListView(LoginRequiredMixin, ListView):
-    template_name = 'mindspace/mindspace_list.html'
+    # template_name = 'mindspace/mindspace_list.html'
+    template_name = 'mindspace/mindspace_dashboard.html'
 
     def get_queryset(self):
         queryset = Mindspace.objects.filter(owner=self.request.user.profile)
@@ -83,9 +84,10 @@ class MindspaceListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # view = self.request.user.profile.can_view.all()
-        # comment = self.request.user.profile.can_comment.all()
-        # edit = self.request.user.profile.can_edit.all()
+
+        context['form_create'] = MindspaceModelForm()
+        context['form_search'] = MindspaceSearchForm()
+
         view = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.viewer)
         comment = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.commenter)
         edit = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.editor)
@@ -253,7 +255,7 @@ class ShareMindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateVi
 class AjaxMindspaceSearch(LoginRequiredMixin, View):
     def get(self, request):
         context = {}
-        result = Mindspace.objects.all().exclude(owner=request.user.profile)
+        result = Mindspace.objects.filter(is_public=True).exclude(owner=request.user.profile)
 
         keyword_query = request.GET.get('keyword_query')
         owner_query = request.GET.get('owner_query')
@@ -265,7 +267,7 @@ class AjaxMindspaceSearch(LoginRequiredMixin, View):
             )
         # filter by owner
         if owner_query:
-            result = result.filter(owner__username__icontains=owner_query)
+            result = result.filter(owner__created_by__username__icontains=owner_query)
 
         context['filter_flag'] = False
         for key, value in self.request.GET.items():

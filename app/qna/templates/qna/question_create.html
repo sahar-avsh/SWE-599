@@ -42,7 +42,7 @@
 {% load static %}
 
         <h4> Create a new Question </h4>
-        <form action='.' id='question_form' method='POST' data-resources-url="{% url 'ajax_load_resources' %}" novalidate>
+        <form action='.' id='question_form' method='POST' data-resources-url="{% url 'qna:ajax_load_resources' %}" novalidate>
         {% csrf_token %}
             {{form|crispy}}
             <input type='submit' class='btn btn-success' value='Save'/>

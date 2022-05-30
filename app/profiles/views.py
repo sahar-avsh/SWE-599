@@ -120,7 +120,7 @@ class NotificationListView(LoginRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        queryset = self.model.objects.filter(received_by=self.request.user.profile).order_by('sent_date')
+        queryset = self.model.objects.filter(received_by=self.request.user.profile).order_by('-sent_date')
         now = datetime.now(timezone.utc)
         queryset.update(read_date=now)
         return queryset

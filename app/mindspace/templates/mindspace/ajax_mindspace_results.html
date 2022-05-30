@@ -1,6 +1,6 @@
-{% extends "mindspace/base.html" %}
+{% comment %} {% extends "mindspace/base.html" %}
 
-{% block content %}
+{% block content %} {% endcomment %}
     <div>
         {% if filter_flag %}
                 <div class="applied-filters">
@@ -21,10 +21,13 @@
     <div id="id_results" class="results">
         <h2>Found Mindspaces</h2>
         <p> {{result_list|length}} result(s) found </p>
-        <div class="row">
+        {% comment %} <div class="row"> {% endcomment %}
             {% for result in result_list %}
+                <div id="id-search-{{result.id}}">
+                    <h2 class="mindspace-title" id="id-mindspace-search-title-{{result.id}}"> <a style="text-decoration: none; color: black;" href="{{result.get_absolute_url}}"> {{ result.title }} </a> </h2>
+                </div>
 
-                <div class="col-sm-6">
+                {% comment %} <div class="col-sm-6">
                     <div class="card">
                         <div class="card-body">
                             <h5 class="card-title"> {{result.title}} </h5>
@@ -34,16 +37,16 @@
                             <a href="#" class="btn btn-primary">Save this Mindspace</a>
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
 
             {% empty %}
             {% endfor %}
-        </div>
+        {% comment %} </div> {% endcomment %}
     </div>
 
-{% endblock content %}
+{% comment %} {% endblock content %} {% endcomment %}
 
-{% block js %}
+{% comment %} {% block js %} {% endcomment %}
     <script>
         $(document).ready(function() {
             $("#id-remove-filter-keyword").click(function(e) {
@@ -56,8 +59,7 @@
                         owner_query: $("#id-search-owner").val(),
                     },
                     success: function(response) {
-                        $("#id_results").html("");
-                        $("#id_results").append(response);
+                        $(".mindspace-search-results").html(response);
                     }
                 });
             });
@@ -72,16 +74,15 @@
                         owner_query: $("#id-search-owner").val(),
                     },
                     success: function(response) {
-                        $("#id_results").html("");
-                        $("#id_results").append(response);
+                        $(".mindspace-search-results").html(response);
                     }
                 });
             });
         });
     </script>
-{% endblock js %}
+{% comment %} {% endblock js %}
 
-{% block styles %}
+{% block styles %} {% endcomment %}
     <style>
         .remove-filter {
             width: 15px;
@@ -96,6 +97,20 @@
 
         .results {
             width: 80%;
+            margin-top: 2%;
+            margin-left: 5%;
+            margin-right: 10px;
+            display: inline-block;
+        }
+
+        .applied-filters {
+            width: 90%;
+            margin-top: 2%;
+            margin-left: 5%;
+            margin-right: 10px;
+            display: inline-block;
+            padding: 10px;
+            border: 3px grey solid;
         }
     </style>
-{% endblock styles %}
+{% comment %} {% endblock styles %} {% endcomment %}

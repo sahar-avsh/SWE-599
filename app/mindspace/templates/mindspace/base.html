@@ -29,9 +29,9 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto" id="id-navbar-items">
       
-            <li class="nav-item" id="id-timeline">
+            {% comment %} <li class="nav-item" id="id-timeline">
               <a class="nav-link" href="{% url 'mindspace:mindspace_search' %}">Timeline</a>
-            </li>
+            </li> {% endcomment %}
       
             <li class="nav-item" id="id-dashboard">
               <a class="nav-link" href="{% url 'mindspace:mindspace_list' %}">Dashboard</a>
@@ -55,17 +55,17 @@
           <ul class="navbar-nav">
       
             <li class="nav-item" id="id-notifications">
-              <a class="nav-link" href="{% url 'profiles:profile_notifications' id=request.user.profile.id %}">Notification <span id="id-notif" data-url="{% url 'profiles:unseen_notifs' %}" class="badge badge-light"></span></a>
+              <a class="nav-link" href="{% url 'profiles:profile_notifications' id=request.user.profile.id %}">Notifications <span id="id-notif" data-url="{% url 'profiles:unseen_notifs' %}" class="badge badge-light"></span></a>
             </li>
       
             <li class="nav-item" id="id-logout">
               <a class="nav-link" href="{% url 'logout' %}">Logout</a>
             </li>
       
-            <form class="form-inline my-2 my-lg-0" id="id-navbar-search">
-                <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            {% comment %} <form class="form-inline my-2 my-lg-0" id="id-navbar-search" action="{% url 'mindspace:ajax_load_search_results' %}" redirect-url="{% url 'mindspace:mindspace_list' %}">
+                <input class="form-control mr-sm-2" id="id-navbar-search-input" type="search" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-            </form>
+            </form> {% endcomment %}
       
           </ul>
       
