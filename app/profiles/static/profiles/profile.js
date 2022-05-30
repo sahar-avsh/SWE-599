@@ -20,10 +20,23 @@ $(document).ready(function() {
 
     $(document).on("submit", "#id-form-edit-profile", function(e) {
         e.preventDefault();
+        var formData = new FormData();
+        $.each($(this).serializeArray(), function(index, value) {
+            formData.append(value['name'], value['value']);
+        });
+    
+        var img_data = $('#id_image').get(0).files[0];
+        if (img_data) {
+            formData.append('image', img_data);
+        }
         
         $.ajax({
             type: 'POST',
-            data: $(this).serialize(),
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            enctype: 'multipart/form-data',
             url: $(this).attr("action"),
             success: function(response) {
                 $.ajax({
