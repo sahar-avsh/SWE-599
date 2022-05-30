@@ -89,10 +89,10 @@ class MindspaceListView(LoginRequiredMixin, ListView):
         context['form_search'] = MindspaceSearchForm()
 
         view = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.viewer)
-        comment = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.commenter)
+        # comment = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.commenter)
         edit = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.editor)
         context['object_list_view'] = view
-        context['object_list_comment'] = comment
+        # context['object_list_comment'] = comment
         context['object_list_edit'] = edit
         return context
 
