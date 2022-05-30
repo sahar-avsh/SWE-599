@@ -1,4 +1,4 @@
-{% extends 'mindspace/base.html' %}
+{% comment %} {% extends 'mindspace/base.html' %}
 
 {% load static %}
 {% block styles %}
@@ -10,9 +10,9 @@
 
 {% block title %}
     {{block.super}} - Delete a Resource
-{% endblock title %}
+{% endblock title %} {% endcomment %}
 
-{% block navbar %}
+{% comment %} {% block navbar %}
     
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
@@ -31,18 +31,27 @@
     </div>
   </ul>
 
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
-{% block content %}
+{% comment %} {% block content %} {% endcomment %}
 
-<div class="container-fluid">
-    <form action='.' method='POST'>{% csrf_token %}
+    <form style="padding: 20px;" id="id-form-delete-resource" action="{% url 'mindspace:resource_delete' ms_id=object.belongs_to.id id=object.id %}" method='POST'>{% csrf_token %}
         <h2>Do you want to delete {{object.title}}?</h2>
-        <p>Important: All notes belonging to this Resource will be deleted as well.</p>
-        <p><input type='submit' class="btn btn-primary" value='Yes'/> <a class="btn btn-secondary" href='{{object.get_absolute_url}}'>Cancel</a></p>
+        <p style="margin-bottom: 5px;">Important: All notes belonging to this Resource will be deleted as well.</p>
+        <p style="margin-bottom: 0px;">
+          <input type='submit' class="btn btn-warning" value='Delete'/> 
+          <button class="btn btn-secondary" onclick=closeForm()>Cancel</button>
+        </p>
     </form>
+
+    <script>
+      function closeForm() {
+        $("#id-mindspace-edit").html("");
+        $("#id-mindspace-edit").css('border', 'none');
+      }
+    </script>
         
-    <h3>Notes belonging to this Mindspace</h3>
+    {% comment %} <h3>Notes belonging to this Mindspace</h3>
     <div class="card-deck">
         <div class="card">
             <img class="card-img-top" src="..." alt="Card image cap">
@@ -55,8 +64,7 @@
                 <small class="text-muted">Last updated 3 mins ago</small>
             </div>
         </div>
-    </div>
+    </div> {% endcomment %}
 
-</div>
 
-{% endblock content %}
+{% comment %} {% endblock content %} {% endcomment %}

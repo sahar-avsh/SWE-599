@@ -1,6 +1,6 @@
-{% extends "mindspace/base.html" %} 
+{% comment %} {% extends "mindspace/base.html" %} 
 
-{% load crispy_forms_tags %}
+
 
 {% block title %}
     {{block.super}}
@@ -25,15 +25,15 @@
   </ul>
 {% endblock navbar %}
 
-{% block content %}
+{% block content %} {% endcomment %}
 
-    <div class="container-fluid">
+{% load crispy_forms_tags %}
+
         <h1> Create a new Note </h1>
         <form action='.' method='POST'>{% csrf_token %}
             {{form|crispy}}
             <input type='submit' class='btn btn-success' value='Save'/>
             <a class="btn btn-secondary" href="{{parent.get_absolute_url}}" role="button">Cancel</a>
         </form>
-    </div>
 
-{% endblock content %}
+{% comment %} {% endblock content %} {% endcomment %}

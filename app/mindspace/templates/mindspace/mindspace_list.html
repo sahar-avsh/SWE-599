@@ -4,15 +4,16 @@
 {% block styles %}
   <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_list.css' %}">
 {% endblock styles %}
+
 {% block js %}
-  <script src="{% static 'mindspace/dropdown.js' %}"></script>
+  {% comment %} <script src="{% static 'mindspace/dropdown.js' %}"></script> {% endcomment %}
 {% endblock js %}
 
 {% block title %}
     {{block.super}} - Dashboard
 {% endblock title %}
 
-{% block navbar %}
+{% comment %} {% block navbar %}
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
     <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
@@ -27,12 +28,11 @@
       <button onclick="myFunction()" class="dropbtn">Actions</button>
       <div id="myDropdown" class="dropdown-content">
         <a href={% url 'mindspace:mindspace_create' %}>Create a new Mindspace</a>
-        <a href="#about">Clicked</a>
-        <a href="#contact">Clicked</a>
+        <a href="{% url 'mindspace:mindspace_search' %}">Timeline</a>
       </div>
     </div>
   </ul>
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
 {% block content %}
 
@@ -41,14 +41,15 @@
 
       <div class="card-deck">
         {% for object in object_list %}
-          <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
+          <div class="card bg-transparent border-success" style="margin-bottom: 5px;">
+            <img class="card-img-top" src="" alt="Card image cap">
+            <div class="card-body text-success">
               <h5 class="card-title"> {{object.title}} </h5>
               <p class="card-text"> {{object.description}} </p>
-              <a href="{{object.get_absolute_url}}" class="btn btn-primary">Go</a>
+              <a href="{{object.get_absolute_url}}" class="btn btn-secondary">Go</a>
             </div>
-            <div class="card-footer">
+
+            <div class="card-footer bg-transparent border-success">
               {% if object.is_recent %}
                 <small class="text-muted"> Updated just now </small>
               {% else %}
@@ -65,14 +66,15 @@
 
       <div class="card-deck">
         {% for object in object_list_edit %}
-          <div class="card" style="width: 18rem;">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
+          <div class="card bg-transparent border-success" style="margin-bottom: 5px;">
+            <img class="card-img-top" src="" alt="Card image cap">
+            <div class="card-body text-success">
               <h5 class="card-title"> {{object.mindspace.title}} </h5>
               <p class="card-text"> {{object.mindspace.description}} </p>
-              <a href="{{object.mindspace.get_absolute_url}}" class="btn btn-primary">Go</a>
+              <a href="{{object.mindspace.get_absolute_url}}" class="btn btn-secondary">Go</a>
             </div>
-            <div class="card-footer">
+
+            <div class="card-footer bg-transparent border-success">
               {% if object.mindspace.is_recent %}
                 <small class="text-muted"> Updated just now </small>
               {% else %}

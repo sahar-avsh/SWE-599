@@ -1,4 +1,4 @@
-{% extends 'qna/base.html' %}
+{% comment %} {% extends 'mindspace/base.html' %} {% endcomment %}
 
 {% comment %} {% load static %}
 {% block styles %}
@@ -34,12 +34,21 @@
 
 {% endblock navbar %} {% endcomment %}
 
-{% block content %}
-{% comment %}     <div class="container-fluid">
-        <form action='.' method='POST'>{% csrf_token %}
-            <h2>Do you want to delete answer?</h2>
+{% comment %} {% block content %} {% endcomment %}
+        <form class="answer-delete-form" action="{% url 'qna:answer_delete' q_id=object.question.id id=object.id %}" id="id-answer-delete-form-{{object.id}}" method='POST'>{% csrf_token %}
+            <h2>Do you want to delete this answer?</h2>
             <p>Important: You won't be able to take back this action.</p>
-            <p><input type='submit' class="btn btn-primary" value='Yes'/> <a class="btn btn-secondary" href='{{object.get_absolute_url}}'>Cancel</a></p>
+            <p>
+                <input type='submit' class="btn btn-primary" value='Yes'/>
+                <a class="btn btn-secondary" id="id-cancel-answer-delete-form-{{object.id}}" style="color: white;">Cancel</a>
+            </p>
         </form>
-    </div> {% endcomment %}
-{% endblock content %}
+
+        <style>
+            .answer-delete-form {
+              padding: 15px;
+              background-color: rgb(222, 250, 253);
+              border: 2px solid #b6b6b6;
+            }
+          </style>
+{% comment %} {% endblock content %} {% endcomment %}

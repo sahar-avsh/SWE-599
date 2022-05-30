@@ -1,6 +1,6 @@
-{% extends "mindspace/base.html" %} 
+{% comment %} {% extends "mindspace/base.html" %} 
 
-{% load crispy_forms_tags %}
+
 
 {% load static %}
 {% block styles %}
@@ -12,9 +12,9 @@
 
 {% block title %}
     {{block.super}} - Update
-{% endblock title %}
+{% endblock title %} {% endcomment %}
 
-{% block navbar %}
+{% comment %} {% block navbar %}
 
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
@@ -33,17 +33,30 @@
     </div>
   </ul>
 
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
-{% block content %}
+{% comment %} {% block content %} {% endcomment %}
 
-  <div class="container-fluid">
-    <h1> Update {{object.title}} </h1>
-    <form action='.' method='POST'>{% csrf_token %}
+{% load crispy_forms_tags %}
+
+    <h1 style="margin-left: 20px;"> Update {{object.title}} </h1>
+    <form action="{% url 'mindspace:mindspace_update' id=object.id %}" method='POST' id="id-update-mindspace-form" style="margin: 20px; padding-bottom: 20px;">{% csrf_token %}
         {{form|crispy}}
         <input type='submit' class='btn btn-success' value='Save'/>
-        <a class="btn btn-secondary" href="{{object.get_absolute_url}}" role="button">Cancel</a>
+        <button class="btn btn-secondary" id="id-cancel-mindspace-update" style="color: white;" onclick=closeForm()>Cancel</button>
     </form>
-  </div>
 
-{% endblock content %}
+<style>
+  #id_description {
+    height: 50px;
+  }
+</style>
+
+<script>
+  function closeForm() {
+    $("#id-mindspace-edit").html("");
+    $("#id-mindspace-edit").css('border', 'none');
+  }
+</script>
+
+{% comment %} {% endblock content %} {% endcomment %}

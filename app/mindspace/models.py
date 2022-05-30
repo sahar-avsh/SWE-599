@@ -55,8 +55,8 @@ class Resource(models.Model):
 
     # edits = GenericRelation("profiles.Notification", related_query_name='resource_edits')
 
-    def get_absolute_url(self):
-        return reverse('mindspace:resource_detail', kwargs={'ms_id': self.belongs_to.id, 'id': self.id})
+    # def get_absolute_url(self):
+    #     return reverse('mindspace:resource_detail', kwargs={'ms_id': self.belongs_to.id, 'id': self.id})
 
     def __str__(self):
         return self.belongs_to.title + ' - ' + self.title

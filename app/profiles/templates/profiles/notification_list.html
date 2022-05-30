@@ -1,9 +1,10 @@
-{% extends "profiles/base.html" %} 
+{% extends "mindspace/base.html" %} 
 
 {% load static %}
 {% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_list.css' %}">
+  {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_list.css' %}"> {% endcomment %}
 {% endblock styles %}
+
 {% block js %}
   <script src="{% static 'mindspace/dropdown.js' %}"></script>
 {% endblock js %}
@@ -12,7 +13,7 @@
     {{block.super}} - Notifications
 {% endblock title %}
 
-{% block navbar %}
+{% comment %} {% block navbar %}
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
     <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
@@ -30,7 +31,7 @@
       </div>
     </div>
   </ul>
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
 {% block content %}
 

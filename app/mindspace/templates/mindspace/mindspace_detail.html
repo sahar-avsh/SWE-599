@@ -2,17 +2,17 @@
 
 {% load static %}
 {% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_detail.css' %}">
+  {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_detail.css' %}"> {% endcomment %}
 {% endblock styles %}
 {% block js %}
-  <script src="{% static 'mindspace/dropdown.js' %}"></script>
+  {% comment %} <script src="{% static 'mindspace/dropdown.js' %}"></script> {% endcomment %}
 {% endblock js %}
 
 {% block title %}
     {{block.super}}
 {% endblock title %}
 
-{% block navbar %}
+{% comment %} {% block navbar %}
 <ul>
   <li><a href={% url 'main_page' %}>Home</a></li>
   <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
@@ -29,7 +29,7 @@
     </div>
   </div>
 </ul>
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
 {% block content %}
 

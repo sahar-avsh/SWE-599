@@ -1,4 +1,4 @@
-{% extends 'qna/base.html' %}
+{% comment %} {% extends 'mindspace/base.html' %}
 
 {% load static %}
 {% block styles %}
@@ -32,17 +32,20 @@
         </div>
     </ul>
 
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
-{% block content %}
-    <div class="container-fluid">
-        <form action='.' method='POST'>{% csrf_token %}
-            <h2>Do you want to delete {{object.title}}?</h2>
-            <p>Important: All answers belonging to this question will be deleted as well.</p>
-            <p><input type='submit' class="btn btn-primary" value='Yes'/> <a class="btn btn-secondary" href='{{object.get_absolute_url}}'>Cancel</a></p>
+{% comment %} {% block content %} {% endcomment %}
+
+        <form action="{% url 'qna:question_delete' id=object.id %}" id="id-question-delete-form-{{object.id}}" method='POST'>{% csrf_token %}
+            <h2>Do you want to delete "{{object.title}}"?</h2>
+            <p>Important: {{object.answers.all|length}} answer(s) belonging to this question will be deleted as well.</p>
+            <p>
+              <input type='submit' class="btn btn-primary" value='Yes'/> 
+              <a class="btn btn-secondary" id="id-cancel-question-delete-form-{{object.id}}" style="color: white;">Cancel</a>
+            </p>
         </form>
           
-        {% for ans in object.answers.all %}
+        {% comment %} {% for ans in object.answers.all %}
           <h3>Answers belonging to this Mindspace</h3>
           <div class="card-deck">
               <div class="card">
@@ -59,6 +62,4 @@
           {% empty %}
             <h3>There is no answer belonging to this question.</h3>
           {% endfor %}
-
-    </div>
-{% endblock content %}
+{% endblock content %} {% endcomment %}

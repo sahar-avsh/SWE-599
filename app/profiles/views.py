@@ -1,6 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
 from django.shortcuts import redirect
+from django.http import JsonResponse
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -30,7 +31,8 @@ from django.views.generic import (
     UpdateView,
     DeleteView,
     TemplateView,
-    FormView
+    FormView,
+    View
 )
 
 from datetime import datetime, timezone
@@ -95,7 +97,9 @@ class ProfileUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         return get_object_or_404(Profile, id=id_)
 
     def form_valid(self, form):
-        return super().form_valid(form)
+        self.object = form.save()
+        # return super().form_valid(form)
+        return JsonResponse({'update': 'done'}, status=200)
 
     def dispatch(self, request, *args, **kwargs):
         object = Profile.objects.get(id=self.kwargs.get('id'))
@@ -120,3 +124,8 @@ class NotificationListView(LoginRequiredMixin, ListView):
         now = datetime.now(timezone.utc)
         queryset.update(read_date=now)
         return queryset
+
+class GetNumOfUnseenNotifsAjax(View):
+    def get(self, request):
+        qs = Notification.objects.filter(received_by=request.user.profile, read_date__isnull=True)
+        return JsonResponse({'notifs': len(qs)}, status=200)

@@ -1,4 +1,4 @@
-{% extends 'mindspace/base.html' %}
+{% comment %} {% extends 'mindspace/base.html' %}
 
 {% load resource_filename_filter %}
 {% load embed_video_tags %}
@@ -19,36 +19,24 @@
     {{block.super}} - Resource
 {% endblock title %}
 
-{% block navbar %}
+{% block content %} {% endcomment %}
 
-  <ul>
-    <li><a href={% url 'main_page' %}>Home</a></li>
-    <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
-    <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-    <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
-    <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
-    <li style="float:right"><a href="#">Notifications</a></li>
+{% load resource_filename_filter %}
+{% load embed_video_tags %}
 
-    <div class="dropdown">
-      <button onclick="myFunction()" class="dropbtn">Actions</button>
-      <div id="myDropdown" class="dropdown-content">
-        <a href={% url 'mindspace:resource_update' ms_id=object.belongs_to.id id=object.id %}>Edit</a>
-        <a href={% url 'mindspace:resource_delete' ms_id=object.belongs_to.id id=object.id %}>Delete</a>
-        <a href="#contact">Clicked</a>
-      </div>
-    </div>
-  </ul>
+{% load static %}
 
-{% endblock navbar %}
+<script src="{% static 'mindspace/render_note_form.js' %}"></script>
+<script src="{% static 'mindspace/post_note_form.js' %}"></script>
+<script src="{% static 'mindspace/delete_note.js' %}"></script>
+<script src="{% static 'mindspace/update_note.js' %}"></script>
 
-{% block content %}
 
-  <div class="container-fluid">
 
-      <ol class="breadcrumb">
+      {% comment %} <ol class="breadcrumb">
         <li class="breadcrumb-item"><a class="breadcrumb-parent" href="{{object.belongs_to.get_absolute_url}}"> {{object.belongs_to.title}} </a></li>
         <li class="breadcrumb-item active" aria-current="page"> {{object.title}} </li>
-      </ol>
+      </ol> {% endcomment %}
 
     <div class="card text-center">
       <div class="card-header">
@@ -129,6 +117,5 @@
       <a class="btn btn-secondary" id="id-cancel-note-form" role="button">Cancel</a>
     </form>
 
-  </div>
 
-{% endblock content %}
+{% comment %} {% endblock content %} {% endcomment %}

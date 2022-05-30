@@ -4,6 +4,16 @@ from django import forms
 from .models import Question, Answer
 from mindspace.models import *
 
+class QuestionSearchForm(forms.ModelForm):
+    keyword = forms.CharField(max_length=100)
+    class Meta:
+        model = Question
+        fields = []
+
+        def __init__(self, *args, **kwargs):
+            super().__init__(*args, **kwargs)
+            self.fields['keyword'].required = True
+
 class QuestionModelForm(forms.ModelForm):
     class Meta:
         model = Question
@@ -39,8 +49,9 @@ class QuestionModelForm(forms.ModelForm):
             except (ValueError, TypeError):
                 pass
         elif self.instance.id:
-            self.fields['tagged_resource'].queryset = self.instance.tagged_mindspace.resources.order_by('title')
-            self.fields['tagged_resource'].label_from_instance = lambda obj: "%s" % obj.title
+            if self.instance.tagged_mindspace:
+                self.fields['tagged_resource'].queryset = self.instance.tagged_mindspace.resources.order_by('title')
+                self.fields['tagged_resource'].label_from_instance = lambda obj: "%s" % obj.title
 
 class AnswerModelForm(forms.ModelForm):
     class Meta:

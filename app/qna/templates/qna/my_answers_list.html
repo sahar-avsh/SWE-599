@@ -1,0 +1,63 @@
+{% load static %}
+<link rel="stylesheet" type="text/css" href="{% static 'qna/question_list.css' %}">
+
+{% for q in object_list %}
+    <div id="id-myanswers-q-{{q.id}}">
+        <h2 class="question-title" id="id-question-title-{{q.id}}"> {{ q.title }} </h2>
+    </div>
+
+    <div class="question-detail" id="id-myanswers-question-detail-{{q.id}}" style="display: none;">
+        <p class="created-question">Created {{ q.asked_date|timesince }} ago</p>
+        <p class="modified-question">Modified {{ q.updated_date|timesince }} ago</p>
+        <hr class="solid">
+        <div class="question">
+            <div class="The-question-content">
+                <p>{{ q.body }}</p>
+                
+                <div class="attached-material">
+                    {% if q.tagged_mindspace %} <p>Attached mindspace: <a href="{% url 'mindspace:mindspace_detail' id=q.tagged_mindspace.id %}">{{ q.tagged_mindspace.title }}</a></p> {% endif %}
+                    {% if q.tagged_resource %} <p>Attached resource: <a href="{% url 'mindspace:mindspace_detail' id=q.tagged_mindspace.id %}">{{ q.tagged_resource.title }}</a></p> {% endif %}
+                </div>
+            </div>
+
+        </div>
+        
+        <hr class="dotted">
+
+        <!-- My answers - Question detail section - Answers - Hidden by default -->
+
+        <div id="id-myanswers-main-answer-container-{{q.id}}">
+            <h5 style="margin-bottom: 20px;"> {{q.answers.all|length}} Answer(s)</h5>
+            {% for a in q.answers.all %}
+                <div class="rate-and-answer" id="id-myanswers-rate-and-answer-{{a.id}}">
+                    <div class="rate-amount">
+                        <h4 style="margin-bottom: 0px;">+34</h4>
+                    </div>
+
+                    <div class="the-answer">
+                        <div class="the-answer-content">
+                            {{a.reply}}
+                        </div>
+
+                        <div class="attached-material">
+                            {% if a.tagged_mindspace %} <p>Attached mindspaces: <a href="{% url 'mindspace:mindspace_detail' id=a.tagged_mindspace.id %}"> {{a.tagged_mindspace.title}} </a></p> {% endif %}
+                            {% if a.tagged_resource %} <p>Attached resources: <a href="{% url 'mindspace:mindspace_detail' id=a.tagged_mindspace.id %}"> {{a.tagged_resource.title}} </a></p> {% endif %}
+                        </div>
+                    </div>
+    
+                </div>
+
+                <div class="answer-edit-buttons" style="margin-bottom: 10px;">
+                    <button class="btn btn-secondary" action="{% url 'qna:answer_update' q_id=q.id id=a.id %}" id="id-answer-update-button-{{a.id}}">Update</button>
+                    <button class="btn btn-warning" action="{% url 'qna:answer_delete' q_id=q.id id=a.id %}" id="id-answer-delete-button-{{a.id}}">Delete</button>
+                </div>
+
+                <div class="answer-edit-container" id="id-myanswers-answer-edit-container-{{a.id}}" style="display: none;"></div>
+
+            {% empty %}
+            {% endfor %}
+        </div>
+    </div>
+{% empty %}
+    <h3>No answers.</h3>
+{% endfor %}

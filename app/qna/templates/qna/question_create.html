@@ -1,4 +1,4 @@
-{% extends "qna/base.html" %} 
+{% comment %} {% extends "mindspace/base.html" %} 
 
 {% load static %}
 {% block styles %}
@@ -13,9 +13,9 @@
 
 {% block title %}
     {{block.super}} - Create a Question
-{% endblock title %}
+{% endblock title %} {% endcomment %}
 
-{% block navbar %}
+{% comment %} {% block navbar %}
 
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
@@ -34,18 +34,27 @@
     </div>
   </ul>
 
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
-{% block content %}
+{% comment %} {% block content %} {% endcomment %}
 
-    <div class="container-fluid">
-        <h1> Create a new Question </h1>
+{% load crispy_forms_tags %}
+{% load static %}
+
+        <h4> Create a new Question </h4>
         <form action='.' id='question_form' method='POST' data-resources-url="{% url 'ajax_load_resources' %}" novalidate>
         {% csrf_token %}
             {{form|crispy}}
             <input type='submit' class='btn btn-success' value='Save'/>
-            <a class="btn btn-secondary" href="{{object.get_absolute_url}}" role="button">Cancel</a>
+            {% comment %} <a class="btn btn-secondary" href="{{object.get_absolute_url}}" role="button">Cancel</a> {% endcomment %}
         </form>
-    </div>
 
-{% endblock content %}
+        <script src="{% static 'qna/resource_dropdown_list.js' %}"></script>
+
+        <style>
+          #body_field {
+            height: 100px !important;
+          }
+        </style>
+
+{% comment %} {% endblock content %} {% endcomment %}

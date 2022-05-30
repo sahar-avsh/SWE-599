@@ -22,7 +22,7 @@ from .views import (
 app_name = 'mindspace'
 urlpatterns = [
     path('dashboard/', MindspaceListView.as_view(), name='mindspace_list'),
-    path('<int:id>/', MindspaceDetailView.as_view(), name='mindspace_detail'),
+    path('detail/<int:id>/', MindspaceDetailView.as_view(), name='mindspace_detail'),
     path('create/', MindspaceCreateView.as_view(), name='mindspace_create'),
     path('<int:id>/update/', MindspaceUpdateView.as_view(), name='mindspace_update'),
     path('<int:id>/delete/', MindspaceDeleteView.as_view(), name='mindspace_delete'),
@@ -31,7 +31,7 @@ urlpatterns = [
     path('ajax/load-search-results/', AjaxMindspaceSearch.as_view(), name='ajax_load_search_results'),
     path('<int:ms_id>/create-resource/', ResourceCreateView.as_view(), name='resource_create'),
     path('<int:ms_id>/<int:id>/update-resource/', ResourceUpdateView.as_view(), name='resource_update'),
-    path('<int:ms_id>/<int:id>/', ResourceDetailView.as_view(), name='resource_detail'),
+    path('<int:ms_id>/resource-detail/<int:id>/', ResourceDetailView.as_view(), name='resource_detail'),
     path('<int:ms_id>/resources/', ResourceListView.as_view(), name='resource_list'),
     path('<int:ms_id>/<int:id>/delete/', ResourceDeleteView.as_view(), name='resource_delete'),
     path('<int:ms_id>/<int:r_id>/create-note/', NoteCreateView.as_view(), name='note_create'),

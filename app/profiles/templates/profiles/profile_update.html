@@ -1,4 +1,4 @@
-{% extends "profiles/base.html" %} 
+{% comment %} {% extends "mindspace/base.html" %} 
 
 {% load static %}
 {% block styles %}
@@ -8,13 +8,11 @@
   <script src="{% static 'profiles/dropdown.js' %}"></script>
 {% endblock js %}
 
-{% load crispy_forms_tags %}
-
 {% block title %}
     {{block.super}} - Update
-{% endblock title %}
+{% endblock title %} {% endcomment %}
 
-{% block navbar %}
+{% comment %} {% block navbar %}
 
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
@@ -33,18 +31,24 @@
     </div>
   </ul>
 
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
-{% block content %}
-<div class="container-fluid">
-    <h1> Update Your Profile </h1>
-    <form action='.' method='POST' enctype="multipart/form-data">{% csrf_token %}
+{% load crispy_forms_tags %}
+
+{% comment %} {% block content %} {% endcomment %}
+    <h4> Update Your Profile </h4>
+    <form action="{% url 'profiles:profile_update' id=object.id %}" method='POST' id="id-form-edit-profile" enctype="multipart/form-data">{% csrf_token %}
         {{form|crispy}}
         {% if form.instance.image %}
           <img src="{{ form.instance.image.url }}">
         {% endif %}
         <input type='submit' class='btn btn-success' value='Save'/>
-        <a class="btn btn-secondary" href="{{object.get_absolute_url}}" role="button">Cancel</a>
+        {% comment %} <a class="btn btn-secondary" href="{{object.get_absolute_url}}" role="button">Cancel</a> {% endcomment %}
     </form>
-  </div>
-{% endblock content %}
+{% comment %} {% endblock content %} {% endcomment %}
+
+<style>
+  #id_bio {
+    height: 100px !important;
+  }
+</style>

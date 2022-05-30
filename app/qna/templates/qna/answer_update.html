@@ -1,4 +1,4 @@
-{% extends "qna/base.html" %} 
+{% comment %} {% extends "mindspace/base.html" %} 
 
 {% load static %}
 
@@ -8,19 +8,30 @@
 
 {% load crispy_forms_tags %}
 
-{% block content %}
+{% block content %} {% endcomment %}
 
-    <div class="container-fluid">
-        <h1> Update your answer </h1>
-        <form action="{% url 'qna:answer_update' q_id=object.question.id id=object.id %}" id='question_form' method='POST' data-resources-url="{% url 'ajax_load_resources' %}" novalidate>
-        {% csrf_token %}
-            {{form|crispy}}
-            <input type='submit' class='btn btn-success' value='Save'/>
-            <a id="id-cancel-button" class="btn btn-secondary" role="button">Cancel</a>
-        </form>
-    </div>
+{% load crispy_forms_tags %}
+{% load static %}
+<script src="{% static 'qna/resource_dropdown_list.js' %}"></script>
 
-{% endblock content %}
+    
+    <form class="answer-update-form" action="{% url 'qna:answer_update' q_id=object.question.id id=object.id %}" id='id-answer-update-form-{{object.id}}' method='POST' data-resources-url="{% url 'ajax_load_resources' %}" novalidate>
+      <h3> Update your answer </h3>
+      {% csrf_token %}
+      {{form|crispy}}
+      <input type='submit' class='btn btn-success' value='Save'/>
+      <a id="id-cancel-answer-update-form-{{object.id}}" style="color: white;" class="btn btn-secondary" role="button">Cancel</a>
+    </form>
+
+    <style>
+      .answer-update-form {
+        padding: 15px;
+        background-color: rgb(222, 250, 253);
+        border: 2px solid #b6b6b6;
+      }
+    </style>
+
+{% comment %} {% endblock content %}
 
 {% block styles %}
   <style>
@@ -28,4 +39,4 @@
           color: white !important;
       }
   </style>
-{% endblock styles %}
+{% endblock styles %} {% endcomment %}

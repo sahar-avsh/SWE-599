@@ -1,18 +1,12 @@
-{% extends 'profiles/base.html' %}
-
-{% load static %}
-{% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'profiles/profile_detail.css' %}">
-{% endblock styles %}
-{% block js %}
-  <script src="{% static 'profiles/dropdown.js' %}"></script>
-{% endblock js %}
-
-{% block title %}
-    {{block.super}}
-{% endblock title %}
+{% comment %} {% extends 'mindspace/base.html' %}
 
 {% block navbar %}
+{% endblock navbar %}
+
+{% block title %}
+{% endblock title %} {% endcomment %}
+
+{% comment %} {% block navbar %}
 <ul>
   <li><a href={% url 'main_page' %}>Home</a></li>
   <li><a href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
@@ -29,20 +23,48 @@
     </div>
   </div>
 </ul>
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
-{% block content %}
+{% comment %} {% block content %} {% endcomment %}
 
-  <div class="container-fluid">
+<div class="container-fluid">
 
-    {% if object.image %}
-      <img src="{{ object.image.url }}">
-    {% endif %}
-    
+  {% if object.image %}
+    <img src="{{ object.image.url }}">
+  {% endif %}
+  <div class="details">
     <h1>{{object.f_name}} {{object.l_name}}</h1>
-    <p> <b>Bio:</b> {{object.bio}} </p>
-    <p> <b>Company:</b> {{object.company}} </p>
+    {% if object.bio %}
+      <p> {{object.bio}} </p>
+    {% else %}
+      <p>No bio available</p>
+    {% endif %}
 
+    {% if object.company %}
+      <p> <b>Company:</b> {{object.company}} </p>
+    {% else %}
+    {% endif %}
   </div>
+  <button class="btn btn-secondary" id="id-edit-profile-button" action="{% url 'profiles:profile_update' id=object.id %}">Edit profile</button>
+</div>
 
-{% endblock content %}
+<style>
+  .details {
+    border-top: 1px #9c9c9c solid;
+    padding-top: 10px;
+  }
+</style>
+
+<script>
+  $(document).on('click', '#id-edit-profile-button', function(e) {
+    $.ajax({
+      type: 'GET',
+      url: $(this).attr("action"),
+      success: function(response) {
+        $("#id-profile-detail").html(response);
+      }
+    });
+  });
+</script>
+
+{% comment %} {% endblock content %} {% endcomment %}

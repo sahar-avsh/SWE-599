@@ -1,9 +1,4 @@
-{% extends "mindspace/base.html" %} 
-
-{% load crispy_forms_tags %}
-
-{% load index %}
-{% load get_item %}
+{% comment %} {% extends "mindspace/base.html" %} 
 
 {% load static %}
 {% block styles %}
@@ -15,9 +10,9 @@
 
 {% block title %}
     {{block.super}} - Share
-{% endblock title %}
+{% endblock title %} {% endcomment %}
 
-{% block navbar %}
+{% comment %} {% block navbar %}
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
     <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
@@ -34,13 +29,16 @@
       </div>
     </div>
   </ul>
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
-{% block content %}
+{% comment %} {% block content %} {% endcomment %}
 
-    <div class="container">
-        <h1> Share {{mindspace.title}} </h1>
-        <form action='.' method='POST'>{% csrf_token %}
+{% load crispy_forms_tags %}
+{% load index %}
+{% load get_item %}
+
+        <h4 style="margin-left: 20px;"> Share {{mindspace.title}} </h4>
+        <form action="{% url 'mindspace:mindspace_share' id=mindspace.id %}" id="id-share-mindspace-form" method='POST' style="margin: 20px; padding-bottom: 10px;">{% csrf_token %}
           {{formset.management_form|crispy}}
             {% for form in formset %}
               {{ form.id }}
@@ -56,9 +54,15 @@
 
             <div class="buttons">
               <input type='submit' class='btn btn-success' value='Save'/>
-              <a class="btn btn-secondary" href="{{mindspace.get_absolute_url}}" role="button">Cancel</a>
+              <button class="btn btn-secondary" onclick=closeForm()>Cancel</button>
             </div>
         </form>
-    </div>
 
-{% endblock content %}
+        <script>
+          function closeForm() {
+            $("#id-mindspace-edit").html("");
+            $("#id-mindspace-edit").css('border', 'none');
+          }
+        </script>
+
+{% comment %} {% endblock content %} {% endcomment %}

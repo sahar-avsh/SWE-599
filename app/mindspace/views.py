@@ -48,9 +48,11 @@ class MindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     success_message = 'Your Mindspace was created successfully'
 
     def form_valid(self, form):
-        mindspace = form.save()
+        mindspace = form.save(commit=False)
         mindspace.owner = self.request.user.profile
-        return super().form_valid(form)
+        # return super().form_valid(form)
+        mindspace.save()
+        return JsonResponse({'nextURL': reverse('mindspace:mindspace_detail', kwargs={'id': mindspace.id})}, status=200)
 
 
 class MindspaceUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
@@ -93,7 +95,7 @@ class MindspaceListView(LoginRequiredMixin, ListView):
         return context
 
 class MindspaceDetailView(LoginRequiredMixin, DetailView):
-    template_name = 'mindspace/mindspace_detail.html'
+    template_name = 'mindspace/mindspace_detail2.html'
 
     def get_object(self):
         id_ = self.kwargs.get('id')
@@ -119,7 +121,10 @@ class MindspaceDeleteView(LoginRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         messages.success(self.request, self.success_message)
-        return super().delete(request, *args, **kwargs)
+        self.object = self.get_object()
+        self.object.delete()
+        # return super().delete(request, *args, **kwargs)
+        return JsonResponse({'nextURL': reverse('mindspace:mindspace_list')}, status=200)
 
     def get_success_url(self):
         return reverse('mindspace:mindspace_list')
@@ -294,7 +299,9 @@ class ResourceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.belongs_to_id = self.kwargs.get('ms_id')
-        return super().form_valid(form)
+        resource = form.save()
+        return JsonResponse({'resource_id': resource.id}, status=200)
+        # return super().form_valid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -318,7 +325,9 @@ class ResourceUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
         return get_object_or_404(Resource, id=id_)
 
     def form_valid(self, form):
-        return super().form_valid(form)
+        self.object = form.save()
+        return JsonResponse({'update': 'done'}, status=200)
+        # return super().form_valid(form)
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('ms_id'))

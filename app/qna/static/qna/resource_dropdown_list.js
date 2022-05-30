@@ -1,5 +1,5 @@
 $("#id_tagged_mindspace").change(function () {
-    var url = $("#question_form").attr("data-resources-url");
+    var url = $("#id-answer-form").attr("data-resources-url");
     var mindspaceId = $(this).val();
 
     $.ajax({

@@ -1,4 +1,4 @@
-{% extends "mindspace/base.html" %} 
+{% comment %} {% extends "mindspace/base.html" %} 
 
 {% load static %}
 {% block styles %}
@@ -13,9 +13,9 @@
 
 {% block title %}
     {{block.super}} - Create a Resource
-{% endblock title %}
+{% endblock title %} {% endcomment %}
 
-{% block navbar %}
+{% comment %} {% block navbar %}
 
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
@@ -34,13 +34,15 @@
     </div>
   </ul>
 
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
-{% block content %}
+{% comment %} {% block content %} {% endcomment %}
 
-    <div class="container-fluid">
-        <h1> Create a new Resource </h1>
-        <form action='.' method='POST' enctype="multipart/form-data">{% csrf_token %}
+{% load crispy_forms_tags %}
+{% load static %}
+
+        <h4> Create a new Resource </h4>
+        <form action="{% url 'mindspace:resource_create' ms_id=parent.id %}" id="id-create-resource-form" method='POST' enctype="multipart/form-data">{% csrf_token %}
             {{form.title|as_crispy_field}}
             {{form.description|as_crispy_field}}
             {{form.res_format|as_crispy_field}}
@@ -50,8 +52,15 @@
             {{form.quote|as_crispy_field}}
             {{form.link|as_crispy_field}}
             <input type='submit' class='btn btn-success' value='Save'/>
-            <a class="btn btn-secondary" href="{{parent.get_absolute_url}}" role="button">Cancel</a>
+            {% comment %} <a class="btn btn-secondary" href="{{parent.get_absolute_url}}" role="button">Cancel</a> {% endcomment %}
         </form>
-    </div>
 
-{% endblock content %}
+    <script src="{% static 'mindspace/resource_create.js' %}"></script>
+
+    <style>
+      #id_description {
+        height: 100px !important;
+      }
+    </style>
+
+{% comment %} {% endblock content %} {% endcomment %}

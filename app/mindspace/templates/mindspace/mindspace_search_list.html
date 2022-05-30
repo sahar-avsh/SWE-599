@@ -5,7 +5,7 @@
     <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_search_list.css' %}">
 {% endblock styles %}
 {% block js %}
-    <script src="{% static 'mindspace/dropdown.js' %}"></script>
+    {% comment %} <script src="{% static 'mindspace/dropdown.js' %}"></script> {% endcomment %}
     <script src="{% static 'mindspace/search.js' %}"></script>
 {% endblock js %}
 
@@ -13,11 +13,11 @@
     Timeline
 {% endblock title %}
 
-{% block navbar %}
+{% comment %} {% block navbar %}
 
   <ul>
     <li><a href={% url 'main_page' %}>Home</a></li>
-    <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
+    <li><a href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
     <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
     <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
     <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
@@ -33,7 +33,7 @@
     </div>
   </ul>
 
-{% endblock navbar %}
+{% endblock navbar %} {% endcomment %}
 
 {% block content %}
 
