@@ -13,6 +13,7 @@ from .views import (
     AnswerListView,
     AnswerDeleteView,
     AnswerDetailView,
+    LoadResources,
     # MyAnswerListView,
     # AnswersAjaxView,
     # AnswerFormAjax
@@ -33,4 +34,5 @@ urlpatterns = [
     path('<int:q_id>/<int:id>/detail/', AnswerDetailView.as_view(), name='answer_detail'),
     path('<int:q_id>/<int:id>/delete/', AnswerDeleteView.as_view(), name='answer_delete'),
     path('ajax/load-answers/', AnswerListView.as_view(), name='answer_list'),
+    path('ajax/load-resources/', LoadResources.as_view(), name='ajax_load_resources'),
 ]

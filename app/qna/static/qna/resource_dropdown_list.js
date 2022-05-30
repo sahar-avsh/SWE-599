@@ -1,8 +1,10 @@
-$("#id_tagged_mindspace").change(function () {
-    var url = $("#id-answer-form").attr("data-resources-url");
+$(document).ready(function() {
+  $("#id_tagged_mindspace").change(function () {
+    var url = $("#id-question-form").attr("data-resources-url");
     var mindspaceId = $(this).val();
 
     $.ajax({
+      type: 'GET',
       url: url,
       data: {
         'mindspace': mindspaceId
@@ -12,3 +14,4 @@ $("#id_tagged_mindspace").change(function () {
       }
     });
   });
+});

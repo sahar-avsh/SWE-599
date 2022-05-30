@@ -26,7 +26,7 @@
         <div class="qna-sidebar">
             <div class="qna-create">
                 <h4> Create a new Question </h4>
-                <form action="{% url 'qna:question_create' %}" id='id-question-form' method='POST' data-resources-url="{% url 'ajax_load_resources' %}" novalidate> {% csrf_token %}
+                <form action="{% url 'qna:question_create' %}" id='id-question-form' data-resources-url="{% url 'qna:ajax_load_resources' %}" novalidate> {% csrf_token %}
                     {{form_create|crispy}}
                     <input type='submit' class='btn btn-secondary' value='Save'/>
                 </form>

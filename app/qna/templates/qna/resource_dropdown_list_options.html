@@ -1,10 +1,4 @@
-{% extends "qna/base.html" %}
-
-{% block content %}
-
-    <option value="">---------</option>
-    {% for resource in resources %}
-        <option value="{{ resource.id }}">{{ resource.title }}</option>
-    {% endfor %}
-
-{% endblock content %}
+<option value="">---------</option>
+{% for resource in resources %}
+    <option value="{{ resource.id }}">{{ resource.title }}</option>
+{% endfor %}

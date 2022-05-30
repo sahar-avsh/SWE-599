@@ -28,7 +28,7 @@ from profiles.views import (
     CustomResetPasswordView,
 )
 
-from qna.views import LoadResources
+# from qna.views import LoadResources
 from mindspace.views import NoteFormAjax
 
 urlpatterns = [
@@ -36,7 +36,7 @@ urlpatterns = [
     path('mindspace/', include('mindspace.urls')),
     path('profiles/', include('profiles.urls')),
     path('questions/', include('qna.urls')),
-    path('ajax/load-resources/', LoadResources.as_view(), name='ajax_load_resources'),
+    # path('ajax/load-resources/', LoadResources.as_view(), name='ajax_load_resources'),
     path('ajax/load-note-form/', NoteFormAjax.as_view(), name='ajax_render_note_form'),
     path('accounts/signup/', CustomSignUpView.as_view(), name='signup'),
     path('accounts/login/', CustomLoginView.as_view(), name='login'),
