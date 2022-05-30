@@ -224,11 +224,31 @@ $(document).ready(function() {
 
     $(document).on("submit", "#id-create-resource-form", function(e) {
         e.preventDefault();
+        var formData = new FormData();
+
+        $.each($(this).serializeArray(), function(index, value) {
+            formData.append(value['name'], value['value']);
+        });
+
+        var img_data = $('#image_field').get(0).files[0];
+        var doc_data = $('#document_field').get(0).files[0];
+        var vid_data = $('#video_field').get(0).files[0];
+        if (img_data) {
+            formData.append('image', img_data);
+        } else if (doc_data) {
+            formData.append('document', doc_data);
+        } else if (vid_data) {
+            formData.append('video', vid_data);
+        }
         
         $.ajax({
             type: 'POST',
             url: $(this).attr("action"),
-            data: $(this).serialize(),
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            enctype: 'multipart/form-data',
             success: function(response) {
                 window.location.reload();
                 // $("#id-mindspace-edit").html("");
@@ -238,11 +258,31 @@ $(document).ready(function() {
 
     $(document).on("submit", "#id-form-edit-resource", function(e) {
         e.preventDefault();
+        var formData = new FormData();
+
+        $.each($(this).serializeArray(), function(index, value) {
+            formData.append(value['name'], value['value']);
+        });
+
+        var img_data = $('#image_field').get(0).files[0];
+        var doc_data = $('#document_field').get(0).files[0];
+        var vid_data = $('#video_field').get(0).files[0];
+        if (img_data) {
+            formData.append('image', img_data);
+        } else if (doc_data) {
+            formData.append('document', doc_data);
+        } else if (vid_data) {
+            formData.append('video', vid_data);
+        }
         
         $.ajax({
             type: 'POST',
             url: $(this).attr("action"),
-            data: $(this).serialize(),
+            data: formData,
+            contentType: false,
+            cache: false,
+            processData: false,
+            enctype: 'multipart/form-data',
             success: function(response) {
                 window.location.reload();
                 // $("#id-mindspace-edit").html("");
