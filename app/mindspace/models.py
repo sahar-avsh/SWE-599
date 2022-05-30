@@ -98,12 +98,12 @@ class ShareMindspace(models.Model):
 
     viewer = 'viewer'
     editor = 'editor'
-    commenter = 'commenter'
+    # commenter = 'commenter'
 
     ACCESS_LEVELS = (
         (viewer,'VIEW'),
         (editor, 'EDIT'),
-        (commenter, 'COMMENT')
+        # (commenter, 'COMMENT')
     )
 
     access_level = models.CharField(max_length=9, choices=ACCESS_LEVELS)
