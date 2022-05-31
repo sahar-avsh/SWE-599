@@ -108,7 +108,6 @@ $(document).ready(function() {
 
     $("#id-ask-mindspace-link").click(function(e) {
         e.preventDefault();
-        console.log($(this).attr("href"));
         
         $.ajax({
             type: 'GET',
@@ -116,8 +115,29 @@ $(document).ready(function() {
             success: function(response) {
                 $("#id-ask-question-mindspace-form").html(response);
                 $("#id_tagged_mindspace").val($("#id-profile").data("id"));
-                // TODO: load the resources of this mindspace
+                $.ajax({
+                    type: 'GET',
+                    url: $("#question_form").attr("data-resources-url"),
+                    data: {
+                        mindspace: $("#id-profile").data("id")
+                    },
+                    success: function(response) {
+                        $("#id_tagged_resource").html(response);
+                    }
+                });
                 $("#id-ask-question-mindspace-form").show();
+            }
+        });
+    });
+
+    $(document).on("submit", "#question_form", function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr("action"),
+            data: $(this).serialize(),
+            success: function(response) {
+                window.location.replace("/questions/");
             }
         });
     });
