@@ -1,8 +1,10 @@
-{% extends "mindspace/base.html" %} 
+{% comment %} {% extends "mindspace/base.html" %} 
+
+
+
+{% block content %} {% endcomment %}
 
 {% load crispy_forms_tags %}
-
-{% block content %}
 
     <form id="id-note-update-form" action='{% url 'mindspace:note_update' ms_id=object.belongs_to.belongs_to.id r_id=object.belongs_to.id id=object.id %}' method='POST'>{% csrf_token %}
         {{form|crispy}}
@@ -10,12 +12,12 @@
         <a id="id-cancel-button" class="btn btn-secondary" role="button">Cancel</a>
     </form>
 
-{% endblock content %}
+{% comment %} {% endblock content %}
 
-{% block styles %}
+{% block styles %} {% endcomment %}
 <style>
     #id-cancel-button {
         color: white !important;
     }
 </style>
-{% endblock styles %}
+{% comment %} {% endblock styles %} {% endcomment %}

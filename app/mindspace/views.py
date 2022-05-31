@@ -454,11 +454,11 @@ class NoteFormAjax(TemplateView):
         return context
 
 
-class NoteCreateView(SuccessMessageMixin, LoginRequiredMixin, AjaxableResponseMixin, CreateView):
+class NoteCreateView(LoginRequiredMixin, AjaxableResponseMixin, CreateView):
     template_name = 'mindspace/note_create.html'
     model = Note
     form_class = NoteModelForm
-    success_message = 'Your Note was created successfully'
+    # success_message = 'Your Note was created successfully'
 
     def post(self, request, *args, **kwargs):
         self.object = None
@@ -509,11 +509,11 @@ class NoteCreateView(SuccessMessageMixin, LoginRequiredMixin, AjaxableResponseMi
 #         return get_object_or_404(Note, id=id_)
 
 
-class NoteUpdateView(SuccessMessageMixin, LoginRequiredMixin, AjaxableResponseMixin, UpdateView):
+class NoteUpdateView(LoginRequiredMixin, AjaxableResponseMixin, UpdateView):
     template_name = 'mindspace/note_update.html'
     form_class = NoteModelForm
     model = Note
-    success_message = 'Your Note was updated successfully'
+    # success_message = 'Your Note was updated successfully'
 
     def get_object(self):
         id_ = self.kwargs.get('id')
