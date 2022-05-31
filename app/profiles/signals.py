@@ -10,8 +10,8 @@ from qna.models import Answer
 def create_notif_share_mindspace(sender, instance, **kwargs):
     if instance.access_level == sender.editor:
         notification_type = Notification.ADD_EDITOR
-    elif instance.access_level == sender.commenter:
-        notification_type = Notification.ADD_COMMENTER
+    # elif instance.access_level == sender.commenter:
+    #     notification_type = Notification.ADD_COMMENTER
     else:
         notification_type = Notification.ADD_VIEWER
     
@@ -26,8 +26,8 @@ def create_notif_share_mindspace(sender, instance, **kwargs):
 def create_notif_share_mindspace_remove(sender, instance, **kwargs):
     if instance.access_level == sender.editor:
         notification_type = Notification.REMOVE_EDITOR
-    elif instance.access_level == sender.commenter:
-        notification_type = Notification.REMOVE_COMMENTER
+    # elif instance.access_level == sender.commenter:
+    #     notification_type = Notification.REMOVE_COMMENTER
     else:
         notification_type = Notification.REMOVE_VIEWER
     
