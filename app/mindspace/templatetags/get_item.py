@@ -1,4 +1,3 @@
-from webbrowser import get
 from django import template
 
 register = template.Library()

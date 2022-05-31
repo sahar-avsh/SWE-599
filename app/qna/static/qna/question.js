@@ -649,6 +649,38 @@ $(document).on("click", "[id*=id-collapse-search-question-detail-]", function() 
         });
     });
 
+    $(document).on("click", "[id*=id-vote-]", function(e) {
+        e.stopImmediatePropagation();
+        var answer_id = $(this).attr("id").split("-").pop();
+        var vote_type = $(this).attr("id").split("-")[2];
+
+        $.ajax({
+            type: 'POST',
+            url: $(this).attr("action-url"),
+            data: {
+                'vote_type': vote_type,
+                'answer_id': answer_id
+            },
+            success: function(response) {
+                var score = parseInt($("#id-vote-score-" + answer_id).html());
+                if (response.nature === "change" && response.vote === "U") {
+                    $("#id-vote-score-" + answer_id).html(score + 2);
+                } else if (response.nature === "change" && response.vote === "D") {
+                    $("#id-vote-score-" + answer_id).html(score - 2);
+                } else if (response.nature === "create" && response.vote === "U") {
+                    $("#id-vote-score-" + answer_id).html(score + 1);
+                } else if (response.nature === "create" && response.vote === "D") {
+                    $("#id-vote-score-" + answer_id).html(score - 1);
+                } else if (response.nature === "delete" && response.vote === "U") {
+                    $("#id-vote-score-" + answer_id).html(score - 1);
+                } else if (response.nature === "delete" && response.vote === "D") {
+                    $("#id-vote-score-" + answer_id).html(score + 1);
+                }
+                $("#id-vote-icons-" + answer_id).html(response.vote_html);
+            }
+        });
+    });
+
 //     $(document).on("click", "[id*=id-search-question-title]", function() {
 //         var id = $(this).attr("id").split("-").pop();
 //         $.ajax({
