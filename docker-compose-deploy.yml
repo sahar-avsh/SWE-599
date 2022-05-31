@@ -16,6 +16,7 @@ services:
       - ALLOWED_HOSTS=${ALLOWED_HOSTS}
       - EMAIL_USER=${EMAIL_USER}
       - EMAIL_PASSWORD=${EMAIL_PASSWORD}
+      - ADOBE_ID=${ADOBE_ID}
     depends_on:
       - db
   
