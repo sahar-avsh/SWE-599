@@ -20,7 +20,7 @@ $(document).ready(function() {
 
     $(document).on("submit", "#id-form-edit-profile", function(e) {
         e.preventDefault();
-        var progress_bar = document.getElementById('progress');
+        const progress_bar = document.getElementById('progress-profile');
         var formData = new FormData();
         $.each($(this).serializeArray(), function(index, value) {
             formData.append(value['name'], value['value']);
@@ -29,7 +29,7 @@ $(document).ready(function() {
         var img_data = $('#id_image').get(0).files[0];
         if (img_data) {
             formData.append('image', img_data);
-            $("#progress").show();
+            $("#progress-profile").show();
         }
         
         $.ajax({
@@ -43,11 +43,11 @@ $(document).ready(function() {
             xhr: function() {
                 var xhr = new window.XMLHttpRequest();
 
-                xhr.upload.addEventListener('progress', e => {
+                xhr.upload.addEventListener('progress', function(e) {
                     if (e.lengthComputable) {
-                        var percentProgress = (e.loaded / e.total) * 100;
+                        const percentProgress = (e.loaded / e.total) * 100;
                         console.log(percentProgress);
-                        progress_bar.innerHTML = '<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: ${percentProgress}%" aria-valuenow="${percentProgress}" aria-valuemin="0" aria-valuemax="100"></div>'
+                        progress_bar.innerHTML = '<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: ' + percentProgress + '%" aria-valuenow="' + percentProgress + '" aria-valuemin="0" aria-valuemax="100"></div>'
                     }
                 });
                 return xhr
@@ -58,7 +58,7 @@ $(document).ready(function() {
                     url: $("#id-profile-link").attr("href"),
                     success: function(response) {
                         $("#id-profile-detail").html(response);
-                        $("#progress").hide();
+                        $("#progress-profile").hide();
                         $("#id-profile-detail").show();
                     }
                 });
