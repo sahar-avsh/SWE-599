@@ -20,6 +20,7 @@ $(document).ready(function() {
 
     $(document).on("submit", "#id-form-edit-profile", function(e) {
         e.preventDefault();
+        var progress_bar = document.getElementById('progress');
         var formData = new FormData();
         $.each($(this).serializeArray(), function(index, value) {
             formData.append(value['name'], value['value']);
@@ -28,6 +29,7 @@ $(document).ready(function() {
         var img_data = $('#id_image').get(0).files[0];
         if (img_data) {
             formData.append('image', img_data);
+            $("#progress").show();
         }
         
         $.ajax({
@@ -38,12 +40,29 @@ $(document).ready(function() {
             processData: false,
             enctype: 'multipart/form-data',
             url: $(this).attr("action"),
+            beforeSend: function(){
+
+            },
+            xhr:function() {
+                const xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener('progress', e=> {
+                    if(e.lengthComputable) {
+                        const percentProgress = (e.loaded/e.total)*100;
+                        console.log(percentProgress);
+                        progress_bar.innerHTML = `<div class="progress-bar progress-bar-striped bg-success" 
+                role="progressbar" style="width: ${percentProgress}%" aria-valuenow="${percentProgress}" aria-valuemin="0" 
+                aria-valuemax="100"></div>`
+                    }
+                });
+                return xhr
+            },
             success: function(response) {
                 $.ajax({
                     type: 'GET',
                     url: $("#id-profile-link").attr("href"),
                     success: function(response) {
                         $("#id-profile-detail").html(response);
+                        $("#progress").hide();
                         $("#id-profile-detail").show();
                     }
                 });

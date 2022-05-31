@@ -244,6 +244,7 @@ $(document).ready(function() {
 
     $(document).on("submit", "#id-create-resource-form", function(e) {
         e.preventDefault();
+        var progress_bar = document.getElementById('progress');
         var formData = new FormData();
 
         $.each($(this).serializeArray(), function(index, value) {
@@ -255,10 +256,13 @@ $(document).ready(function() {
         var vid_data = $('#video_field').get(0).files[0];
         if (img_data) {
             formData.append('image', img_data);
+            $("#progress").show();
         } else if (doc_data) {
             formData.append('document', doc_data);
+            $("#progress").show();
         } else if (vid_data) {
             formData.append('video', vid_data);
+            $("#progress").show();
         }
         
         $.ajax({
@@ -269,7 +273,24 @@ $(document).ready(function() {
             cache: false,
             processData: false,
             enctype: 'multipart/form-data',
+            beforeSend: function(){
+
+            },
+            xhr:function() {
+                const xhr = new window.XMLHttpRequest();
+                xhr.upload.addEventListener('progress', e=> {
+                    if(e.lengthComputable) {
+                        const percentProgress = (e.loaded/e.total)*100;
+                        console.log(percentProgress);
+                        progress_bar.innerHTML = `<div class="progress-bar progress-bar-striped bg-success" 
+                role="progressbar" style="width: ${percentProgress}%" aria-valuenow="${percentProgress}" aria-valuemin="0" 
+                aria-valuemax="100"></div>`
+                    }
+                });
+                return xhr
+            },
             success: function(response) {
+                $("#progress").hide();
                 window.location.reload();
                 // $("#id-mindspace-edit").html("");
             }
