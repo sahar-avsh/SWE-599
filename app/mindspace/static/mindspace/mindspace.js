@@ -114,12 +114,13 @@ $(document).ready(function() {
             url: $(this).attr("href"),
             success: function(response) {
                 $("#id-ask-question-mindspace-form").html(response);
-                $("#id_tagged_mindspace").val($("#id-profile").data("id"));
+                var id = $("[id*=id-mindspace-title]").attr("id").split("-").pop();
+                $("#id_tagged_mindspace").val(id);
                 $.ajax({
                     type: 'GET',
                     url: $("#question_form").attr("data-resources-url"),
                     data: {
-                        mindspace: $("#id-profile").data("id")
+                        mindspace: id
                     },
                     success: function(response) {
                         $("#id_tagged_resource").html(response);
