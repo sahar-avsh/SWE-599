@@ -40,18 +40,14 @@ $(document).ready(function() {
             processData: false,
             enctype: 'multipart/form-data',
             url: $(this).attr("action"),
-            beforeSend: function(){
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
 
-            },
-            xhr:function() {
-                const xhr = new window.XMLHttpRequest();
-                xhr.upload.addEventListener('progress', e=> {
-                    if(e.lengthComputable) {
-                        const percentProgress = (e.loaded/e.total)*100;
+                xhr.upload.addEventListener('progress', e => {
+                    if (e.lengthComputable) {
+                        var percentProgress = (e.loaded / e.total) * 100;
                         console.log(percentProgress);
-                        progress_bar.innerHTML = `<div class="progress-bar progress-bar-striped bg-success" 
-                role="progressbar" style="width: ${percentProgress}%" aria-valuenow="${percentProgress}" aria-valuemin="0" 
-                aria-valuemax="100"></div>`
+                        progress_bar.innerHTML = '<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: ${percentProgress}%" aria-valuenow="${percentProgress}" aria-valuemin="0" aria-valuemax="100"></div>'
                     }
                 });
                 return xhr
