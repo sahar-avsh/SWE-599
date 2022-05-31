@@ -50,6 +50,7 @@
     <script>
         $(document).ready(function() {
             $("#id-remove-filter-keyword").click(function(e) {
+                $(".spinner-border").show();
                 $("#id-search-keyword").val("");
                 $.ajax({
                     url: '{% url 'mindspace:ajax_load_search_results' %}',
@@ -59,12 +60,14 @@
                         owner_query: $("#id-search-owner").val(),
                     },
                     success: function(response) {
+                        $(".spinner-border").hide();
                         $(".mindspace-search-results").html(response);
                     }
                 });
             });
 
             $("#id-remove-filter-owner").click(function(e) {
+                $(".spinner-border").show();
                 $("#id-search-owner").val("");
                 $.ajax({
                     url: '{% url 'mindspace:ajax_load_search_results' %}',
@@ -74,6 +77,7 @@
                         owner_query: $("#id-search-owner").val(),
                     },
                     success: function(response) {
+                        $(".spinner-border").hide();
                         $(".mindspace-search-results").html(response);
                     }
                 });

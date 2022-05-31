@@ -305,6 +305,7 @@ function loadOwnAnswersSection(url) {
         url: url,
         success: function(response) {
             $(".my-answers").html(response);
+            $(".spinner-border").hide();
             $(".my-answers").show();
         }
     });
@@ -318,6 +319,7 @@ function loadOwnQuestionsSection(url) {
         url: url,
         success: function(response) {
             $(".my-questions").html(response);
+            $(".spinner-border").hide();
             $(".my-questions").show();
         }
     });
@@ -400,6 +402,8 @@ $(document).on("click", "[id*=id-collapse-search-question-detail-]", function() 
 // other sections are hidden
 
     $(document).on("click", "#id-my-questions-button", function() {
+        $(".spinner-border").show();
+
         $("#id-comm-button").removeClass("active");
         $("#id-comm-button").addClass("disabled");
 
@@ -424,6 +428,8 @@ $(document).on("click", "[id*=id-collapse-search-question-detail-]", function() 
 // other sections are hidden
 
     $(document).on("click", "#id-my-answers-button", function() {
+        $(".spinner-border").show();
+
         $("#id-comm-button").removeClass("active");
         $("#id-comm-button").addClass("disabled");
 
@@ -636,6 +642,7 @@ $(document).on("click", "[id*=id-collapse-search-question-detail-]", function() 
     });
 
     $(document).on("submit", "#id-question-search-form", function(e) {
+        $(".spinner-border").show();
         e.preventDefault();
         e.stopImmediatePropagation();
         $.ajax({
@@ -645,6 +652,7 @@ $(document).on("click", "[id*=id-collapse-search-question-detail-]", function() 
             success: function(response) {
                 $(".section-buttons").append('<button type="button" id="id-search-results-button" class="btn btn-light btn-lg btn-block disabled">Search Results</button>')
                 $(".question-search-results").html(response);
+                $(".spinner-border").hide();
             }
         });
     });

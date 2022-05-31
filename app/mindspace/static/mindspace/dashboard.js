@@ -57,6 +57,7 @@ $(document).ready(function() {
     });
 
     $(document).on("submit", "#id-mindspace-search-form", function(e) {
+        $(".spinner-border").show();
         e.preventDefault();
         $.ajax({
             type: "GET",
@@ -70,6 +71,7 @@ $(document).ready(function() {
                     $(".section-buttons").append('<button type="button" id="id-search-results-button" class="btn btn-light btn-lg btn-block disabled">Search Results</button>')
                 }
                 $(".mindspace-search-results").html(response);
+                $(".spinner-border").hide();
             }
         });
     });
