@@ -21,7 +21,7 @@
                     {% if q.tagged_resource %} <p>Attached resource: <a href="{% url 'mindspace:mindspace_detail' id=q.tagged_mindspace.id %}">{{ q.tagged_resource.title }}</a></p> {% endif %}
                 </div>
             </div>
-            <button class="answer-button" action="{% url 'qna:answer_create' q_id=q.id %}" id="id-add-answer-button-{{q.id}}">Add your answer</button>
+            <button class="answer-button" action="{% url 'qna:answer_create' q_id=q.id %}" id="id-add-answer-button-{{q.id}}" data-toggle="modal" data-target="#id-modal">Add your answer</button>
         </div>
         
         <div class="question-answer" id="id-search-question-answer-form-{{q.id}}" style="display: none;"></div>
@@ -86,8 +86,8 @@
                     </div>
                     {% if a.owner == request.user.profile %}
                         <div class="answer-edit-buttons" style="margin-bottom: 10px;">
-                            <button class="btn btn-secondary" action="{% url 'qna:answer_update' q_id=q.id id=a.id %}" id="id-answer-update-button-{{a.id}}">Update</button>
-                            <button class="btn btn-warning" action="{% url 'qna:answer_delete' q_id=q.id id=a.id %}" id="id-answer-delete-button-{{a.id}}">Delete</button>
+                            <button class="btn btn-secondary" action="{% url 'qna:answer_update' q_id=q.id id=a.id %}" id="id-answer-update-button-{{a.id}}" data-toggle="modal" data-target="#id-modal">Update</button>
+                            <button class="btn btn-warning" action="{% url 'qna:answer_delete' q_id=q.id id=a.id %}" id="id-answer-delete-button-{{a.id}}" data-toggle="modal" data-target="#id-modal">Delete</button>
                         </div>
     
                         <div class="answer-edit-container" id="id-search-answer-edit-container-{{a.id}}"></div>

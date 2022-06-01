@@ -6,6 +6,9 @@
 <script src="{% static 'qna/resource_dropdown_list.js' %}"></script>
 <script src="{% static 'qna/question.js' %}"></script>
 <link rel="stylesheet" type="text/css" href="{% static 'qna/question_list.css' %}">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
 
 <!-- My questions section - Visible by default -->
 
@@ -33,13 +36,13 @@
                 </div>
 
                 <div class="question-edit-buttons">
-                    <button class="btn btn-secondary" id="id-myquestions-question-update-button-{{question.id}}" action="{% url 'qna:question_update' id=question.id %}">Update</button>
-                    <button class="btn btn-warning" id="id-myquestions-question-delete-button-{{question.id}}" action="{% url 'qna:question_delete' id=question.id %}">Delete</button>
+                    <button class="btn btn-secondary" id="id-myquestions-question-update-button-{{question.id}}" action="{% url 'qna:question_update' id=question.id %}" data-toggle="modal" data-target="#id-modal">Update</button>
+                    <button class="btn btn-warning" id="id-myquestions-question-delete-button-{{question.id}}" action="{% url 'qna:question_delete' id=question.id %}" data-toggle="modal" data-target="#id-modal">Delete</button>
                 </div>
 
                 <div class="question-edit-container" id="id-myquestions-question-edit-container-{{question.id}}" style="padding: 15px;"></div>
 
-                <button class="answer-button" action="{% url 'qna:answer_create' q_id=question.id %}" id="id-add-answer-button-{{question.id}}">Add your answer</button>
+                <button class="answer-button" action="{% url 'qna:answer_create' q_id=question.id %}" id="id-add-answer-button-{{question.id}}" data-toggle="modal" data-target="#id-modal">Add your answer</button>
             </div>
             
             <div class="question-answer" id="id-myquestions-question-answer-form-{{question.id}}" style="display: none;"></div>
@@ -108,8 +111,8 @@
 
                     {% if a.owner == request.user.profile %}
                         <div class="answer-edit-buttons" style="margin-bottom: 10px;">
-                            <button class="btn btn-secondary" action="{% url 'qna:answer_update' q_id=question.id id=a.id %}" id="id-answer-update-button-{{a.id}}">Update</button>
-                            <button class="btn btn-warning" action="{% url 'qna:answer_delete' q_id=question.id id=a.id %}" id="id-answer-delete-button-{{a.id}}">Delete</button>
+                            <button class="btn btn-secondary" action="{% url 'qna:answer_update' q_id=question.id id=a.id %}" id="id-answer-update-button-{{a.id}}" data-toggle="modal" data-target="#id-modal">Update</button>
+                            <button class="btn btn-warning" action="{% url 'qna:answer_delete' q_id=question.id id=a.id %}" id="id-answer-delete-button-{{a.id}}" data-toggle="modal" data-target="#id-modal">Delete</button>
                         </div>
                     {% endif %}
 

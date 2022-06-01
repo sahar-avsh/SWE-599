@@ -62,16 +62,17 @@ function renderAnswerForm(id, url) {
         type: 'GET',
         url: url,
         success: function(response) {
-            if ($(".question-search-results").is(":visible")) {
-                $("#id-search-question-answer-form-" + id).html(response);
-                $("#id-search-question-answer-form-" + id).show();    
-            } else if ($(".comm-questions").is(":visible")) {
-                $("#id-question-answer-form-" + id).html(response);
-                $("#id-question-answer-form-" + id).show();
-            } else if ($(".my-questions").is(":visible")) {
-                $("#id-myquestions-question-answer-form-" + id).html(response);
-                $("#id-myquestions-question-answer-form-" + id).show();
-            }
+            $(".modal-body").html(response);
+            // if ($(".question-search-results").is(":visible")) {
+            //     $("#id-search-question-answer-form-" + id).html(response);
+            //     $("#id-search-question-answer-form-" + id).show();    
+            // } else if ($(".comm-questions").is(":visible")) {
+            //     $("#id-question-answer-form-" + id).html(response);
+            //     $("#id-question-answer-form-" + id).show();
+            // } else if ($(".my-questions").is(":visible")) {
+            //     $("#id-myquestions-question-answer-form-" + id).html(response);
+            //     $("#id-myquestions-question-answer-form-" + id).show();
+            // }
         }
     });
 }
@@ -147,16 +148,18 @@ function postAnswerForm(url, data, q_id, answers_url) {
         url: url,
         data: data,
         success: function(response) {
-            if ($(".comm-questions").is(":visible")) {
-                $("#id-question-answer-form-" + q_id).html("");
-                $("#id-question-answer-form-" + q_id).hide();
-            } else if ($(".question-search-results").is(":visible")) {
-                $("#id-search-question-answer-form-" + q_id).html("");
-                $("#id-search-question-answer-form-" + q_id).hide();
-            } else if ($(".my-questions").is(":visible")) {
-                $("#id-myquestions-question-answer-form-" + q_id).html("");
-                $("#id-myquestions-question-answer-form-" + q_id).hide();
-            }
+            // if ($(".comm-questions").is(":visible")) {
+            //     $("#id-question-answer-form-" + q_id).html("");
+            //     $("#id-question-answer-form-" + q_id).hide();
+            // } else if ($(".question-search-results").is(":visible")) {
+            //     $("#id-search-question-answer-form-" + q_id).html("");
+            //     $("#id-search-question-answer-form-" + q_id).hide();
+            // } else if ($(".my-questions").is(":visible")) {
+            //     $("#id-myquestions-question-answer-form-" + q_id).html("");
+            //     $("#id-myquestions-question-answer-form-" + q_id).hide();
+            // }
+            $('#id-modal').modal('toggle');
+            $('#id-answer-form-' + q_id).trigger("reset");
             loadAnswers(answers_url, q_id);
         }
     });
@@ -167,7 +170,8 @@ function loadQuestionUpdateForm(url, id) {
         type: 'GET',
         url: url,
         success: function(response) {
-            $("#id-myquestions-question-edit-container-" + id).html(response);
+            //$("#id-myquestions-question-edit-container-" + id).html(response);
+            $(".modal-body").html(response);
         }
     });
 }
@@ -177,7 +181,8 @@ function loadQuestionDeleteForm(url, id) {
         type: 'GET',
         url: url,
         success: function(response) {
-            $("#id-myquestions-question-edit-container-" + id).html(response);
+            // $("#id-myquestions-question-edit-container-" + id).html(response);
+            $(".modal-body").html(response);
         }
     });
 }
@@ -188,6 +193,8 @@ function postQuestionUpdateForm(url, data, id, arrayData) {
         url: url,
         data: data,
         success: function(response) {
+            $('#id-modal').modal('toggle');
+            $('#id-question-update-form-' + id).trigger("reset");
             $("#id-question-title-" + id).html(arrayData[1]['value']);
             openQuestionDetail(id, response.url);
         }
@@ -200,6 +207,8 @@ function postQuestionDeleteForm(url, data, id) {
         url: url,
         data: data,
         success: function(response) {
+            $('#id-modal').modal('toggle');
+            $('#id-question-delete-form-' + id).trigger("reset");
             $("#id-myquestions-q-" + id).remove();
             $("#id-myquestions-question-detail-" + id).remove();
         }
@@ -211,19 +220,20 @@ function loadAnswerUpdateForm(url, id) {
         type: 'GET',
         url: url,
         success: function(response) {
-            if ($(".my-answers").is(":visible")) {
-                $("#id-myanswers-answer-edit-container-" + id).html(response);
-                $("#id-myanswers-answer-edit-container-" + id).show();   
-            } else if ($(".comm-questions").is(":visible")) {
-                $("#id-answer-edit-container-" + id).html(response);
-                $("#id-answer-edit-container-" + id).show();
-            } else if ($(".my-questions").is(":visible")) {
-                $("#id-myquestions-answer-edit-container-" + id).html(response);
-                $("#id-myquestions-answer-edit-container-" + id).show();
-            } else {
-                $("#id-search-answer-edit-container-" + id).html(response);
-                $("#id-search-answer-edit-container-" + id).show();
-            }
+            $(".modal-body").html(response);
+            // if ($(".my-answers").is(":visible")) {
+            //     $("#id-myanswers-answer-edit-container-" + id).html(response);
+            //     $("#id-myanswers-answer-edit-container-" + id).show();   
+            // } else if ($(".comm-questions").is(":visible")) {
+            //     $("#id-answer-edit-container-" + id).html(response);
+            //     $("#id-answer-edit-container-" + id).show();
+            // } else if ($(".my-questions").is(":visible")) {
+            //     $("#id-myquestions-answer-edit-container-" + id).html(response);
+            //     $("#id-myquestions-answer-edit-container-" + id).show();
+            // } else {
+            //     $("#id-search-answer-edit-container-" + id).html(response);
+            //     $("#id-search-answer-edit-container-" + id).show();
+            // }
         }
     });
 }
@@ -233,19 +243,20 @@ function loadAnswerDeleteForm(url, id) {
         type: 'GET',
         url: url,
         success: function(response) {
-            if ($(".my-answers").is(":visible")) {
-                $("#id-myanswers-answer-edit-container-" + id).html(response);
-                $("#id-myanswers-answer-edit-container-" + id).show();   
-            } else if ($(".comm-questions").is(":visible")) {
-                $("#id-answer-edit-container-" + id).html(response);
-                $("#id-answer-edit-container-" + id).show();
-            } else if ($(".my-questions").is(":visible")) {
-                $("#id-myquestions-answer-edit-container-" + id).html(response);
-                $("#id-myquestions-answer-edit-container-" + id).show();
-            } else {
-                $("#id-search-answer-edit-container-" + id).html(response);
-                $("#id-search-answer-edit-container-" + id).show();
-            }
+            $(".modal-body").html(response);
+            // if ($(".my-answers").is(":visible")) {
+            //     $("#id-myanswers-answer-edit-container-" + id).html(response);
+            //     $("#id-myanswers-answer-edit-container-" + id).show();   
+            // } else if ($(".comm-questions").is(":visible")) {
+            //     $("#id-answer-edit-container-" + id).html(response);
+            //     $("#id-answer-edit-container-" + id).show();
+            // } else if ($(".my-questions").is(":visible")) {
+            //     $("#id-myquestions-answer-edit-container-" + id).html(response);
+            //     $("#id-myquestions-answer-edit-container-" + id).show();
+            // } else {
+            //     $("#id-search-answer-edit-container-" + id).html(response);
+            //     $("#id-search-answer-edit-container-" + id).show();
+            // }
         }
     });
 }
@@ -256,18 +267,20 @@ function postAnswerUpdateForm(url, data, id) {
         url: url,
         data: data,
         success: function(response) {
+            $('#id-modal').modal('toggle');
+            $('#id-answer-update-form-' + id).trigger("reset");
             $.ajax({
                 type: 'GET',
                 url: response.url,
                 success: function(response2) {
                     if ($(".comm-questions").is(":visible")) {
-                        $("#id-answer-edit-container-" + id).html("");
+                        // $("#id-answer-edit-container-" + id).html("");
                         $("#id-rate-and-answer-" + id).html(response2);
                     } else if ($(".my-answers").is(":visible")) {
-                        $("#id-myanswers-answer-edit-container-" + id).html("");
+                        // $("#id-myanswers-answer-edit-container-" + id).html("");
                         $("#id-myanswers-rate-and-answer-" + id).html(response2);
                     } else if($(".my-questions").is(":visible")) {
-                        $("#id-myquestions-answer-edit-container-" + id).html("");
+                        // $("#id-myquestions-answer-edit-container-" + id).html("");
                         $("#id-myquestions-rate-and-answer-" + id).html(response2);
                     }
                 }
@@ -282,6 +295,7 @@ function postAnswerDeleteForm(url, data) {
         url: url,
         data: data,
         success: function(response) {
+            $('#id-modal').modal('toggle');
             loadAnswers(response.url, response.id);
         }
     });
@@ -328,6 +342,7 @@ function loadOwnQuestionsSection(url) {
 $(document).ready(function() {
     $(document).on("submit", "#id-question-form", function(e) {
         e.preventDefault();
+        e.stopImmediatePropagation();
         var url = $(this).attr("action");
         var data = $(this).serialize();
         submitQuestionForm(url, data);
@@ -336,9 +351,17 @@ $(document).ready(function() {
 // Opens question details when clicked on the title - Covers Community Questions section
 
     $(document).on("click", "[id*=id-question-title-]", function(e) {
+        e.stopImmediatePropagation();
         var id = $(this).attr("id").split("-").pop();
         if ($(".comm-questions").is(":visible")) {
             $("#id-question-detail-" + id).show();
+
+            $("*[id*=id-question-detail]:visible").each(function() {
+                if (id !== this.id.split("-").pop()) {
+                    $("#id-collapse-question-detail-" + this.id.split("-").pop()).remove();
+                    this.style.display = "none";
+                }
+            });
 
             if (!$("#id-collapse-question-detail-" + id).length) {
                 $("#id-q-" + id).append('<svg style="cursor: pointer; display: inline-block;" id="id-collapse-question-detail-' + id + '" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-bar-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 10a.5.5 0 0 0 .5-.5V3.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 3.707V9.5a.5.5 0 0 0 .5.5zm-7 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"/></svg>');
@@ -346,17 +369,38 @@ $(document).ready(function() {
         } else if ($(".my-answers").is(":visible")) {
             $("#id-myanswers-question-detail-" + id).show();
 
+            $("*[id*=id-myanswers-question-detail]:visible").each(function() {
+                if (id !== this.id.split("-").pop()) {
+                    $("#id-collapse-myanswers-question-detail-" + this.id.split("-").pop()).remove();
+                    this.style.display = "none";
+                }
+            });
+
             if (!$("#id-collapse-myanswers-question-detail-" + id).length) {
                 $("#id-myanswers-q-" + id).append('<svg style="cursor: pointer; display: inline-block;" id="id-collapse-myanswers-question-detail-' + id + '" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-bar-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 10a.5.5 0 0 0 .5-.5V3.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 3.707V9.5a.5.5 0 0 0 .5.5zm-7 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"/></svg>');
             }
         } else if ($(".my-questions").is(":visible")) {
             $("#id-myquestions-question-detail-" + id).show();
 
+            $("*[id*=id-myquestions-question-detail]:visible").each(function() {
+                if (id !== this.id.split("-").pop()) {
+                    $("#id-collapse-myquestions-question-detail-" + this.id.split("-").pop()).remove();
+                    this.style.display = "none";
+                }
+            });
+
             if (!$("#id-collapse-myquestions-question-detail-" + id).length) {
                 $("#id-myquestions-q-" + id).append('<svg style="cursor: pointer; display: inline-block;" id="id-collapse-myquestions-question-detail-' + id + '" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-bar-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 10a.5.5 0 0 0 .5-.5V3.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 3.707V9.5a.5.5 0 0 0 .5.5zm-7 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"/></svg>');
             }
         } else if ($(".question-search-results").is(":visible")) {
             $("#id-search-question-detail-" + id).show();
+
+            $("*[id*=id-search-question-detail]:visible").each(function() {
+                if (id !== this.id.split("-").pop()) {
+                    $("#id-collapse-search-question-detail-" + this.id.split("-").pop()).remove();
+                    this.style.display = "none";
+                }
+            });
 
             if (!$("#id-collapse-search-question-detail-" + id).length) {
                 $("#id-search-q-" + id).append('<svg style="cursor: pointer; display: inline-block;" id="id-collapse-search-question-detail-' + id + '" xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-arrow-bar-up" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M8 10a.5.5 0 0 0 .5-.5V3.707l2.146 2.147a.5.5 0 0 0 .708-.708l-3-3a.5.5 0 0 0-.708 0l-3 3a.5.5 0 1 0 .708.708L7.5 3.707V9.5a.5.5 0 0 0 .5.5zm-7 2.5a.5.5 0 0 1 .5-.5h13a.5.5 0 0 1 0 1h-13a.5.5 0 0 1-.5-.5z"/></svg>');
@@ -528,13 +572,15 @@ $(document).on("click", "[id*=id-collapse-search-question-detail-]", function() 
         postAnswerForm(url, data, q_id, answers_url);
     });
 
-    $(document).on("click", "[id*=id-myquestions-question-update-button-]", function() {
+    $(document).on("click", "[id*=id-myquestions-question-update-button-]", function(e) {
+        e.stopImmediatePropagation();
         var id = $(this).attr("id").split("-").pop();
         var url = $(this).attr("action");
         loadQuestionUpdateForm(url, id);
     });
 
-    $(document).on("click", "[id*=id-myquestions-question-delete-button-]", function() {
+    $(document).on("click", "[id*=id-myquestions-question-delete-button-]", function(e) {
+        e.stopImmediatePropagation();
         var id = $(this).attr("id").split("-").pop();
         var url = $(this).attr("action");
         loadQuestionDeleteForm(url, id);
@@ -552,6 +598,7 @@ $(document).on("click", "[id*=id-collapse-search-question-detail-]", function() 
 
     $(document).on("submit", "[id*=id-question-update-form-]", function(e) {
         e.preventDefault();
+        e.stopImmediatePropagation();
         var id = $(this).attr("id").split("-").pop();
         var url = $(this).attr("action");
         var data = $(this).serialize();
@@ -561,6 +608,7 @@ $(document).on("click", "[id*=id-collapse-search-question-detail-]", function() 
 
     $(document).on("submit", "[id*=id-question-delete-form-]", function(e) {
         e.preventDefault();
+        e.stopImmediatePropagation();
         var id = $(this).attr("id").split("-").pop();
         var url = $(this).attr("action");
         var data = $(this).serialize();

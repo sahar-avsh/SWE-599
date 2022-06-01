@@ -60,8 +60,8 @@
 
     {% if a.owner == request.user.profile %}
         <div class="answer-edit-buttons" style="margin-bottom: 10px;">
-            <button class="btn btn-secondary" action="{% url 'qna:answer_update' q_id=a.question.id id=a.id %}" id="id-answer-update-button-{{a.id}}">Update</button>
-            <button class="btn btn-warning" action="{% url 'qna:answer_delete' q_id=a.question.id id=a.id %}" id="id-answer-delete-button-{{a.id}}">Delete</button>
+            <button class="btn btn-secondary" action="{% url 'qna:answer_update' q_id=a.question.id id=a.id %}" id="id-answer-update-button-{{a.id}}" data-toggle="modal" data-target="#id-modal">Update</button>
+            <button class="btn btn-warning" action="{% url 'qna:answer_delete' q_id=a.question.id id=a.id %}" id="id-answer-delete-button-{{a.id}}" data-toggle="modal" data-target="#id-modal">Delete</button>
         </div>
     {% endif %}
 

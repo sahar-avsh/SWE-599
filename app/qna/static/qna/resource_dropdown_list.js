@@ -1,5 +1,7 @@
 $(document).ready(function() {
-  $("#id_tagged_mindspace").change(function () {
+  $(document).on("change", "#id_tagged_mindspace", function (e) {
+    e.stopImmediatePropagation();
+    console.log('what');
     var url = $("#id-question-form").attr("data-resources-url");
     var mindspaceId = $(this).val();
 
@@ -15,8 +17,31 @@ $(document).ready(function() {
     });
   });
 
-  $("#id_tagged_mindspace_answer").change(function () {
-    var url = $("[id*=id-answer-form]").attr("data-resources-url");
+  $(document).on("change", "[id*=id_tagged_mindspace_update]:visible", function (e) {
+    e.stopImmediatePropagation();
+    console.log('where');
+    var url = $("[id*=id-question-update-form]:visible").attr("data-resources-url");
+    console.log(url);
+    var mindspaceId = $(this).val();
+
+    $.ajax({
+      type: 'GET',
+      url: url,
+      data: {
+        'mindspace': mindspaceId
+      },
+      success: function (data) {
+        $("#id_tagged_resource_update:visible").html(data);
+      }
+    });
+  });
+
+  $(document).on("change", "#id_tagged_mindspace_answer", function (e) {
+    e.stopImmediatePropagation();
+    var url = $("[id*=id-answer-form]:visible").attr("data-resources-url");
+    if (!url) {
+      var url = $("[id*=id-answer-update-form]:visible").attr("data-resources-url");
+    }
     var mindspaceId = $(this).val();
 
     $.ajax({

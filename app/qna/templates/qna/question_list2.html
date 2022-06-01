@@ -57,7 +57,16 @@
                     <span class="sr-only">Loading...</span>
                 </div>
             </div>
-
+            
+            <div class="modal fade" id="id-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                        ...
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Community Questions section - Visible by default -->
 
             <div class="comm-questions">
@@ -83,7 +92,7 @@
                                     {% if q.tagged_resource %} <p>Attached resource: <a href="{% url 'mindspace:mindspace_detail' id=q.tagged_mindspace.id %}">{{ q.tagged_resource.title }}</a></p> {% endif %}
                                 </div>
                             </div>
-                            <button class="answer-button" action="{% url 'qna:answer_create' q_id=q.id %}" id="id-add-answer-button-{{q.id}}">Add your answer</button>
+                            <button class="answer-button" action="{% url 'qna:answer_create' q_id=q.id %}" id="id-add-answer-button-{{q.id}}" data-toggle="modal" data-target="#id-modal">Add your answer</button>
                         </div>
                         
                         
@@ -156,8 +165,8 @@
 
                                     {% if a.owner == request.user.profile %}
                                         <div class="answer-edit-buttons" style="margin-bottom: 10px;">
-                                            <button class="btn btn-secondary" action="{% url 'qna:answer_update' q_id=q.id id=a.id %}" id="id-answer-update-button-{{a.id}}">Update</button>
-                                            <button class="btn btn-warning" action="{% url 'qna:answer_delete' q_id=q.id id=a.id %}" id="id-answer-delete-button-{{a.id}}">Delete</button>
+                                            <button class="btn btn-secondary" action="{% url 'qna:answer_update' q_id=q.id id=a.id %}" id="id-answer-update-button-{{a.id}}" data-toggle="modal" data-target="#id-modal">Update</button>
+                                            <button class="btn btn-warning" action="{% url 'qna:answer_delete' q_id=q.id id=a.id %}" id="id-answer-delete-button-{{a.id}}" data-toggle="modal" data-target="#id-modal">Delete</button>
                                         </div>
                                     {% endif %}
 

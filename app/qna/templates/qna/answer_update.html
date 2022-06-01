@@ -15,12 +15,12 @@
 <script src="{% static 'qna/resource_dropdown_list.js' %}"></script>
 
     
-    <form class="answer-update-form" action="{% url 'qna:answer_update' q_id=object.question.id id=object.id %}" id='id-answer-update-form-{{object.id}}' method='POST' data-resources-url="{% url 'ajax_load_resources' %}" novalidate>
+    <form class="answer-update-form" action="{% url 'qna:answer_update' q_id=object.question.id id=object.id %}" id='id-answer-update-form-{{object.id}}' data-resources-url="{% url 'qna:ajax_load_resources' %}" novalidate>
       <h3> Update your answer </h3>
       {% csrf_token %}
       {{form|crispy}}
       <input type='submit' class='btn btn-success' value='Save'/>
-      <a id="id-cancel-answer-update-form-{{object.id}}" style="color: white;" class="btn btn-secondary" role="button">Cancel</a>
+      <a id="id-cancel-answer-update-form-{{object.id}}" style="color: white;" class="btn btn-secondary" role="button" data-dismiss="modal">Cancel</a>
     </form>
 
     <style>

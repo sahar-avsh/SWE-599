@@ -63,7 +63,7 @@ class LoadResources(LoginRequiredMixin, TemplateView):
 
 class QuestionUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
     template_name = 'qna/question_update.html'
-    form_class = QuestionModelForm
+    form_class = QuestionUpdateModelForm
     success_message = 'Your question was updated successfully'
 
     def get_object(self):
