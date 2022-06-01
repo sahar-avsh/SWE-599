@@ -1,70 +1,8 @@
-{% comment %} {% extends 'mindspace/base.html' %}
-
-{% load static %}
-{% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/resource_delete.css' %}">
-{% endblock styles %}
-{% block js %}
-  <script src="{% static 'mindspace/dropdown.js' %}"></script>
-{% endblock js %}
-
-{% block title %}
-    {{block.super}} - Delete a Resource
-{% endblock title %} {% endcomment %}
-
-{% comment %} {% block navbar %}
-    
-  <ul>
-    <li><a href={% url 'main_page' %}>Home</a></li>
-    <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
-    <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-    <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
-    <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
-
-    <div class="dropdown">
-      <button onclick="myFunction()" class="dropbtn">Actions</button>
-      <div id="myDropdown" class="dropdown-content">
-        <a href="#home">Clicked</a>
-        <a href="#about">Clicked</a>
-        <a href="#contact">Clicked</a>
-      </div>
-    </div>
-  </ul>
-
-{% endblock navbar %} {% endcomment %}
-
-{% comment %} {% block content %} {% endcomment %}
-
-    <form style="padding: 20px;" id="id-form-delete-resource" action="{% url 'mindspace:resource_delete' ms_id=object.belongs_to.id id=object.id %}" method='POST'>{% csrf_token %}
-        <h2>Do you want to delete {{object.title}}?</h2>
-        <p style="margin-bottom: 5px;">Important: All notes belonging to this Resource will be deleted as well.</p>
-        <p style="margin-bottom: 0px;">
-          <input type='submit' class="btn btn-warning" value='Delete'/> 
-          <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        </p>
-    </form>
-
-    <script>
-      function closeForm() {
-        $("#id-mindspace-edit").html("");
-        $("#id-mindspace-edit").css('border', 'none');
-      }
-    </script>
-        
-    {% comment %} <h3>Notes belonging to this Mindspace</h3>
-    <div class="card-deck">
-        <div class="card">
-            <img class="card-img-top" src="..." alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title"> Dummy Note Title </h5>
-                <p class="card-text"> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                <a href="#" class="btn btn-primary">Go</a>
-            </div>
-            <div class="card-footer">
-                <small class="text-muted">Last updated 3 mins ago</small>
-            </div>
-        </div>
-    </div> {% endcomment %}
-
-
-{% comment %} {% endblock content %} {% endcomment %}
+<form style="padding: 20px;" id="id-form-delete-resource" action="{% url 'mindspace:resource_delete' ms_id=object.belongs_to.id id=object.id %}" method='POST'>{% csrf_token %}
+    <h2>Do you want to delete {{object.title}}?</h2>
+    <p style="margin-bottom: 5px;">Important: All notes belonging to this Resource will be deleted as well.</p>
+    <p style="margin-bottom: 0px;">
+      <input type='submit' class="btn btn-warning" value='Delete'/> 
+      <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    </p>
+</form>

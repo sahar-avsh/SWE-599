@@ -34,8 +34,6 @@ $(document).ready(function() {
             url: $(this).data("url"),
             success: function(response) {
                 $("#id-mindspace-modal-body").html(response);
-                // $("#id-mindspace-edit").html(response);
-                // $("#id-mindspace-edit").css('border', '1px burlywood solid');
             }
         });
     });
@@ -46,8 +44,6 @@ $(document).ready(function() {
             url: $(this).data("url"),
             success: function(response) {
                 $("#id-mindspace-modal-body").html(response);
-                // $("#id-mindspace-edit").html(response);
-                // $("#id-mindspace-edit").css('border', '1px burlywood solid');
             },
             error: function(response) {
                 $("#id-mindspace-modal-body").html('<div class="alert alert-primary" role="alert"> \
@@ -56,18 +52,6 @@ $(document).ready(function() {
             }
         });
     });
-
-    // $(document).on("click", "[id*=id-kebab-resource]", function() {
-    //     var rid = $(this).attr("id").split('-')[3];
-    //     $(".dropdown-content-" + rid).html("<a>Edit</a><a>Delete</a>");
-    // });
-
-    // $(document).click(function(e) {
-    //     if (e.target.id.indexOf('id-resource-dropdown-menu') < 0 && e.target.id.indexOf('id-kebab-resource') < 0)
-    //     {
-    //         $("*[id*=id-resource-dropdown-menu]").html("");
-    //     }
-    // });
 });
 
 

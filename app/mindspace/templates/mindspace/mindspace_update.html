@@ -1,42 +1,3 @@
-{% comment %} {% extends "mindspace/base.html" %} 
-
-
-
-{% load static %}
-{% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_update.css' %}">
-{% endblock styles %}
-{% block js %}
-  <script src="{% static 'mindspace/dropdown.js' %}"></script>
-{% endblock js %}
-
-{% block title %}
-    {{block.super}} - Update
-{% endblock title %} {% endcomment %}
-
-{% comment %} {% block navbar %}
-
-  <ul>
-    <li><a href={% url 'main_page' %}>Home</a></li>
-    <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
-    <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-    <li><a href="#">Q&A</a></li>
-    <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
-
-    <div class="dropdown">
-      <button onclick="myFunction()" class="dropbtn">Actions</button>
-      <div id="myDropdown" class="dropdown-content">
-        <a href="#home">Create a new Mindspace</a>
-        <a href="#about">Clicked</a>
-        <a href="#contact">Clicked</a>
-      </div>
-    </div>
-  </ul>
-
-{% endblock navbar %} {% endcomment %}
-
-{% comment %} {% block content %} {% endcomment %}
-
 {% load crispy_forms_tags %}
 
     <h1 style="margin-left: 20px;"> Update {{object.title}} </h1>
@@ -51,12 +12,3 @@
     height: 50px;
   }
 </style>
-
-<script>
-  function closeForm() {
-    $("#id-mindspace-edit").html("");
-    $("#id-mindspace-edit").css('border', 'none');
-  }
-</script>
-
-{% comment %} {% endblock content %} {% endcomment %}

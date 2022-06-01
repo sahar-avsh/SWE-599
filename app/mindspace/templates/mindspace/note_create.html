@@ -1,39 +1,7 @@
-{% comment %} {% extends "mindspace/base.html" %} 
-
-
-
-{% block title %}
-    {{block.super}}
-{% endblock title %}
-
-{% block navbar %}
-  <ul>
-    <li><a href={% url 'main_page' %}>Home</a></li>
-    <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
-    <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-    <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
-    <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
-
-    <div class="dropdown">
-      <button onclick="myFunction()" class="dropbtn">Actions</button>
-      <div id="myDropdown" class="dropdown-content">
-        <a href="#home">Clicked</a>
-        <a href="#about">Clicked</a>
-        <a href="#contact">Clicked</a>
-      </div>
-    </div>
-  </ul>
-{% endblock navbar %}
-
-{% block content %} {% endcomment %}
-
 {% load crispy_forms_tags %}
 
-        <h1> Create a new Note </h1>
-        <form action='.' method='POST'>{% csrf_token %}
-            {{form|crispy}}
-            <input type='submit' class='btn btn-success' value='Save'/>
-            <a class="btn btn-secondary" href="{{parent.get_absolute_url}}" role="button">Cancel</a>
-        </form>
-
-{% comment %} {% endblock content %} {% endcomment %}
+<form action="{% url 'mindspace:note_create' ms_id=resource.belongs_to.id r_id=resource.id %}" method='POST' id="id-note-create-form">{% csrf_token %}
+    {{form|crispy}}
+    <input type='submit' class='btn btn-success' value='Save'/>
+    <a id="id-cancel-note-create-button" class="btn btn-secondary" role="button" style="color: white;">Cancel</a>
+</form>

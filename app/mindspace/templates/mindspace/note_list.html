@@ -1,6 +1,3 @@
-{% comment %} {% extends "mindspace/base.html" %}
-
-{% block styles %} {% endcomment %}
 <style>
   .note {
       border: 1px grey solid;
@@ -35,9 +32,6 @@
       width: 97%;
     }
 </style>
-{% comment %} {% endblock styles %}
-
-{% block content %}  {% endcomment %}
 
 {% for note in note_list %}
     <div id="id-note-{{forloop.counter0}}" class="note">
@@ -56,5 +50,3 @@
     <p class="note-timestamp"> Created at {{note.created_at|date:"l j M Y - H:i"}} | Updated at {{note.updated_at|date:"l j M Y - H:i"}} </p>
 {% empty %}
 {% endfor %}
-
-{% comment %} {% endblock content %} {% endcomment %}

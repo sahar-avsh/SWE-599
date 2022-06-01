@@ -18,8 +18,8 @@ class Question(models.Model):
     def __str__(self):
         return self.owner.f_name + '-' + self.title
 
-    # def get_absolute_url(self):
-    #     return reverse('qna:question_detail', kwargs={'id': self.id})
+    def get_absolute_url(self):
+        return reverse('qna:question_detail', kwargs={'id': self.id})
 
     @property
     def is_recent(self):

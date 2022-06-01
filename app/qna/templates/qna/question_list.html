@@ -2,80 +2,96 @@
 
 {% load static %}
 {% block styles %}
-  {% comment %} <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_list.css' %}"> {% endcomment %}
+  <link rel="stylesheet" type="text/css" href="{% static 'qna/question_list.css' %}">
+  <style>
+    #body_field {
+      height: 100px !important;
+    }
+  </style>
 {% endblock styles %}
+
 {% block js %}
+    <script src="{% static 'qna/resource_dropdown_list.js' %}"></script>
+    <script src="{% static 'qna/question.js' %}"></script>
 {% endblock js %}
 
-{% block title %}
-    Q&A
-{% endblock title %}
+{% block title %}Q&A{% endblock title %}
 
-{% comment %} {% block navbar %}
-  <ul>
-    <li><a href={% url 'main_page' %}>Home</a></li>
-    <li><a href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
-    <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-    <li><a class="active" href={% url 'qna:question_list' %}>Q&A</a></li>
-    <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
-
-    <div class="dropdown">
-      <button onclick="myFunction()" class="dropbtn">Actions</button>
-      <div id="myDropdown" class="dropdown-content">
-        <a href={% url 'qna:question_create' %}>Ask a question</a>
-        <a href="#about">Clicked</a>
-        <a href="#contact">Clicked</a>
-      </div>
-    </div>
-  </ul>
-{% endblock navbar %} {% endcomment %}
+{% load crispy_forms_tags %}
+{% load has_voted %}
+{% load is_upvote %}
+{% load order_answers %}
 
 {% block content %}
 
-    <div class="container-fluid">
-      <h2 class="ms_header">Your Questions</h2>
+    <div class="main-container">
 
-      {% for object in object_list %}
-        <div class="card-deck">
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title"> {{object.title}} </h5>
-              <p class="card-text"> {{object.body}} </p>
-              <a href="{{object.get_absolute_url}}" class="btn btn-primary">Go</a>
+        <div class="qna-sidebar">
+            <div class="qna-create">
+                <h4> Create a new Question </h4>
+                <form action="{% url 'qna:question_create' %}" method="POST" id='id-question-form' data-resources-url="{% url 'qna:ajax_load_resources' %}" novalidate> {% csrf_token %}
+                    {{form_create|crispy}}
+                    <input type='submit' class='btn btn-secondary' value='Save'/>
+                </form>
             </div>
-            <div class="card-footer">
-              {% if object.is_recent %}
-                <small class="text-muted"> Updated just now </small>
-              {% else %}
-                <small class="text-muted">Last updated {{object.updated_date|timesince}} ago </small>
-              {% endif %}
+
+            <div class="qna-search">
+                <h4> Search a Question </h4>
+                <form action="{% url 'qna:question_search' %}" id='id-question-search-form' autocomplete="off">
+                    {{form_search|crispy}}
+                    <input type='submit' id="id-question-search-submit-button" class='btn btn-secondary' value='Search'/>
+                </form>
             </div>
-          </div>
+
         </div>
-      {% empty %}
-        <p>No questions</p>
-      {% endfor %}
 
-      <h2 class="ms_header">Questions Asked by Community</h2>
-      <div class="card-deck">
-        {% for q in object_list_questions %}
-          <div class="card" style="width: 18rem;">
-            <div class="card-body">
-              <h5 class="card-title"> {{q.title}} </h5>
-              <p class="card-text"> {{q.body}} </p>
-              <a href="{{q.get_absolute_url}}" class="btn btn-primary">Go</a>
+        <div class="qna-results">
+            <div class="section-buttons">
+                <button type="button" id="id-my-questions-button" class="btn btn-primary btn-lg btn-block disabled">My Questions</button>
+                <button type="button" id="id-my-answers-button" class="btn btn-info btn-lg btn-block disabled">My Answers</button>
+                <button type="button" id="id-comm-button" class="btn btn-secondary btn-lg btn-block active">Community Questions</button>
             </div>
-            <div class="card-footer">
-              {% if q.is_recent %}
-                <small class="text-muted"> Updated just now </small>
-              {% else %}
-                <small class="text-muted">Last updated {{q.updated_date|timesince}} ago </small>
-              {% endif %}
+
+            <div class="d-flex justify-content-center">
+                <div class="spinner-border" role="status" style="display: none; margin-top: 20px;">
+                    <span class="sr-only">Loading...</span>
+                </div>
             </div>
-          </div>
-        {% empty %}
-        {% endfor %}
-      </div>
+
+            <div class="comm-questions">
+                {% for q in object_list %}
+                    <div>
+                        <h2 class="question-title" id="id-question-title-{{q.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{q.get_absolute_url}}">{{ q.title }}</a> </h2>
+                    </div>
+                {% empty %}
+                    <h2 style="padding: 30px;">No questions.</h2>
+                {% endfor %}
+            </div>
+
+            <div class="my-questions" style="display: none;">
+                {% for my_q in own_questions %}
+                    <div>
+                        <h2 class="question-title" id="id-question-title-{{my_q.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{my_q.get_absolute_url}}">{{ my_q.title }}</a> </h2>
+                    </div>
+                {% empty %}
+                    <h2 style="padding: 30px;">You do not have any questions.</h2>
+                {% endfor %}
+            </div>
+
+            <div class="my-answers" style="display: none;">
+                {% for my_a in own_answers %}
+                    <div>
+                        <h2 class="question-title" id="id-question-title-{{my_a.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{my_a.get_absolute_url}}">{{ my_a.title }}</a> </h2>
+                    </div>
+                {% empty %}
+                    <h2 style="padding: 30px;">You do not have any answered questions.</h2>
+                {% endfor %}
+            </div>
+
+            <div class="question-search-results" style="display: none;">
+
+            </div>
+        </div>
     </div>
 
 {% endblock content %}

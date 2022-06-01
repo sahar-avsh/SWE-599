@@ -1,76 +1,9 @@
-{% comment %} {% extends 'mindspace/base.html' %}
-
-{% block title %}
-    {{block.super}} - Delete
-{% endblock title %} {% endcomment %}
-
-{% comment %} {% block navbar %}
-    <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #e3f2fd;">
-    <a class="navbar-brand" href="{% url 'main_page' %}">Rememberall</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'mindspace:mindspace_list' %}">Dashboard</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="{% url 'profiles:profile_detail' id=request.user.profile.id %}">Profile</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="">Q&A</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
-        </li>
-      </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
-    </div>
-  </nav>
-
-{% endblock navbar %} {% endcomment %}
-
-{% comment %} {% block content %} {% endcomment %}
-        <form action="{% url 'mindspace:mindspace_delete' id=object.id %}" method='POST' id="id-delete-mindspace-form" style="margin: 20px; padding-bottom: 10px;">{% csrf_token %}
-            <h2>Do you want to delete {{object.title}}?</h2>
-            <p style="margin-bottom: 0px;">Important: All resources belonging to this Mindspace will be deleted as well.</p>
-            <small>{{object.resources.count}} resource(s) found in this Mindspace.</small>
-            <p style="margin-bottom: 0px; margin-top: 5px;">
-              <input type='submit' class="btn btn-warning" value='Delete'/>
-              <button class="btn btn-secondary" id="id-cancel-mindspace-delete" data-dismiss="modal">Cancel</button>
-            </p>
-        </form>
-
-        <script>
-          function closeForm() {
-            $("#id-mindspace-edit").html("");
-            $("#id-mindspace-edit").css('border', 'none');
-          }
-        </script>
-            
-        {% comment %} {% if object.resources.count > 0 %}
-          <h3>Resources belonging to this Mindspace</h3>
-          <div class="card-deck">
-            {% for res in object.resources.all %}
-              <div class="card">
-                <img class="card-img-top" src="..." alt="Card image cap">
-                <div class="card-body">
-                  <h5 class="card-title"> {{res.title}} </h5>
-                  <p class="card-text"> {{res.description}} </p>
-                  <a href="{{res.get_absolute_url}}" class="btn btn-primary">Go</a>
-                </div>
-                <div class="card-footer">
-                  <small class="text-muted">Last updated 3 mins ago</small>
-                </div>
-              </div>
-            {% endfor %}
-          </div>
-        {% else %}
-          <h3>There is no resource belonging to this Mindspace.</h3>
-        {% endif %} {% endcomment %}
-{% comment %} {% endblock content %} {% endcomment %}
+<form action="{% url 'mindspace:mindspace_delete' id=object.id %}" method='POST' id="id-delete-mindspace-form" style="margin: 20px; padding-bottom: 10px;">{% csrf_token %}
+    <h2>Do you want to delete {{object.title}}?</h2>
+    <p style="margin-bottom: 0px;">Important: All resources belonging to this Mindspace will be deleted as well.</p>
+    <small>{{object.resources.count}} resource(s) found in this Mindspace.</small>
+    <p style="margin-bottom: 0px; margin-top: 5px;">
+      <input type='submit' class="btn btn-warning" value='Delete'/>
+      <button class="btn btn-secondary" id="id-cancel-mindspace-delete" data-dismiss="modal">Cancel</button>
+    </p>
+</form>

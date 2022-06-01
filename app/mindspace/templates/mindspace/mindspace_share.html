@@ -1,68 +1,24 @@
-{% comment %} {% extends "mindspace/base.html" %} 
-
-{% load static %}
-{% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/mindspace_share.css' %}">
-{% endblock styles %}
-{% block js %}
-  <script src="{% static 'mindspace/dropdown.js' %}"></script>
-{% endblock js %}
-
-{% block title %}
-    {{block.super}} - Share
-{% endblock title %} {% endcomment %}
-
-{% comment %} {% block navbar %}
-  <ul>
-    <li><a href={% url 'main_page' %}>Home</a></li>
-    <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
-    <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-    <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
-    <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
-
-    <div class="dropdown">
-      <button onclick="myFunction()" class="dropbtn">Actions</button>
-      <div id="myDropdown" class="dropdown-content">
-        <a href="#home">Clicked</a>
-        <a href="#about">Clicked</a>
-        <a href="#contact">Clicked</a>
-      </div>
-    </div>
-  </ul>
-{% endblock navbar %} {% endcomment %}
-
-{% comment %} {% block content %} {% endcomment %}
-
 {% load crispy_forms_tags %}
 {% load index %}
 {% load get_item %}
 
-        <h4 style="margin-left: 20px;"> Share {{mindspace.title}} </h4>
-        <form action="{% url 'mindspace:mindspace_share' id=mindspace.id %}" id="id-share-mindspace-form" method='POST' style="margin: 20px; padding-bottom: 10px;">{% csrf_token %}
-          {{formset.management_form|crispy}}
-            {% for form in formset %}
-              {{ form.id }}
-              {{ form|crispy }}
-              {% if form_errors %}
-                {% if err_msgs|get_item:forloop.counter0 %}
-                  <div class="alert alert-danger">
-                    <strong> {{ err_msgs|get_item:forloop.counter0|escape }} </strong>
-                  </div>
-                {% endif %}
-              {% endif %}
-            {% endfor %}
+<h4 style="margin-left: 20px;"> Share {{mindspace.title}} </h4>
+<form action="{% url 'mindspace:mindspace_share' id=mindspace.id %}" id="id-share-mindspace-form" method='POST' style="margin: 20px; padding-bottom: 10px;">{% csrf_token %}
+  {{formset.management_form|crispy}}
+    {% for form in formset %}
+      {{ form.id }}
+      {{ form|crispy }}
+      {% if form_errors %}
+        {% if err_msgs|get_item:forloop.counter0 %}
+          <div class="alert alert-danger">
+            <strong> {{ err_msgs|get_item:forloop.counter0|escape }} </strong>
+          </div>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
 
-            <div class="buttons">
-              <input type='submit' class='btn btn-success' value='Save'/>
-              <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-            </div>
-        </form>
-
-        <script>
-          function closeForm() {
-            $("#id-mindspace-edit").html("");
-            $("#id-mindspace-edit").css('border', 'none');
-          }
-        </script>
-
-{% comment %} {% endblock content %} {% endcomment %}
+    <div class="buttons">
+      <input type='submit' class='btn btn-success' value='Save'/>
+      <button class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+    </div>
+</form>

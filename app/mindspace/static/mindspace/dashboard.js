@@ -44,18 +44,6 @@ $(document).ready(function() {
         $(".mindspace-search-results").show();
     });
 
-    $(document).on("submit", "#id-mindspace-form", function(e) {
-        e.preventDefault();
-        $.ajax({
-            type: "POST",
-            url: $(this).attr("action"),
-            data: $(this).serialize(),
-            success: function(response) {
-                window.location.reload();
-            }
-        });
-    });
-
     $(document).on("submit", "#id-mindspace-search-form", function(e) {
         $(".spinner-border").show();
         e.preventDefault();

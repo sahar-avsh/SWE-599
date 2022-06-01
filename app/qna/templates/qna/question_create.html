@@ -1,60 +1,16 @@
-{% comment %} {% extends "mindspace/base.html" %} 
-
-{% load static %}
-{% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/resource_create.css' %}">
-{% endblock styles %}
-{% block js %}
-  <script src="{% static 'qna/dropdown.js' %}"></script>
-  <script src="{% static 'qna/resource_dropdown_list.js' %}"></script>
-{% endblock js %}
-
-{% load crispy_forms_tags %}
-
-{% block title %}
-    {{block.super}} - Create a Question
-{% endblock title %} {% endcomment %}
-
-{% comment %} {% block navbar %}
-
-  <ul>
-    <li><a href={% url 'main_page' %}>Home</a></li>
-    <li><a href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
-    <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-    <li><a class="active" href={% url 'qna:question_list' %}>Q&A</a></li>
-    <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
-
-    <div class="dropdown">
-      <button onclick="myFunction()" class="dropbtn">Actions</button>
-      <div id="myDropdown" class="dropdown-content">
-        <a href="#home">Clicked</a>
-        <a href="#about">Clicked</a>
-        <a href="#contact">Clicked</a>
-      </div>
-    </div>
-  </ul>
-
-{% endblock navbar %} {% endcomment %}
-
-{% comment %} {% block content %} {% endcomment %}
-
 {% load crispy_forms_tags %}
 {% load static %}
 
-        <h4> Create a new Question </h4>
-        <form action="{% url 'qna:question_create' %}" id='question_form' data-resources-url="{% url 'qna:ajax_load_resources' %}" novalidate>
-        {% csrf_token %}
-            {{form|crispy}}
-            <input type='submit' class='btn btn-success' value='Save'/>
-            {% comment %} <a class="btn btn-secondary" href="{{object.get_absolute_url}}" role="button">Cancel</a> {% endcomment %}
-        </form>
+<h4> Create a new Question </h4>
+<form action="{% url 'qna:question_create' %}" id='question_form' data-resources-url="{% url 'qna:ajax_load_resources' %}" novalidate>
+{% csrf_token %}
+    {{form|crispy}}
+    <input type='submit' class='btn btn-success' value='Save'/>
+    <a class="btn btn-secondary" data-dismiss="modal" style="color: white;" role="button">Cancel</a>
+</form>
 
-        {% comment %} <script src="{% static 'qna/resource_dropdown_list.js' %}"></script> {% endcomment %}
-
-        <style>
-          #body_field {
-            height: 100px !important;
-          }
-        </style>
-
-{% comment %} {% endblock content %} {% endcomment %}
+<style>
+  #body_field {
+    height: 100px !important;
+  }
+</style>

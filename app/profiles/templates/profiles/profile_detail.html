@@ -1,34 +1,3 @@
-{% comment %} {% extends 'mindspace/base.html' %}
-
-{% block navbar %}
-{% endblock navbar %}
-
-{% block title %}
-{% endblock title %} {% endcomment %}
-
-{% comment %} {% block navbar %}
-<ul>
-  <li><a href={% url 'main_page' %}>Home</a></li>
-  <li><a href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
-  <li><a class="active" href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-  <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
-  <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
-
-  <div class="dropdown">
-    <button onclick="myFunction()" class="dropbtn">Actions</button>
-    <div id="myDropdown" class="dropdown-content">
-      <a href={% url 'profiles:profile_update' id=request.user.profile.id %}>Edit your profile</a>
-      <a href="#about">Clicked</a>
-      <a href="#contact">Clicked</a>
-    </div>
-  </div>
-</ul>
-{% endblock navbar %} {% endcomment %}
-
-{% comment %} {% block content %} {% endcomment %}
-
-<div class="container-fluid">
-
   {% if object.image %}
     <img src="{{ object.image.url }}">
   {% endif %}
@@ -45,8 +14,10 @@
     {% else %}
     {% endif %}
   </div>
-  <button class="btn btn-secondary" id="id-edit-profile-button" action="{% url 'profiles:profile_update' id=object.id %}">Edit profile</button>
-</div>
+  
+  {% if object == request.user.profile %}
+    <button class="btn btn-secondary" id="id-edit-profile-button" action="{% url 'profiles:profile_update' id=object.id %}">Edit profile</button>
+  {% endif %}
 
 <style>
   .details {
@@ -67,5 +38,3 @@
     });
   });
 </script>
-
-{% comment %} {% endblock content %} {% endcomment %}

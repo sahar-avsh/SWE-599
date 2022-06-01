@@ -1,26 +1,3 @@
-{% comment %} {% extends 'mindspace/base.html' %}
-
-{% load resource_filename_filter %}
-{% load embed_video_tags %}
-
-{% load static %}
-{% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'mindspace/resource_detail.css' %}">
-{% endblock styles %}
-{% block js %}
-  <script src="{% static 'mindspace/dropdown.js' %}"></script>
-  <script src="{% static 'mindspace/render_note_form.js' %}"></script>
-  <script src="{% static 'mindspace/post_note_form.js' %}"></script>
-  <script src="{% static 'mindspace/delete_note.js' %}"></script>
-  <script src="{% static 'mindspace/update_note.js' %}"></script>
-{% endblock js %}
-
-{% block title %}
-    {{block.super}} - Resource
-{% endblock title %}
-
-{% block content %} {% endcomment %}
-
 {% load resource_filename_filter %}
 {% load embed_video_tags %}
 {% load get_env_var %}
@@ -28,16 +5,6 @@
 {% load static %}
 
 <link rel="stylesheet" type="text/css" href="{% static 'mindspace/resource_detail.css' %}">
-
-<script src="{% static 'mindspace/render_note_form.js' %}"></script>
-<script src="{% static 'mindspace/post_note_form.js' %}"></script>
-<script src="{% static 'mindspace/delete_note.js' %}"></script>
-<script src="{% static 'mindspace/update_note.js' %}"></script>
-
-      {% comment %} <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a class="breadcrumb-parent" href="{{object.belongs_to.get_absolute_url}}"> {{object.belongs_to.title}} </a></li>
-        <li class="breadcrumb-item active" aria-current="page"> {{object.title}} </li>
-      </ol> {% endcomment %}
 
     <div class="card">
       <div class="card-header">
@@ -115,14 +82,5 @@
       {% endfor %}
     </div>
 
-    <button data-id="{{object.id}}" class="btn btn-info" id="id-create-note-button" note-form-url="{% url 'ajax_render_note_form' %}">Create Note</button>
-    <form action="{% url 'mindspace:note_create' ms_id=object.belongs_to.id r_id=object.id %}" id="id-form" style="display: none;">
-      {% csrf_token %}
-  
-      <div id="form-fields"></div>
-      <input class="btn btn-primary" type="submit" value="Save"/>
-      <a class="btn btn-secondary" id="id-cancel-note-form" role="button">Cancel</a>
-    </form>
-
-
-{% comment %} {% endblock content %} {% endcomment %}
+    <button data-id={{object.id}} class="btn btn-info" id="id-create-note-button" note-form-url="{% url 'mindspace:note_create' ms_id=object.belongs_to.id r_id=object.id %}">Create Note</button>
+    <div id="id-note-create-container"></div>

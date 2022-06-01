@@ -5,112 +5,121 @@
   <link rel="stylesheet" type="text/css" href="{% static 'profiles/notification_list.css' %}">
 {% endblock styles %}
 
-{% comment %} {% block js %}
-  <script src="{% static 'mindspace/dropdown.js' %}"></script>
-{% endblock js %} {% endcomment %}
+{% block js %}
+  <script>
+    $(document).on("click", "#id-profile-name", function(e) {
+      e.preventDefault();
+      
+      $.ajax({
+        type: 'GET',
+        url: $(this).attr("href"),
+        success: function(response) {
+          $("#id-profile-modal-body").html(response);
+        }
+      });
+    });
+  </script>
+{% endblock js %}
 
 {% block title %}
     Notifications
 {% endblock title %}
 
-{% comment %} {% block navbar %}
-  <ul>
-    <li><a href={% url 'main_page' %}>Home</a></li>
-    <li><a class="active" href={% url 'mindspace:mindspace_list' %}>Dashboard</a></li>
-    <li><a href={% url 'profiles:profile_detail' id=request.user.profile.id %}>Profile</a></li>
-    <li><a href={% url 'qna:question_list' %}>Q&A</a></li>
-    <li style="float:right"><a href={% url 'logout' %}>Logout</a></li>
-    <li style="float:right"><a href={% url 'logout' %}>Notifications</a></li>
-
-    <div class="dropdown">
-      <button onclick="myFunction()" class="dropbtn">Actions</button>
-      <div id="myDropdown" class="dropdown-content">
-        <a href={% url 'mindspace:mindspace_create' %}>Create a new Mindspace</a>
-        <a href="#about">Clicked</a>
-        <a href="#contact">Clicked</a>
-      </div>
-    </div>
-  </ul>
-{% endblock navbar %} {% endcomment %}
-
 {% block content %}
 
-    <div class="container-fluid" style="background-color: rgba(255, 248, 220, 0.815);">
-      <h2 class="ms_header">Notifications</h2>
-      
-      {% comment %} <div class="card-deck"> {% endcomment %}
-        {% for object in object_list %}
-          <div class="card bg-transparent border-success">
-            <div class="card-body">
-                {% if object.read_date == Null %}
-                    <h5 class="card-title"> New Notification* </h5>
-                {% else %}
-                    <h5 class="card-title"> Notification </h5>
-                {% endif %}
-                {% if object.notification_type == 'UA' %}
-                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> updated the answer for your question <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
-                    <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-primary">Go to question</a>
-                {% elif object.notification_type == 'PA' %}
-                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> posted an answer for your question <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
-                    <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-primary">Go to question</a>
-                {% elif object.notification_type == 'AE' %}
-                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as an editor for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-                    <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-                {% elif object.notification_type == 'RE' %}
-                    {% if object.subject_mindspace.public %}
-                        <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from editors for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-                        <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-                    {% else %}
-                        <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from editors for "{{object.subject_mindspace.title}}"</p>
-                    {% endif %}
-                {% elif object.notification_type == 'AC' %}
-                  <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as a commenter for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-                  <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-                {% elif object.notification_type == 'RC' %}
-                  {% if object.subject_mindspace.public %}
-                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from commenters for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-                    <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-                  {% else %}
-                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from commenters for "{{object.subject_mindspace.title}}"</p>
-                  {% endif %}
-                {% elif object.notification_type == 'AV' %}
-                  <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as a viewer for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-                  <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-                {% elif object.notification_type == 'RV' %}
-                  {% if object.subject_mindspace.public %}
-                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from viewers for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-                    <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-                  {% else %}
-                    <p class="card-text"> <a href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from viewers for "{{object.subject_mindspace.title}}"</p>
-                  {% endif %}
-                {% endif %}
+  <div class="modal fade" id="id-profile-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body" id="id-profile-modal-body">
+            ...
             </div>
-            <div class="card-footer bg-transparent border-success">
-                <small class="text-muted"> {{object.sent_date|timesince}} ago </small>
-            </div>
-          </div>
-        
-        {% empty %}
-          <p>You have no notifications</p>
-        {% endfor %} 
-      {% comment %} </div> {% endcomment %}
-
-      {% if is_paginated %}
-        <div class="pagination">
-          <span class="page-links">
-            {% if page_obj.has_previous %}
-              <a href="?page={{ page_obj.previous_page_number }}">previous</a>
-            {% endif %}
-            <span class="page-current">
-              Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
-            </span>
-            {% if page_obj.has_next %}
-              <a href="?page={{ page_obj.next_page_number }}">next</a>
-            {% endif %}
-          </span>
         </div>
-      {% endif %}
-
     </div>
+  </div>
+
+  <div class="container-fluid" style="background-color: rgba(255, 248, 220, 0.815);">
+    <h2 class="ms_header">Notifications</h2>
+    
+      {% for object in object_list %}
+        <div class="card bg-transparent border-success">
+          <div class="card-body">
+              {% if object.read_date == Null %}
+                  <h5 class="card-title"> New Notification* </h5>
+              {% else %}
+                  <h5 class="card-title"> Notification </h5>
+              {% endif %}
+
+              {% if object.notification_type == 'UA' %}
+                  <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> updated the answer for your question <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
+                  <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-primary">Go to question</a>
+
+              {% elif object.notification_type == 'PA' %}
+                  <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> posted an answer for your question <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
+                  <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-primary">Go to question</a>
+
+              {% elif object.notification_type == 'AE' %}
+                  <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as an editor for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                  <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
+
+              {% elif object.notification_type == 'RE' %}
+                  {% if object.subject_mindspace.public %}
+                      <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from editors for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                      <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
+                  {% else %}
+                      <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from editors for "{{object.subject_mindspace.title}}"</p>
+                  {% endif %}
+
+              {% elif object.notification_type == 'AC' %}
+                <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as a commenter for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
+
+              {% elif object.notification_type == 'RC' %}
+                {% if object.subject_mindspace.public %}
+                  <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from commenters for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                  <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
+                {% else %}
+                  <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from commenters for "{{object.subject_mindspace.title}}"</p>
+                {% endif %}
+
+              {% elif object.notification_type == 'AV' %}
+                <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as a viewer for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
+
+              {% elif object.notification_type == 'RV' %}
+                {% if object.subject_mindspace.public %}
+                  <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from viewers for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
+                  <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
+                {% else %}
+                  <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from viewers for "{{object.subject_mindspace.title}}"</p>
+                {% endif %}
+                
+              {% endif %}
+          </div>
+          <div class="card-footer bg-transparent border-success">
+              <small class="text-muted"> {{object.sent_date|timesince}} ago </small>
+          </div>
+        </div>
+      
+      {% empty %}
+        <p>You have no notifications</p>
+      {% endfor %}
+
+    {% if is_paginated %}
+      <div class="pagination">
+        <span class="page-links">
+          {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+          {% endif %}
+          <span class="page-current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+          </span>
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+          {% endif %}
+        </span>
+      </div>
+    {% endif %}
+
+  </div>
 
 {% endblock content %}
