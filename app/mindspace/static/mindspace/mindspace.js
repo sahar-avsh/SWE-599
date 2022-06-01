@@ -38,6 +38,11 @@ $(document).ready(function() {
                 // $("#id-mindspace-edit").html(response);
                 // $("#id-mindspace-edit").css('border', '1px burlywood solid');
                 // $("#id-delete-mindspace-form").show();
+            },
+            error: function(response) {
+                $("#id-mindspace-modal-body").html('<div class="alert alert-primary" role="alert"> \
+                You do not have permission to delete this Mindspace! \
+                </div>');
             }
         });
     });

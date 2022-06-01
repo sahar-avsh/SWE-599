@@ -48,6 +48,11 @@ $(document).ready(function() {
                 $("#id-mindspace-modal-body").html(response);
                 // $("#id-mindspace-edit").html(response);
                 // $("#id-mindspace-edit").css('border', '1px burlywood solid');
+            },
+            error: function(response) {
+                $("#id-mindspace-modal-body").html('<div class="alert alert-primary" role="alert"> \
+                You do not have permission to delete this Resource! \
+                </div>');
             }
         });
     });
