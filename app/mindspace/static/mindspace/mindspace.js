@@ -19,8 +19,9 @@ $(document).ready(function() {
             type: 'GET',
             url: $(this).attr("href"),
             success: function(response) {
-                $("#id-mindspace-edit").html(response);
-                $("#id-mindspace-edit").css('border', '1px burlywood solid');
+                $("#id-mindspace-modal-body").html(response);
+                // $("#id-mindspace-edit").html(response);
+                // $("#id-mindspace-edit").css('border', '1px burlywood solid');
                 //$("#id-update-mindspace-form").show();
             }
         });
@@ -33,8 +34,9 @@ $(document).ready(function() {
             type: 'GET',
             url: $(this).attr("href"),
             success: function(response) {
-                $("#id-mindspace-edit").html(response);
-                $("#id-mindspace-edit").css('border', '1px burlywood solid');
+                $("#id-mindspace-modal-body").html(response);
+                // $("#id-mindspace-edit").html(response);
+                // $("#id-mindspace-edit").css('border', '1px burlywood solid');
                 // $("#id-delete-mindspace-form").show();
             }
         });
@@ -47,8 +49,9 @@ $(document).ready(function() {
             type: 'GET',
             url: $(this).attr("href"),
             success: function(response) {
-                $("#id-mindspace-edit").html(response);
-                $("#id-mindspace-edit").css('border', '1px burlywood solid');
+                $("#id-mindspace-modal-body").html(response);
+                // $("#id-mindspace-edit").html(response);
+                // $("#id-mindspace-edit").css('border', '1px burlywood solid');
                 //$("#id-share-mindspace-form").show();
             }
         });
@@ -61,8 +64,9 @@ $(document).ready(function() {
             type: 'GET',
             url: $(this).attr("href"),
             success: function(response) {
-                $("#id-add-resource-form").html(response);
-                $("#id-add-resource-form").show();
+                $("#id-mindspace-modal-body").html(response);
+                // $("#id-add-resource-form").html(response);
+                // $("#id-add-resource-form").show();
             }
         });
     });
@@ -93,18 +97,18 @@ $(document).ready(function() {
     //     });
     // });
 
-    $("#id-ask-question-link").click(function(e) {
-        e.preventDefault();
+    // $("#id-ask-question-link").click(function(e) {
+    //     e.preventDefault();
         
-        $.ajax({
-            type: 'GET',
-            url: $(this).attr("href"),
-            success: function(response) {
-                $("#id-ask-question-form").html(response);
-                $("#id-ask-question-form").show();
-            }
-        });
-    });
+    //     $.ajax({
+    //         type: 'GET',
+    //         url: $(this).attr("href"),
+    //         success: function(response) {
+    //             $("#id-ask-question-form").html(response);
+    //             $("#id-ask-question-form").show();
+    //         }
+    //     });
+    // });
 
     $("#id-ask-mindspace-link").click(function(e) {
         e.preventDefault();
@@ -113,7 +117,8 @@ $(document).ready(function() {
             type: 'GET',
             url: $(this).attr("href"),
             success: function(response) {
-                $("#id-ask-question-mindspace-form").html(response);
+                // $("#id-ask-question-mindspace-form").html(response);
+                $("#id-mindspace-modal-body").html(response);
                 var id = $("[id*=id-mindspace-title]").attr("id").split("-").pop();
                 $("#id_tagged_mindspace").val(id);
                 $.ajax({
@@ -138,16 +143,18 @@ $(document).ready(function() {
             url: $(this).attr("action"),
             data: $(this).serialize(),
             success: function(response) {
+                $('#id-mindspace-modal').modal('toggle');
+                $('#question_form').trigger("reset");
                 window.location.replace("/questions/");
             }
         });
     });
 
-    $(document).click(function(e) {
-        if (e.target.id != 'id-create-mindspace-form' && !$('#id-create-mindspace-form').find(e.target).length)
-        {
-            $("#id-create-mindspace-form").hide();
-        }
+    // $(document).click(function(e) {
+    //     if (e.target.id != 'id-create-mindspace-form' && !$('#id-create-mindspace-form').find(e.target).length)
+    //     {
+    //         $("#id-create-mindspace-form").hide();
+    //     }
 
         // if (e.target.id != 'id-update-mindspace-form' && !$('#id-update-mindspace-form').find(e.target).length)
         // {
@@ -164,31 +171,31 @@ $(document).ready(function() {
         //     $("#id-share-mindspace-form").hide();
         // }
 
-        if (e.target.id != 'id-add-resource-form' && !$('#id-add-resource-form').find(e.target).length)
-        {
-            $("#id-add-resource-form").hide();
-        }
+    //     if (e.target.id != 'id-add-resource-form' && !$('#id-add-resource-form').find(e.target).length)
+    //     {
+    //         $("#id-add-resource-form").hide();
+    //     }
 
-        if (e.target.id != 'id-update-resource-form' && !$('#id-update-resource-form').find(e.target).length)
-        {
-            $("#id-update-resource-form").hide();
-        }
+    //     if (e.target.id != 'id-update-resource-form' && !$('#id-update-resource-form').find(e.target).length)
+    //     {
+    //         $("#id-update-resource-form").hide();
+    //     }
 
-        if (e.target.id != 'id-delete-resource-form' && !$('#id-delete-resource-form').find(e.target).length)
-        {
-            $("#id-delete-resource-form").hide();
-        }
+    //     if (e.target.id != 'id-delete-resource-form' && !$('#id-delete-resource-form').find(e.target).length)
+    //     {
+    //         $("#id-delete-resource-form").hide();
+    //     }
 
-        if (e.target.id != 'id-ask-question-form' && !$('#id-ask-question-form').find(e.target).length)
-        {
-            $("#id-ask-question-form").hide();
-        }
+    //     if (e.target.id != 'id-ask-question-form' && !$('#id-ask-question-form').find(e.target).length)
+    //     {
+    //         $("#id-ask-question-form").hide();
+    //     }
 
-        if (e.target.id != 'id-ask-question-mindspace-form' && !$('#id-ask-question-mindspace-form').find(e.target).length)
-        {
-            $("#id-ask-question-mindspace-form").hide();
-        }
-    });
+    //     if (e.target.id != 'id-ask-question-mindspace-form' && !$('#id-ask-question-mindspace-form').find(e.target).length)
+    //     {
+    //         $("#id-ask-question-mindspace-form").hide();
+    //     }
+    // });
 
     $(document).on("submit", "#id-create-mindspace-form", function(e) {
         e.preventDefault();
@@ -211,6 +218,8 @@ $(document).ready(function() {
             url: $(this).attr("action"),
             data: $(this).serialize(),
             success: function(response) {
+                $('#id-mindspace-modal').modal('toggle');
+                $('#id-update-mindspace-form').trigger("reset");
                 window.location.reload();
             }
         });
@@ -224,6 +233,8 @@ $(document).ready(function() {
             url: $(this).attr("action"),
             data: $(this).serialize(),
             success: function(response) {
+                $('#id-mindspace-modal').modal('toggle');
+                $('#id-delete-mindspace-form').trigger("reset");
                 window.location.replace(response.nextURL);
             }
         });
@@ -238,7 +249,9 @@ $(document).ready(function() {
             data: $(this).serialize(),
             success: function(response) {
                 // window.location.reload();
-                $("#id-mindspace-edit").html("");
+                // $("#id-mindspace-edit").html("");
+                $('#id-mindspace-modal').modal('toggle');
+                $('#id-share-mindspace-form').trigger("reset");
             }
         });
     });
@@ -288,6 +301,8 @@ $(document).ready(function() {
             },
             success: function(response) {
                 $("#progress").hide();
+                $('#id-mindspace-modal').modal('toggle');
+                $('#id-create-resource-form').trigger("reset");
                 window.location.reload();
                 // $("#id-mindspace-edit").html("");
             }
@@ -296,6 +311,7 @@ $(document).ready(function() {
 
     $(document).on("submit", "#id-form-edit-resource", function(e) {
         e.preventDefault();
+        const progress_bar = document.getElementById('progress');
         var formData = new FormData();
 
         $.each($(this).serializeArray(), function(index, value) {
@@ -307,10 +323,13 @@ $(document).ready(function() {
         var vid_data = $('#video_field').get(0).files[0];
         if (img_data) {
             formData.append('image', img_data);
+            $("#progress").show();
         } else if (doc_data) {
             formData.append('document', doc_data);
+            $("#progress").show();
         } else if (vid_data) {
             formData.append('video', vid_data);
+            $("#progress").show();
         }
         
         $.ajax({
@@ -321,7 +340,22 @@ $(document).ready(function() {
             cache: false,
             processData: false,
             enctype: 'multipart/form-data',
+            xhr: function() {
+                var xhr = new window.XMLHttpRequest();
+
+                xhr.upload.addEventListener('progress', function(e) {
+                    if (e.lengthComputable) {
+                        const percentProgress = (e.loaded / e.total) * 100;
+                        console.log(percentProgress);
+                        progress_bar.innerHTML = '<div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width:' + percentProgress + '%" aria-valuenow="' + percentProgress + '" aria-valuemin="0" aria-valuemax="100"></div>'
+                    }
+                });
+                return xhr
+            },
             success: function(response) {
+                $("#progress").hide();
+                $('#id-mindspace-modal').modal('toggle');
+                $('#id-form-edit-resource').trigger("reset");
                 window.location.reload();
                 // $("#id-mindspace-edit").html("");
             }
@@ -336,6 +370,8 @@ $(document).ready(function() {
             url: $(this).attr("action"),
             data: $(this).serialize(),
             success: function(response) {
+                $('#id-mindspace-modal').modal('toggle');
+                $('#id-form-delete-resource').trigger("reset");
                 window.location.reload();
                 // $("#id-mindspace-edit").html("");
             }

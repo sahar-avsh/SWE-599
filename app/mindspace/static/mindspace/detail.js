@@ -33,8 +33,9 @@ $(document).ready(function() {
             type: 'GET',
             url: $(this).data("url"),
             success: function(response) {
-                $("#id-mindspace-edit").html(response);
-                $("#id-mindspace-edit").css('border', '1px burlywood solid');
+                $("#id-mindspace-modal-body").html(response);
+                // $("#id-mindspace-edit").html(response);
+                // $("#id-mindspace-edit").css('border', '1px burlywood solid');
             }
         });
     });
@@ -44,8 +45,9 @@ $(document).ready(function() {
             type: 'GET',
             url: $(this).data("url"),
             success: function(response) {
-                $("#id-mindspace-edit").html(response);
-                $("#id-mindspace-edit").css('border', '1px burlywood solid');
+                $("#id-mindspace-modal-body").html(response);
+                // $("#id-mindspace-edit").html(response);
+                // $("#id-mindspace-edit").css('border', '1px burlywood solid');
             }
         });
     });
