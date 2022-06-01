@@ -252,6 +252,11 @@ $(document).ready(function() {
                 // $("#id-mindspace-edit").html("");
                 $('#id-mindspace-modal').modal('toggle');
                 $('#id-share-mindspace-form').trigger("reset");
+            },
+            error: function(response) {
+                $.each(response.responseJSON.error, function(key, value) {
+                    $("#id-mindspace-modal-body").append('<div class="alert alert-warning" role="alert">' + value + '</div>');
+                });
             }
         });
     });

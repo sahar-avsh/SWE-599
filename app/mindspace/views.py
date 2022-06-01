@@ -199,7 +199,8 @@ class ShareMindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateVi
                 err_msg = error_list[-1].strip()
                 err_msgs[index] = err_msg
         self.object = None
-        return self.render_to_response(self.get_context_data(formset=formset, form_errors=form_errors, err_msgs=err_msgs))
+        return JsonResponse({'error': err_msgs}, status=400)
+        # return self.render_to_response(self.get_context_data(formset=formset, form_errors=form_errors, err_msgs=err_msgs))
 
     def get_success_url(self):
         return reverse('mindspace:mindspace_detail', kwargs={'id': self.kwargs.get('id')})
