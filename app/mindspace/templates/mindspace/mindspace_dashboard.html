@@ -53,7 +53,7 @@
             <div class="my-mindspaces">
                 {% for m in object_list %}
                     <div id="id-{{m.id}}">
-                        <h2 class="mindspace-title" id="id-mindspace-title-{{m.id}}"> <a style="text-decoration: none; color: black;" href="{{m.get_absolute_url}}"> {{ m.title }} </a> </h2>
+                        <h2 class="mindspace-title" id="id-mindspace-title-{{m.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);;" href="{{m.get_absolute_url}}"> {{ m.title }} </a> </h2>
                     </div>
                 {% empty %}
                     <h2 style="padding: 30px;">No mindspaces.</h2>
