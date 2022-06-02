@@ -38,8 +38,8 @@
 
         <div class="mindspace-results">
             <div class="section-buttons">
-                <button type="button" id="id-sharedmindspaces-button" class="btn btn-info btn-lg btn-block disabled">Mindspaces Shared With You</button>
-                <button type="button" id="id-mymindspaces-button" class="btn btn-secondary btn-lg btn-block active">My Mindspaces</button>
+                <button type="button" id="id-sharedmindspaces-button" data-url="{% url 'mindspace:ajax_load_mindspace_lists' %}" class="btn btn-info btn-lg btn-block disabled">Mindspaces Shared With You</button>
+                <button type="button" id="id-mymindspaces-button" data-url="{% url 'mindspace:ajax_load_mindspace_lists' %}" class="btn btn-secondary btn-lg btn-block disabled">My Mindspaces</button>
             </div>
 
             <div class="d-flex justify-content-center">
@@ -48,38 +48,7 @@
                 </div>
             </div>
 
-            <!-- My Mindspaces section - Visible by default -->
-
-            <div class="my-mindspaces">
-                {% for m in object_list %}
-                    <div id="id-{{m.id}}">
-                        <h2 class="mindspace-title" id="id-mindspace-title-{{m.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);;" href="{{m.get_absolute_url}}"> {{ m.title }} </a> </h2>
-                    </div>
-                {% empty %}
-                    <h2 style="padding: 30px;">No mindspaces.</h2>
-                {% endfor %}
-            </div>
-
-            <div class="shared-mindspaces" style="display: none;">
-                {% if object_list_edit|length > 0 %}
-                    <h2 style="margin-left: 10%; margin-bottom: 0px; margin-top: 10px;color: rgb(77, 77, 77);"> <u> Edit Access </u></h2>
-                    {% for edit in object_list_edit %}
-                        <div id="id-{{edit.mindspace.id}}">
-                            <h2 class="mindspace-title" id="id-mindspace-title-{{edit.mindspace.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{edit.mindspace.get_absolute_url}}"> {{ edit.mindspace.title }} </a> </h2>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-                
-                {% if object_list_view|length > 0 %}
-                    <h2 style="margin-left: 10%; margin-bottom: 0px; margin-top: 10px;"> <u> View Access </u></h2>
-                    {% for view in object_list_view %}
-                        <div id="id-{{view.mindspace.id}}">
-                            <h2 class="mindspace-title" id="id-mindspace-title-{{view.mindspace.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{view.mindspace.get_absolute_url}}"> {{ view.mindspace.title }} </a> </h2>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-            </div>
-
+            <div class="mindspace-lists" style="display: none;"></div>
             <div class="mindspace-search-results" style="display: none;"></div>
         </div>
     </div>

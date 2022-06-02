@@ -1,6 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse, reverse_lazy
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, Http404
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
@@ -11,6 +11,8 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 
 from django.core.exceptions import PermissionDenied
+
+from django.core.paginator import Paginator, Page, InvalidPage
 
 from profiles.models import Profile
 
@@ -71,23 +73,51 @@ class MindspaceUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
-class MindspaceListView(LoginRequiredMixin, ListView):
+
+class MindspaceDashboardView(LoginRequiredMixin, TemplateView):
     template_name = 'mindspace/mindspace_dashboard.html'
 
-    def get_queryset(self):
-        queryset = Mindspace.objects.filter(owner=self.request.user.profile)
-        return queryset
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_create'] = MindspaceModelForm()
+        context['form_search'] = MindspaceSearchForm()
+        return context
+
+class MindspaceListView(LoginRequiredMixin, TemplateView):
+    template_name = 'mindspace/mindspace_list.html'
+    paginate_by = 1
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        context['form_create'] = MindspaceModelForm()
-        context['form_search'] = MindspaceSearchForm()
+        shared_with = [i.mindspace for i in ShareMindspace.objects.filter(shared_with=self.request.user.profile).order_by('shared_date')]
+        my_mindspaces = Mindspace.objects.filter(owner=self.request.user.profile).order_by('created_at')
 
-        view = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.viewer)
-        edit = ShareMindspace.objects.filter(shared_with=self.request.user.profile, access_level=ShareMindspace.editor)
-        context['object_list_view'] = view
-        context['object_list_edit'] = edit
+        if 'shared-mindspace-page' in self.request.GET.keys():
+            paginator = Paginator(shared_with, self.paginate_by)
+            page_kwarg = 'shared-mindspace-page'
+            context['is_viewing'] = 'shared-mindspace'
+        elif 'my-mindspace-page' in self.request.GET.keys():
+            paginator = Paginator(my_mindspaces, self.paginate_by)
+            page_kwarg = 'my-mindspace-page'
+            context['is_viewing'] = 'my-mindspace'
+
+        page = self.request.GET.get(page_kwarg) or 1
+        try:
+            page_number = int(page)
+        except ValueError:
+            if page == 'last':
+                page_number = paginator.num_pages
+            else:
+                raise Http404()
+        
+        try:
+            page = paginator.page(page_number)
+            context['is_paginated'] = page.has_other_pages()
+            context['page_obj'] = page
+        except InvalidPage:
+            raise Http404
+
         return context
 
 class MindspaceDetailView(LoginRequiredMixin, DetailView):
@@ -198,32 +228,37 @@ class ShareMindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateVi
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
-class AjaxMindspaceSearch(LoginRequiredMixin, View):
-    def get(self, request):
-        context = {}
-        result = Mindspace.objects.filter(is_public=True).exclude(owner=request.user.profile)
 
-        keyword_query = request.GET.get('keyword_query')
-        owner_query = request.GET.get('owner_query')
+class AjaxMindspaceSearch(LoginRequiredMixin, ListView):
+    template_name = 'mindspace/ajax_mindspace_results.html'
+    paginate_by = 1
+    page_kwarg = 'search-mindspace-page'
+
+    def get_queryset(self):
+        queryset = Mindspace.objects.filter(is_public=True).exclude(owner=self.request.user.profile).order_by('created_at')
+
+        keyword_query = self.request.GET.get('keyword_query')
+        owner_query = self.request.GET.get('owner_query')
 
         # filter by title
         if keyword_query:
-            result = result.filter(
+            queryset = queryset.filter(
                 Q(title__icontains=keyword_query) | Q(description__icontains=keyword_query) | Q(resources__title__icontains=keyword_query) | Q(resources__description__icontains=keyword_query)
             )
         # filter by owner
         if owner_query:
-            result = result.filter(owner__created_by__username__icontains=owner_query)
+            queryset = queryset.filter(owner__created_by__username__icontains=owner_query)
 
-        context['filter_flag'] = False
+        return queryset.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
         for key, value in self.request.GET.items():
             if key in ['keyword_query', 'owner_query'] and value:
                 context[key] = value
                 context['filter_flag'] = True
+        return context
 
-        context['result_list'] = result.distinct()
-
-        return render(request, 'mindspace/ajax_mindspace_results.html', context)
 
 ##################### Resource #####################
 class ResourceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):

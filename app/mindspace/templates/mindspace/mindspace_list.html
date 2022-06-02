@@ -1,0 +1,29 @@
+<span id="id-is-viewing" style="display: none;">{{is_viewing}}</span>
+
+<div class="mindspaces">
+    {% for m in page_obj.object_list %}
+        <div id="id-{{m.id}}">
+            <h2 class="mindspace-title" id="id-mindspace-title-{{m.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);;" href="{{m.get_absolute_url}}"> {{ m.title }} </a> </h2>
+        </div>
+    {% empty %}
+        <h2 style="padding: 30px;">No mindspaces.</h2>
+    {% endfor %}
+
+    {% if is_paginated %}
+        <div class="pagination" style="margin-top: 20px; margin-left: 10%; margin-right: 10px;">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-outline-primary" id="id-mindspace-page-previous" page-num={{page_obj.previous_page_number}} href="{% url 'mindspace:ajax_load_mindspace_lists' %}">Previous</a>
+                {% endif %}
+
+                <span class="page-current btn btn-outline-primary" style="cursor: default;">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+
+                {% if page_obj.has_next %}
+                    <a class="btn btn-outline-primary" id="id-mindspace-page-next" page-num={{page_obj.next_page_number}} href="{% url 'mindspace:ajax_load_mindspace_lists' %}">Next</a>
+                {% endif %}
+            </span>
+        </div>
+    {% endif %}
+</div>
