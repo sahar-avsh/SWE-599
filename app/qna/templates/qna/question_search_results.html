@@ -2,10 +2,32 @@
 {% load is_upvote %}
 {% load order_answers %}
 
-{% for q in object_list %}
+<span id="id-keyword" style="display: none;">{{filter_keyword}}</span>
+
+<p class="results-found"> {{page_obj.paginator.count}} result(s) found </p>
+{% for q in page_obj.object_list %}
     <div id="id-search-q-{{q.id}}">
         <h2 class="question-title" id="id-question-title-{{q.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{q.get_absolute_url}}"> {{ q.title }} </a> </h2>
     </div>
 {% empty %}
     <h2 style="padding: 30px;">No matches.</h2>
 {% endfor %}
+
+
+{% if is_paginated %}
+    <div class="pagination" style="margin-top: 20px; margin-left: 10%; margin-right: 10px;">
+        <span class="page-links">
+            {% if page_obj.has_previous %}
+                <a class="btn btn-outline-primary" id="id-search-question-page-previous" page-num={{page_obj.previous_page_number}} href="{% url 'qna:question_search' %}">Previous</a>
+            {% endif %}
+
+            <span class="page-current btn btn-outline-primary" style="cursor: default;">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a class="btn btn-outline-primary" id="id-search-question-page-next" page-num={{page_obj.next_page_number}} href="{% url 'qna:question_search' %}">Next</a>
+            {% endif %}
+        </span>
+    </div>
+{% endif %}

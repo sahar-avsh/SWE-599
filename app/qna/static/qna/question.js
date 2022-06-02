@@ -1,4 +1,86 @@
+function loadQuestions(url, target) {
+    if (target === "my-questions") {
+        var data = {'my-questions-page': 1}
+    } else if (target === "my-answers") {
+        var data = {'my-answers-page': 1}
+    } else if (target === "community-questions") {
+        var data = {'community-questions-page': 1}
+    }
+
+    $.ajax({
+        type: 'GET',
+        url: url,
+        data: data,
+        success: function(response) {
+            $(".questions").html(response);
+            $(".questions").show();
+        },
+        error: function(response) {
+            console.log(response);
+        }
+    });
+}
+
 $(document).ready(function() {
+
+    $(document).on("click", "[id*=id-question-page-]", function(e) {
+        $(".spinner-border").show();
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        var url = $(this).attr("href");
+        var page = $(this).attr("page-num");
+
+        var is_viewing = $("#id-is-viewing").html();
+        if (is_viewing === "community-questions") {
+            var data = {'community-questions-page': page}
+        } else if (is_viewing === "my-questions") {
+            var data = {'my-questions-page': page}
+        } else if (is_viewing === "my-answers") {
+            var data = {'my-answers-page': page}
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: data,
+            success: function(response) {
+                $(".questions").html(response);
+                $(".spinner-border").hide();
+                $(".questions").show();
+            },
+            error: function(response) {
+                console.log(response);
+            }
+        });
+    });
+
+    $(document).on("click", "[id*=id-search-question-page-]", function(e) {
+        $(".spinner-border").show();
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        var url = $(this).attr("href");
+        var page = $(this).attr("page-num");
+        var data = {'search-question-page': page}
+
+        if ($("#id-keyword").length) {
+            data['keyword'] = $("#id-keyword").html();
+        }
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: data,
+            success: function(response) {
+                $(".spinner-border").hide();
+                $(".question-search-results").html(response);
+            },
+            error: function(response) {
+                console.log(response);
+            }
+        });
+    });
 
 // My questions button is clicked and that section is opened
 // other sections are hidden
@@ -16,10 +98,11 @@ $(document).ready(function() {
         $(this).removeClass("disabled");
         $(this).addClass("active");
 
-        $(".comm-questions").hide();
-        $(".my-answers").hide();
+        // $(".comm-questions").hide();
+        // $(".my-answers").hide();
         $(".question-search-results").hide();
-        $(".my-questions").show();
+        loadQuestions($(this).data("url"), "my-questions");
+        // $(".my-questions").show();
     });
 
 // My answers button is clicked and that section is opened
@@ -38,10 +121,11 @@ $(document).ready(function() {
         $(this).removeClass("disabled");
         $(this).addClass("active");
 
-        $(".comm-questions").hide();
-        $(".my-questions").hide();
+        // $(".comm-questions").hide();
+        // $(".my-questions").hide();
         $(".question-search-results").hide();
-        $(".my-answers").show();
+        loadQuestions($(this).data("url"), "my-answers");
+        // $(".my-answers").show();
     });
 
 // My answers button is clicked and that section is opened
@@ -60,10 +144,11 @@ $(document).ready(function() {
         $(this).removeClass("disabled");
         $(this).addClass("active");
 
-        $(".my-questions").hide();
-        $(".my-answers").hide();
+        // $(".my-questions").hide();
+        // $(".my-answers").hide();
         $(".question-search-results").hide();
-        $(".comm-questions").show();
+        loadQuestions($(this).data("url"), "community-questions");
+        // $(".comm-questions").show();
     });
 
     $(document).on("click", "#id-search-results-button", function() {
@@ -79,9 +164,9 @@ $(document).ready(function() {
         $(this).removeClass("disabled");
         $(this).addClass("active");
 
-        $(".my-questions").hide();
-        $(".my-answers").hide();
-        $(".comm-questions").hide();
+        // $(".my-questions").hide();
+        // $(".my-answers").hide();
+        $(".questions").hide();
         $(".question-search-results").show();
     });
 

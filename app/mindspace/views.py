@@ -85,7 +85,7 @@ class MindspaceDashboardView(LoginRequiredMixin, TemplateView):
 
 class MindspaceListView(LoginRequiredMixin, TemplateView):
     template_name = 'mindspace/mindspace_list.html'
-    paginate_by = 1
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -231,7 +231,7 @@ class ShareMindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateVi
 
 class AjaxMindspaceSearch(LoginRequiredMixin, ListView):
     template_name = 'mindspace/ajax_mindspace_results.html'
-    paginate_by = 1
+    paginate_by = 5
     page_kwarg = 'search-mindspace-page'
 
     def get_queryset(self):

@@ -4,7 +4,7 @@ from django.urls import reverse, reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib import messages
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, Http404
 
 from django.core.exceptions import PermissionDenied
 
@@ -12,6 +12,8 @@ from django.db.models import Q
 
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+
+from django.core.paginator import Paginator, Page, InvalidPage
 
 from django.views.generic import (
     CreateView,
@@ -78,32 +80,66 @@ class QuestionUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
 
-class QuestionListView(LoginRequiredMixin, ListView):
-    template_name = 'qna/question_list.html'
-
-    def get_queryset(self):
-        queryset = Question.objects.filter(~Q(owner=self.request.user.profile)).order_by('asked_date')
-        return queryset
+class QuestionDashboardView(LoginRequiredMixin, TemplateView):
+    template_name = 'qna/question_dashboard.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        own_questions = Question.objects.filter(owner=self.request.user.profile)
-        context['own_questions'] = own_questions
-
-        answers = Answer.objects.filter(owner=self.request.user.profile).prefetch_related('question')
-        own_answers = []
-        for answer in answers:
-            if answer.question not in own_answers:
-                own_answers.append(answer.question)
-        context['own_answers'] = own_answers
-
         context['form_create'] = QuestionModelForm(self.request.user.profile)
         context['form_search'] = QuestionSearchForm()
         return context
 
+
+class QuestionListView(LoginRequiredMixin, TemplateView):
+    template_name = 'qna/question_list.html'
+    paginate_by = 5
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        comm_questions = Question.objects.filter(~Q(owner=self.request.user.profile)).order_by('asked_date')
+        my_questions = Question.objects.filter(owner=self.request.user.profile).order_by('asked_date')
+        answers = Answer.objects.filter(owner=self.request.user.profile).prefetch_related('question').order_by('replied_date')
+        my_answers = []
+        for answer in my_answers:
+            if answer.question not in answers:
+                my_answers.append(answer.question)
+
+        if 'community-questions-page' in self.request.GET.keys():
+            paginator = Paginator(comm_questions, self.paginate_by)
+            page_kwarg = 'community-questions-page'
+            context['is_viewing'] = 'community-questions'
+        elif 'my-questions-page' in self.request.GET.keys():
+            paginator = Paginator(my_questions, self.paginate_by)
+            page_kwarg = 'my-questions-page'
+            context['is_viewing'] = 'my-questions'
+        elif 'my-answers-page' in self.request.GET.keys():
+            paginator = Paginator(my_answers, self.paginate_by)
+            page_kwarg = 'my-answers-page'
+            context['is_viewing'] = 'my-answers'
+
+        page = self.request.GET.get(page_kwarg) or 1
+        try:
+            page_number = int(page)
+        except ValueError:
+            if page == 'last':
+                page_number = paginator.num_pages
+            else:
+                raise Http404()
+        
+        try:
+            page = paginator.page(page_number)
+            context['is_paginated'] = page.has_other_pages()
+            context['page_obj'] = page
+        except InvalidPage:
+            raise Http404
+
+        return context
+
 class QuestionSearchView(LoginRequiredMixin, ListView):
     template_name = 'qna/question_search_results.html'
+    paginate_by = 5
+    page_kwarg = 'search-question-page'
 
     def get_queryset(self):
         keyword = self.request.GET.get('keyword')
@@ -115,6 +151,10 @@ class QuestionSearchView(LoginRequiredMixin, ListView):
         queryset = Question.objects.filter(*(arguments, ))
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['filter_keyword'] = self.request.GET.get('keyword')
+        return context
 class QuestionDetailView(LoginRequiredMixin, DetailView):
     template_name = 'qna/question_detail.html'
 

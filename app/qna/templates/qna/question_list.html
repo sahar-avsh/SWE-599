@@ -1,97 +1,29 @@
-{% extends "mindspace/base.html" %} 
+<span id="id-is-viewing" style="display: none;">{{is_viewing}}</span>
 
-{% load static %}
-{% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'qna/question_list.css' %}">
-  <style>
-    #body_field {
-      height: 100px !important;
-    }
-  </style>
-{% endblock styles %}
-
-{% block js %}
-    <script src="{% static 'qna/resource_dropdown_list.js' %}"></script>
-    <script src="{% static 'qna/question.js' %}"></script>
-{% endblock js %}
-
-{% block title %}Q&A{% endblock title %}
-
-{% load crispy_forms_tags %}
-{% load has_voted %}
-{% load is_upvote %}
-{% load order_answers %}
-
-{% block content %}
-
-    <div class="main-container">
-
-        <div class="qna-sidebar">
-            <div class="qna-create">
-                <h4> Create a new Question </h4>
-                <form action="{% url 'qna:question_create' %}" method="POST" id='id-question-form' data-resources-url="{% url 'qna:ajax_load_resources' %}" novalidate> {% csrf_token %}
-                    {{form_create|crispy}}
-                    <input type='submit' class='btn btn-secondary' value='Save'/>
-                </form>
-            </div>
-
-            <div class="qna-search">
-                <h4> Search a Question </h4>
-                <form action="{% url 'qna:question_search' %}" id='id-question-search-form' autocomplete="off">
-                    {{form_search|crispy}}
-                    <input type='submit' id="id-question-search-submit-button" class='btn btn-secondary' value='Search'/>
-                </form>
-            </div>
-
+<div class="questions">
+    {% for q in page_obj.object_list %}
+        <div id="id-{{q.id}}">
+            <h2 class="question-title" id="id-question-title-{{q.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);;" href="{{q.get_absolute_url}}"> {{ q.title }} </a> </h2>
         </div>
+    {% empty %}
+        <h2 style="padding: 30px;">No questions.</h2>
+    {% endfor %}
 
-        <div class="qna-results">
-            <div class="section-buttons">
-                <button type="button" id="id-my-questions-button" class="btn btn-primary btn-lg btn-block disabled">My Questions</button>
-                <button type="button" id="id-my-answers-button" class="btn btn-info btn-lg btn-block disabled">My Answers</button>
-                <button type="button" id="id-comm-button" class="btn btn-secondary btn-lg btn-block active">Community Questions</button>
-            </div>
+    {% if is_paginated %}
+        <div class="pagination" style="margin-top: 20px; margin-left: 10%; margin-right: 10px;">
+            <span class="page-links">
+                {% if page_obj.has_previous %}
+                    <a class="btn btn-outline-primary" id="id-question-page-previous" page-num={{page_obj.previous_page_number}} href="{% url 'qna:ajax_load_question_lists' %}">Previous</a>
+                {% endif %}
 
-            <div class="d-flex justify-content-center">
-                <div class="spinner-border" role="status" style="display: none; margin-top: 20px;">
-                    <span class="sr-only">Loading...</span>
-                </div>
-            </div>
+                <span class="page-current btn btn-outline-primary" style="cursor: default;">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
 
-            <div class="comm-questions">
-                {% for q in object_list %}
-                    <div>
-                        <h2 class="question-title" id="id-question-title-{{q.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{q.get_absolute_url}}">{{ q.title }}</a> </h2>
-                    </div>
-                {% empty %}
-                    <h2 style="padding: 30px; color: rgb(77, 77, 77);">No questions</h2>
-                {% endfor %}
-            </div>
-
-            <div class="my-questions" style="display: none;">
-                {% for my_q in own_questions %}
-                    <div>
-                        <h2 class="question-title" id="id-question-title-{{my_q.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{my_q.get_absolute_url}}">{{ my_q.title }}</a> </h2>
-                    </div>
-                {% empty %}
-                    <h2 style="padding: 30px; color: rgb(77, 77, 77);" >You do not have any questions</h2>
-                {% endfor %}
-            </div>
-
-            <div class="my-answers" style="display: none;">
-                {% for my_a in own_answers %}
-                    <div>
-                        <h2 class="question-title" id="id-question-title-{{my_a.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{my_a.get_absolute_url}}">{{ my_a.title }}</a> </h2>
-                    </div>
-                {% empty %}
-                    <h2 style="padding: 30px; color: rgb(77, 77, 77);">You do not have any answered questions.</h2>
-                {% endfor %}
-            </div>
-
-            <div class="question-search-results" style="display: none;">
-
-            </div>
+                {% if page_obj.has_next %}
+                    <a class="btn btn-outline-primary" id="id-question-page-next" page-num={{page_obj.next_page_number}} href="{% url 'qna:ajax_load_question_lists' %}">Next</a>
+                {% endif %}
+            </span>
         </div>
-    </div>
-
-{% endblock content %}
+    {% endif %}
+</div>

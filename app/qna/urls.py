@@ -3,6 +3,7 @@ from .views import (
     QuestionCreateView,
     QuestionDetailView, 
     QuestionListView,
+    QuestionDashboardView,
     QuestionUpdateView, 
     QuestionDeleteView,
     QuestionSearchView,
@@ -15,7 +16,8 @@ from .views import (
 
 app_name = 'qna'
 urlpatterns = [
-    path('', QuestionListView.as_view(), name='question_list'),
+    path('', QuestionDashboardView.as_view(), name='question_list'),
+    path('ajax/load-question-lists/', QuestionListView.as_view(), name='ajax_load_question_lists'),
     path('<int:id>/', QuestionDetailView.as_view(), name='question_detail'),
     path('create/', QuestionCreateView.as_view(), name='question_create'),
     path('<int:id>/update/', QuestionUpdateView.as_view(), name='question_update'),

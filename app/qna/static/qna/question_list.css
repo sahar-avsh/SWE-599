@@ -114,6 +114,13 @@ body{
     font-weight: bold;
 }
 
+.results-found {
+    margin-top: 20px;
+    margin-left: 10%;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
 #id-my-questions-button{
     background-color: rgb(255, 255, 128) !important;
     color: rgb(77, 77, 77);
@@ -129,6 +136,12 @@ body{
 
 #id-comm-button{
     background-color: rgb(185, 185, 185) !important;
+    color: rgb(77, 77, 77);
+    border: 1px solid rgb(77, 77, 77);
+}
+
+#id-search-results-button{
+    background-color: rgb(170, 210, 142) !important;
     color: rgb(77, 77, 77);
     border: 1px solid rgb(77, 77, 77);
 }
