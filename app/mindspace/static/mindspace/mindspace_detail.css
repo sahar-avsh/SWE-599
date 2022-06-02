@@ -1,3 +1,10 @@
+body {
+    background-image: url('mindspace.jpg');
+    color: rgb(77, 77, 77);
+    margin: 0; height: 100%; overflow: hidden
+}
+
+
 .main-container {
     display: flex;
     margin-left: 15px;
@@ -6,13 +13,20 @@
 
 .resource-detail {
     width: 80%;
+   
 }
+
+.resource-detail .nav-link.active {
+    background-color: rgba(255, 248, 220, 0.623);
+   
+}
+
 
 .resources-sidebar {
     padding: 10px;
     margin-right: 50px;
-    background-color: bisque;
-    border-right: 1px #9c9c9c solid;
+    background-color: rgba(255, 248, 220, 0.623);
+    border-right: none;
 }
   
 div[class*='dropdown-content'] {
@@ -38,4 +52,40 @@ div[class*='dropdown-content'] a {
     position: relative;
     float: right;
     display: inline-block;
+}
+
+.card{
+    margin-bottom: 10px;
+
+}
+
+#id-update{
+    background-color: rgb(195, 255, 245) !important;
+    color: rgb(77, 77, 77);
+    border: 1px solid rgb(77, 77, 77);
+}
+
+#id-share{
+    background-color: rgb(195, 255, 245) !important;
+    color: rgb(77, 77, 77);
+    border: 1px solid rgb(77, 77, 77);
+}
+
+#id-delete{
+    background-color: rgb(195, 255, 245) !important;
+    color: rgb(77, 77, 77);
+    border: 1px solid rgb(77, 77, 77);
+}
+
+#pills-resources-tab{
+    background-color: none;
+    color: rgb(77, 77, 77);
+
+}
+
+
+
+.nav-pills .nav-link.active{
+    background-color:rgb(255, 255, 128) !important;
+    border: 1px solid rgb(77, 77, 77);
 }
