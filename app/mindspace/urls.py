@@ -1,5 +1,6 @@
 from django.urls import path
 from .views import (
+    MindspaceDashboardView,
     MindspaceListView,
     MindspaceDetailView,
     MindspaceCreateView,
@@ -19,7 +20,8 @@ from .views import (
 
 app_name = 'mindspace'
 urlpatterns = [
-    path('dashboard/', MindspaceListView.as_view(), name='mindspace_list'),
+    path('dashboard/', MindspaceDashboardView.as_view(), name='mindspace_list'),
+    path('ajax/mindspace-list/', MindspaceListView.as_view(), name='ajax_load_mindspace_lists'),
     path('detail/<int:id>/', MindspaceDetailView.as_view(), name='mindspace_detail'),
     path('create/', MindspaceCreateView.as_view(), name='mindspace_create'),
     path('<int:id>/update/', MindspaceUpdateView.as_view(), name='mindspace_update'),
