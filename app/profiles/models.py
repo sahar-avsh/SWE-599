@@ -62,6 +62,9 @@ class Notification(models.Model):
   REMOVE_COMMENTER = 'RC'
   POST_ANSWER = 'PA'
   UPDATE_ANSWER = 'UA'
+  UP_VOTE = 'UV'
+  DOWN_VOTE = 'DV'
+  TAKE_VOTE = 'TV'
   NOTIFICATION_TYPES = (
     (ADD_EDITOR, 'add_editor'),
     (REMOVE_EDITOR, 'remove_editor'),
@@ -70,7 +73,10 @@ class Notification(models.Model):
     (ADD_COMMENTER, 'add_commenter'),
     (REMOVE_COMMENTER, 'remove_commenter'),
     (POST_ANSWER, 'post_answer'),
-    (UPDATE_ANSWER, 'update_answer')
+    (UPDATE_ANSWER, 'update_answer'),
+    (UP_VOTE, 'upvote_answer'),
+    (DOWN_VOTE, 'downvote_answer'),
+    (TAKE_VOTE, 'take_vote')
   )
 
   sent_by = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='sender_notifications')

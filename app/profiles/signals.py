@@ -3,7 +3,7 @@ from django.dispatch import receiver
 
 from mindspace.models import *
 from .models import Notification
-from qna.models import Answer
+from qna.models import Answer, Activity
 
 @receiver(post_save, sender=ShareMindspace)
 def create_notif_share_mindspace(sender, instance, **kwargs):
@@ -48,3 +48,29 @@ def create_notification_question_answered(sender, instance, created, **kwargs):
             notification_type=notification_type,
             subject_answer=instance
         )
+
+@receiver(post_save, sender=Activity)
+def create_notification_vote_add(sender, instance, created, **kwargs):
+    sent_by = instance.owner
+    if instance.activity_type == 'U':
+        notification_type = Notification.UP_VOTE
+    else:
+        notification_type = Notification.DOWN_VOTE
+
+    n = Notification.objects.create(
+        sent_by=sent_by,
+        received_by=instance.answer.owner,
+        notification_type=notification_type,
+        subject_answer=instance.answer
+    )
+
+@receiver(post_delete, sender=Activity)
+def create_notif_vote_remove(sender, instance, **kwargs):
+    notification_type = Notification.TAKE_VOTE
+    
+    n = Notification.objects.create(
+        sent_by=instance.owner,
+        received_by=instance.answer.owner,
+        notification_type=notification_type,
+        subject_answer=instance.answer
+    )

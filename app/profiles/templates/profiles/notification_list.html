@@ -92,6 +92,16 @@
                 {% else %}
                   <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from viewers for "{{object.subject_mindspace.title}}"</p>
                 {% endif %}
+
+              {% elif object.notification_type == 'UV' %}
+                <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> upvoted your answer for <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
+                <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-primary">Go to Question</a>
+              {% elif object.notification_type == 'DV' %}
+                <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> downvoted your answer for <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
+                <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-primary">Go to Question</a>
+              {% elif object.notification_type == 'TV' %}
+                <p class="card-text"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> took back their vote for your answer for <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
+                <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-primary">Go to Question</a>
                 
               {% endif %}
           </div>
