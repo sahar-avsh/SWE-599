@@ -117,7 +117,7 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
 class NotificationListView(LoginRequiredMixin, ListView):
     template_name = 'profiles/notification_list.html'
     model = Notification
-    paginate_by = 10
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = self.model.objects.filter(received_by=self.request.user.profile).order_by('-sent_date')
