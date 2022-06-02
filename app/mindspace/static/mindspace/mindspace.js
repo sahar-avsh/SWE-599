@@ -20,6 +20,11 @@ $(document).ready(function() {
             url: $(this).attr("href"),
             success: function(response) {
                 $("#id-mindspace-modal-body").html(response);
+            },
+            error: function(response) {
+                $("#id-mindspace-modal-body").html('<div class="alert alert-primary" role="alert"> \
+                You do not have permission to edit this Mindspace! \
+                </div>');
             }
         });
     });
@@ -49,6 +54,11 @@ $(document).ready(function() {
             url: $(this).attr("href"),
             success: function(response) {
                 $("#id-mindspace-modal-body").html(response);
+            },
+            error: function(response) {
+                $("#id-mindspace-modal-body").html('<div class="alert alert-primary" role="alert"> \
+                You do not have permission to share this Mindspace! \
+                </div>');
             }
         });
     });

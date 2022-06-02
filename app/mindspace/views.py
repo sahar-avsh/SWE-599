@@ -97,6 +97,14 @@ class MindspaceDetailView(LoginRequiredMixin, DetailView):
         id_ = self.kwargs.get('id')
         return get_object_or_404(Mindspace, id=id_)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        obj = self.get_object()
+        shares = obj.shares.all()
+        edit_access = [i.shared_with for i in shares if i.access_level == 'editor']
+        context['profile_has_edit_access'] = self.request.user.profile in edit_access
+        return context
+
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('id'))
         allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile).exists()

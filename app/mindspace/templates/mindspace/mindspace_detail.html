@@ -32,11 +32,17 @@
                 </div>
             </div>
             
-            <div class="buttons" style="margin-top: 5px;">
-                <button id="id-update" href="{% url 'mindspace:mindspace_update' id=object.id %}" class="btn btn-secondary" data-toggle="modal" data-target="#id-mindspace-modal">Update</button>
-                <button id="id-share" href="{% url 'mindspace:mindspace_share' id=object.id %}" class="btn btn-secondary" data-toggle="modal" data-target="#id-mindspace-modal">Share</button>
-                <button id="id-delete" href="{% url 'mindspace:mindspace_delete' id=object.id %}" class="btn btn-secondary" data-toggle="modal" data-target="#id-mindspace-modal">Delete</button>
-            </div>
+            {% if object.owner == request.user.profile %}
+                <div class="buttons" style="margin-top: 5px;">
+                    <button id="id-update" href="{% url 'mindspace:mindspace_update' id=object.id %}" class="btn btn-secondary" data-toggle="modal" data-target="#id-mindspace-modal">Update</button>
+                    <button id="id-share" href="{% url 'mindspace:mindspace_share' id=object.id %}" class="btn btn-secondary" data-toggle="modal" data-target="#id-mindspace-modal">Share</button>
+                    <button id="id-delete" href="{% url 'mindspace:mindspace_delete' id=object.id %}" class="btn btn-secondary" data-toggle="modal" data-target="#id-mindspace-modal">Delete</button>
+                </div>
+            {% elif profile_has_edit_access %}
+                <div class="buttons" style="margin-top: 5px;">
+                    <button id="id-update" href="{% url 'mindspace:mindspace_update' id=object.id %}" class="btn btn-secondary btn-block" data-toggle="modal" data-target="#id-mindspace-modal">Update</button>
+                </div>
+            {% endif %}
 
             <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist" style="margin-top: 10px; padding-top: 10px; border-top: 1px gray dotted;">
                 <li class="nav-item" role="presentation">
@@ -49,18 +55,28 @@
 
             <div class="tab-content" id="pills-tabContent">
                 <div class="tab-pane fade show active" id="pills-resources" role="tabpanel" aria-labelledby="pills-resources-tab">
+                    {% if profile_has_edit_access or object.owner == request.user.profile %}
+                        <button type="button" class="btn btn-outline-secondary btn-block" style="margin-bottom: 10px;" id="id-add-resource-link" data-toggle="modal" data-target="#id-mindspace-modal" href="{% url 'mindspace:resource_create' ms_id=object.id %}">Add Resource</button>
+                    {% endif %}
                     {% for res in object.resources.all %}
                         <p style="min-height: 20px;"> 
                             <a style="text-decoration: none; color: black; float: left; display: inline;" id="id-show-resource-detail-{{res.id}}" href="{% url 'mindspace:resource_detail' ms_id=object.id id=res.id %}"> {{ res.title|truncatewords_html:3 }} </a>
                             
-                            <svg class="icons" data-toggle="modal" data-target="#id-mindspace-modal" id="id-delete-resource-{{res.id}}" data-url="{% url 'mindspace:resource_delete' ms_id=object.id id=res.id %}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-                            </svg>
-                            <svg class="icons" data-toggle="modal" data-target="#id-mindspace-modal" id="id-edit-resource-{{res.id}}" data-url="{% url 'mindspace:resource_update' ms_id=object.id id=res.id %}" style="margin-right: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
-                                <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                                <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                            </svg>
+                            {% if object.owner == request.user.profile %}
+                                <svg class="icons" data-toggle="modal" data-target="#id-mindspace-modal" id="id-edit-resource-{{res.id}}" data-url="{% url 'mindspace:resource_update' ms_id=object.id id=res.id %}" style="margin-right: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                                <svg class="icons" data-toggle="modal" data-target="#id-mindspace-modal" id="id-delete-resource-{{res.id}}" data-url="{% url 'mindspace:resource_delete' ms_id=object.id id=res.id %}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                                </svg>
+                            {% elif profile_has_edit_access %}
+                                <svg class="icons" data-toggle="modal" data-target="#id-mindspace-modal" id="id-edit-resource-{{res.id}}" data-url="{% url 'mindspace:resource_update' ms_id=object.id id=res.id %}" style="margin-right: 3px;" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">
+                                    <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                    <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
+                                </svg>
+                            {% endif %}
                         </p>
                     {% empty %}
                         No resources found.
@@ -68,6 +84,9 @@
                 </div>
 
                 <div class="tab-pane fade" id="pills-questions" role="tabpanel" aria-labelledby="pills-questions-tab">
+                    {% if profile_has_edit_access or object.owner == request.user.profile %}
+                        <button type="button" class="btn btn-outline-secondary btn-block" style="margin-bottom: 10px;" id="id-ask-mindspace-link" data-toggle="modal" data-target="#id-mindspace-modal" href="{% url 'qna:question_create' %}">Add Question</button>
+                    {% endif %}
                     {% for question in object.mindspace_questions.all %}
                         <p style="min-height: 20px;"> 
                             <a style="text-decoration: none; color: black; float: left; display: inline;" id="id-question-title-{{question.id}}" href="{% url 'qna:question_detail' id=question.id %}"> {{ question.title|truncatewords_html:5 }} </a>

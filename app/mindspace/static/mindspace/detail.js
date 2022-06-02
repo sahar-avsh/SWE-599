@@ -34,6 +34,11 @@ $(document).ready(function() {
             url: $(this).data("url"),
             success: function(response) {
                 $("#id-mindspace-modal-body").html(response);
+            },
+            error: function(response) {
+                $("#id-mindspace-modal-body").html('<div class="alert alert-primary" role="alert"> \
+                You do not have permission to edit this Resource! \
+                </div>');
             }
         });
     });
