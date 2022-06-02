@@ -64,7 +64,7 @@
                         <h2 class="question-title" id="id-question-title-{{q.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{q.get_absolute_url}}">{{ q.title }}</a> </h2>
                     </div>
                 {% empty %}
-                    <h2 style="padding: 30px;">No questions.</h2>
+                    <h2 style="padding: 30px; color: rgb(77, 77, 77);">No questions</h2>
                 {% endfor %}
             </div>
 
@@ -74,7 +74,7 @@
                         <h2 class="question-title" id="id-question-title-{{my_q.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{my_q.get_absolute_url}}">{{ my_q.title }}</a> </h2>
                     </div>
                 {% empty %}
-                    <h2 style="padding: 30px;">You do not have any questions.</h2>
+                    <h2 style="padding: 30px; color: rgb(77, 77, 77);" >You do not have any questions</h2>
                 {% endfor %}
             </div>
 
@@ -84,7 +84,7 @@
                         <h2 class="question-title" id="id-question-title-{{my_a.id}}"> <a style="text-decoration: none; color: rgb(77, 77, 77);" href="{{my_a.get_absolute_url}}">{{ my_a.title }}</a> </h2>
                     </div>
                 {% empty %}
-                    <h2 style="padding: 30px;">You do not have any answered questions.</h2>
+                    <h2 style="padding: 30px; color: rgb(77, 77, 77);">You do not have any answered questions.</h2>
                 {% endfor %}
             </div>
 
