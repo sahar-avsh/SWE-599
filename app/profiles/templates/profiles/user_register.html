@@ -5,7 +5,7 @@
 
 {% load static %}
 {% block styles %}
-  <link rel="stylesheet" type="text/css" href="{% static 'profiles/user_register.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'profiles/the_user_register.css' %}">
 {% endblock styles %}
 
 {% block title %}
@@ -16,12 +16,14 @@
 
  <!-- ***************************************************************** -->
 <!-- Heading part -->
-<h1 class="h1"> <a class="main_name" href="{% url 'main_page' %}">Rememberall</a></h1>
-<h2 class="h2">Please sign-up here</h2>
+<div class="the-header">
+<h1> <a class="main_name" href="{% url 'main_page' %}">Rememberall</a></h1>
+</div>
 
 <form action='.' method='POST'> {% csrf_token %}
 <!-- ***************************************************************** -->
 <!-- content part -->
+<div class="the-container">
   <div class="sign_up">
     <div class="first">
       <p class="log_in_requirements">First name</p>
@@ -55,6 +57,7 @@
     <input type='submit' class="button" value='Sign Up'/>
     <button class="button"> <a href="{% url 'login' %}">Already have an account?</a> </button>
   </div>
+</div>
 </form>
 
 {% endblock content %}

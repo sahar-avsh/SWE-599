@@ -7,28 +7,21 @@ body{
   /*  ***************************************************************** 
   Heading part */
 
-  .h1{
-    color: rgb(77, 77, 77);
-    margin: auto;
+  .the-header{
     width: 28%;
     padding: 10px;
     margin-bottom: 0;
     padding-bottom: 0;
-    margin-top: 25px;
+    margin-top: 5px;
+    width: 100px;
+    margin-left: 400px;
+    
   }
   
-  .h2{
-    color: rgb(77, 77, 77);
-    margin: auto;
-    width: 28%;
-    padding: 10px;
-    margin-bottom: 5px;
-    padding-bottom: 0;
-    margin-top: 10px;
-  
-  }
 
-  .main_name {
+  .main_name{
+    width: 100px;
+    margin-top: 5px;
     text-decoration: none;
     color: rgb(77, 77, 77);
     font-size: 50px;
@@ -41,18 +34,19 @@ body{
   
   /*  ***************************************************************** 
   content part */
+  .the-container{
+    padding-left: 0;
+    margin-left: 400px;
+    margin-top: 0;
+  }
   
   .sign_up{
-  
     color: rgb(77, 77, 77);
-    margin: auto;
     width: 28%;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding-left: 10px;
     padding-bottom: 0;
     display: flex;
     align-content: space-between;
-    margin-top: 5px;
   }
 
   .second{
@@ -65,13 +59,14 @@ body{
   
   
   .log_in_requirements{
+    padding-top: 0;
     margin-top: 0;
     margin-bottom: 5px;
   }
   
   .inputs{
     background-color: rgb(255, 255, 235);
-    margin-bottom: 15px;
+    margin-bottom: 8px;
   }
   
   
@@ -81,10 +76,10 @@ body{
   
   .buttons{
     color: rgb(77, 77, 77);
-    margin: auto;
     width: 28%;
     padding: 10px;
     padding-top: 0;
+    margin-top: 5px;
   
   }
   

@@ -21,8 +21,9 @@ body{
   }
   
   .head_child{
-    color: rgb(134, 133, 133);
+    color: rgb(112, 112, 112);
     line-height: 25%;
+    margin-left: 20px;
   }
 
   ul li {
