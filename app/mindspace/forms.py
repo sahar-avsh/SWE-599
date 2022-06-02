@@ -77,23 +77,6 @@ class MindspaceSearchForm(forms.Form):
     }), required=False)
 
 
-# class ShareMindspaceForm(forms.Form):
-#     profile_to_share = forms.EmailField(required=True)
-
-#     ACCESS_LEVELS = (
-#         ('viewer','VIEW'),
-#         ('editor', 'EDIT'),
-#         ('commenter', 'COMMENT')
-#     )
-
-#     access_level = forms.ChoiceField(choices=ACCESS_LEVELS, required=True)
-
-#     def __init__(self, *args, **kwargs):
-#         super().__init__(*args, **kwargs)
-#         self.fields['profile_to_share'].widget = forms.EmailInput(attrs={
-#             'id': 'profile_to_share_field',
-#             'placeholder': 'Enter an email'})
-
 class ShareMindspaceModelForm(forms.ModelForm):
     # shared_with_info = forms.EmailField()
     class Meta:

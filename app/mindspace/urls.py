@@ -14,7 +14,7 @@ from .views import (
     NoteCreateView,
     NoteUpdateView,
     NoteDeleteView,
-    NotesListView,
+    NoteListView,
 )
 
 app_name = 'mindspace'
@@ -32,6 +32,6 @@ urlpatterns = [
     path('<int:ms_id>/<int:id>/delete/', ResourceDeleteView.as_view(), name='resource_delete'),
     path('<int:ms_id>/<int:r_id>/create-note/', NoteCreateView.as_view(), name='note_create'),
     path('<int:ms_id>/<int:r_id>/<int:id>/update-resource/', NoteUpdateView.as_view(), name='note_update'),
-    path('<int:ms_id>/<int:r_id>/notes/', NotesListView.as_view(), name='note_list'),
+    path('<int:ms_id>/<int:r_id>/notes/', NoteListView.as_view(), name='note_list'),
     path('<int:ms_id>/<int:r_id>/<int:id>/delete/', NoteDeleteView.as_view(), name='note_delete'),
 ]

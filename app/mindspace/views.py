@@ -304,7 +304,7 @@ class ResourceDeleteView(LoginRequiredMixin, DeleteView):
         return super().dispatch(request, *args, **kwargs)
 
 ##################### Note #####################
-class NotesListView(LoginRequiredMixin, ListView):
+class NoteListView(LoginRequiredMixin, ListView):
     template_name = 'mindspace/note_list.html'
     model = Note
     
