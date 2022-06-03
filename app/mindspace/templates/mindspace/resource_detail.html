@@ -6,11 +6,11 @@
 
 <link rel="stylesheet" type="text/css" href="{% static 'mindspace/resource_detail.css' %}">
 
-    <div class="card">
-      <div class="card-header">
+    <div class="card bg-transparent">
+      <div class="card-header bg-transparent border-primary">
         Resource
       </div>
-      <div class="card-body">
+      <div class="card-body bg-transparent">
         <h5 class="card-title"> {{object.title}} </h5>
         {% comment %} Format is an uploaded image {% endcomment %}
         {% if object.res_format == 'Image' and object.image %}
@@ -55,14 +55,14 @@
         {% endif %}
         <p class="card-text"> {{object.description}} </p>
       </div>
-      <div class="card-footer text-muted">
+      <div class="card-footer text-muted bg-transparent border-primary">
         Created at {{object.created_at|date:"l j M Y - H:i"}}
       </div>
     </div>
 
-    <h2>Your Notes</h2>
+    <h2 style="margin-left: 20px;">Your Notes</h2>
 
-    <div class="note-list" id="id-note-list" load-notes-url="{% url 'mindspace:note_list' ms_id=object.belongs_to.id r_id=object.id %}">
+    <div class="note-list" id="id-note-list" style="margin-left: 20px;" load-notes-url="{% url 'mindspace:note_list' ms_id=object.belongs_to.id r_id=object.id %}">
       {% for note in notes %}
         <div id="id-note-{{forloop.counter0}}" class="note">
           <div class="edit-note">
@@ -82,5 +82,5 @@
       {% endfor %}
     </div>
 
-    <button data-id={{object.id}} class="btn btn-info" id="id-create-note-button" note-form-url="{% url 'mindspace:note_create' ms_id=object.belongs_to.id r_id=object.id %}">Create Note</button>
-    <div id="id-note-create-container"></div>
+    <button data-id={{object.id}} style="margin-left: 20px;" class="btn btn-info" id="id-create-note-button" note-form-url="{% url 'mindspace:note_create' ms_id=object.belongs_to.id r_id=object.id %}">Create Note</button>
+    <div id="id-note-create-container" style="padding-right: 20px; padding-left: 20px; padding-bottom: 20px;"></div>

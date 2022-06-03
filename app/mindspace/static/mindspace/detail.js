@@ -1,4 +1,59 @@
 $(document).ready(function() {
+    $(document).on("click", "#pills-resources-tab, #pills-questions-tab", function(e) {
+        $(".spinner-border").show();
+        var ms_id = window.location.pathname.split("/").filter(i => i).pop();
+        var category = $(this).attr("id").split("-")[1];
+
+        $.ajax({
+            type: 'GET',
+            url: $(this).data("url"),
+            data: {
+                'ms_id': ms_id,
+                'category': category
+            },
+            success: function(response) {
+                $("#pills-tabContent").html(response);
+                $(".spinner-border").hide();
+            },
+            error: function(response) {
+                console.log(response);
+            }
+        });
+    });
+
+    $(document).on("click", "[id*=id-mindspace-detail-items-page-]", function(e) {
+        $(".spinner-border").show();
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        var url = $(this).attr("href");
+        var page = $(this).attr("page-num");
+
+        var is_viewing = $("#id-category").html();
+        if (is_viewing === "resources") {
+            var data = {'resources-page': page}
+        } else if (is_viewing === "questions") {
+            var data = {'questions-page': page}
+        }
+
+        data['ms_id'] = window.location.pathname.split("/").filter(i => i).pop();
+        data['category'] = is_viewing;
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: data,
+            success: function(response) {
+                $("#pills-tabContent").html(response);
+                $(".spinner-border").hide();
+                $("#pills-tabContent").show();
+            },
+            error: function(response) {
+                console.log(response);
+            }
+        });
+    });
+
     $(document).on("click", "a[id*=id-show-resource-detail]", function(e) {
         e.preventDefault();
 
@@ -16,6 +71,7 @@ $(document).ready(function() {
             url: $(this).attr("href"),
             success: function(response) {
                 $("#id-detail").html(response);
+                $("#id-detail").css("background-color", "rgba(255, 248, 220, 0.815)");
                 $("#id-collapse").show();
             }
         });

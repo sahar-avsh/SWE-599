@@ -1,18 +1,6 @@
 $(document).ready(function() {
-    $("#id-add-mindspace-link").click(function(e) {
-        e.preventDefault();
-        
-        $.ajax({
-            type: 'GET',
-            url: $(this).attr("href"),
-            success: function(response) {
-                $("#id-create-mindspace-form").html(response);
-                $("#id-create-mindspace-form").show();
-            }
-        });
-    });
 
-    $("#id-update").click(function(e) {
+    $(document).on("click", "#id-update", function(e) {
         e.preventDefault();
         
         $.ajax({
@@ -29,7 +17,7 @@ $(document).ready(function() {
         });
     });
 
-    $("#id-delete").click(function(e) {
+    $(document).on("click", "#id-delete", function(e) {
         e.preventDefault();
         
         $.ajax({
@@ -46,7 +34,7 @@ $(document).ready(function() {
         });
     });
 
-    $("#id-share").click(function(e) {
+    $(document).on("click", "#id-share", function(e) {
         e.preventDefault();
         
         $.ajax({
@@ -63,7 +51,7 @@ $(document).ready(function() {
         });
     });
 
-    $("#id-add-resource-link").click(function(e) {
+    $(document).on("click", "#id-add-resource-link", function(e) {
         e.preventDefault();
         
         $.ajax({
@@ -75,7 +63,30 @@ $(document).ready(function() {
         });
     });
 
-    $("#id-ask-mindspace-link").click(function(e) {
+    $(document).on("change", "#id_tagged_mindspace", function(e) {
+        e.stopImmediatePropagation();
+        console.log('questions');
+        if ($("#question_form").length) {
+            var url = $("#question_form").attr("data-resources-url");
+        } else {
+            var url = $("#id-question-form").attr("data-resources-url");
+        }
+        
+        var mindspaceId = $(this).val();
+    
+        $.ajax({
+            type: 'GET',
+            url: url,
+            data: {
+                'mindspace': mindspaceId
+            },
+            success: function (data) {
+                $("#id_tagged_resource").html(data);
+            }
+        });
+    });
+
+    $(document).on("click", "#id-ask-mindspace-link", function(e) {
         e.preventDefault();
         
         $.ajax({
@@ -109,7 +120,7 @@ $(document).ready(function() {
             success: function(response) {
                 $('#id-mindspace-modal').modal('toggle');
                 $('#question_form').trigger("reset");
-                window.location.replace("/questions/");
+                window.location.replace(response.nextURL);
             }
         });
     });

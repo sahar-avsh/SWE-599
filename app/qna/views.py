@@ -39,8 +39,8 @@ class QuestionCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
     def form_valid(self, form):
         # assign owner to the question
         form.instance.owner = self.request.user.profile
-        form.save()
-        return super().form_valid(form)
+        question = form.save()
+        return JsonResponse({'nextURL': question.get_absolute_url()}, status=200)
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()

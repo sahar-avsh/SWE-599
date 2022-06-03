@@ -23,6 +23,23 @@ function loadQuestions(url, target) {
 
 $(document).ready(function() {
 
+    $(document).on("submit", "#id-question-form", function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        $.ajax({
+            type: "POST",
+            url: $(this).attr("action"),
+            data: $(this).serialize(),
+            success: function(response) {
+                window.location.replace(response.nextURL);
+            },
+            error: function(response) {
+                console.log(response)
+            }
+        });
+    });
+
     $(document).on("click", "[id*=id-question-page-]", function(e) {
         $(".spinner-border").show();
         e.preventDefault();

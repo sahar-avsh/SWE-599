@@ -120,6 +120,55 @@ class MindspaceListView(LoginRequiredMixin, TemplateView):
 
         return context
 
+class LoadMindspaceDetailItems(LoginRequiredMixin, ListView):
+    template_name = 'mindspace/mindspace_detail_items.html'
+    paginate_by = 5
+
+    def get_queryset(self):
+        if self.request.GET.get('category') == 'resources':
+            queryset = Mindspace.objects.get(id=self.request.GET.get('ms_id')).resources.all().order_by('updated_at')
+        else:
+            queryset = Mindspace.objects.get(id=self.request.GET.get('ms_id')).mindspace_questions.all().order_by('asked_date')
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        obj = Mindspace.objects.get(id=self.request.GET.get('ms_id'))
+
+        shares = obj.shares.all()
+        edit_access = [i.shared_with for i in shares if i.access_level == 'editor']
+        context['profile_has_edit_access'] = self.request.user.profile in edit_access
+
+        context['object'] = obj
+        context['category'] = self.request.GET.get('category')
+
+        if 'resources-page' in self.request.GET.keys(): 
+            page_kwarg = 'resources-page'
+        elif 'questions-page' in self.request.GET.keys():
+            page_kwarg = 'questions-page'
+        else:
+            page_kwarg = None
+
+        paginator = Paginator(self.get_queryset(), self.paginate_by)
+        page = self.request.GET.get(page_kwarg) or 1
+        try:
+            page_number = int(page)
+        except ValueError:
+            if page == 'last':
+                page_number = paginator.num_pages
+            else:
+                raise Http404()
+        
+        try:
+            page = paginator.page(page_number)
+            context['is_paginated'] = page.has_other_pages()
+            context['page_obj'] = page
+        except InvalidPage:
+            raise Http404
+
+        return context
+
+
 class MindspaceDetailView(LoginRequiredMixin, DetailView):
     template_name = 'mindspace/mindspace_detail.html'
 

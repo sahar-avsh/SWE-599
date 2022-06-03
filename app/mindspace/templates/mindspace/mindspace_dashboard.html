@@ -20,7 +20,7 @@
         <div class="mindspace-sidebar">
             <div class="mindspace-create">
                 <h4> Create a new Mindspace </h4>
-                <form action="{% url 'mindspace:mindspace_create' %}" method="POST" id='id-mindspace-form'> {% csrf_token %}
+                <form action="{% url 'mindspace:mindspace_create' %}" method="POST" id='id-mindspace-form' data-resources-url="{% url 'qna:ajax_load_resources' %}" novalidate> {% csrf_token %}
                     {{form_create|crispy}}
                     <input type='submit' class='btn btn-secondary' value='Save'/>
                 </form>
