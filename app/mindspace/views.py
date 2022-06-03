@@ -317,6 +317,7 @@ class ResourceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
     def form_valid(self, form):
         form.instance.belongs_to_id = self.kwargs.get('ms_id')
+        form.instance.owner = self.request.user.profile
         return super().form_valid(form)
 
     def get_context_data(self, **kwargs):

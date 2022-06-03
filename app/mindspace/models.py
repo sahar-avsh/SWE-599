@@ -39,6 +39,7 @@ FORMAT_CHOICES = (
 )
 
 class Resource(models.Model):
+    owner = models.ForeignKey('profiles.Profile', on_delete=models.CASCADE, related_name='resources_created', null=True)
     title = models.CharField(max_length=220)
     description = models.TextField(blank=True, null=True)
     belongs_to = models.ForeignKey(Mindspace, on_delete=models.CASCADE, related_name='resources')

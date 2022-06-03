@@ -1,5 +1,21 @@
 $(document).ready(function() {
 
+    $(document).on("click", "#id-resource-created-by", function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("href"),
+            success: function(response) {
+                $("#id-mindspace-modal-body").html(response);
+            },
+            error: function(response) {
+                console.log(response);
+            }
+        });
+    });
+
     $(document).on("click", "#id-update", function(e) {
         e.preventDefault();
         

@@ -14,7 +14,7 @@ body {
 .resource-detail {
     width: 80%;
     overflow: auto;
-    height: 800px;
+    height: 90vh;
 }
 
 .resource-detail .nav-link.active {
