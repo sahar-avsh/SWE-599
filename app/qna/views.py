@@ -148,7 +148,7 @@ class QuestionSearchView(LoginRequiredMixin, ListView):
         for w in search_words:
             arguments |= Q(**{'title__icontains': w})
             arguments |= Q(**{'body__icontains': w})
-        queryset = Question.objects.filter(*(arguments, ))
+        queryset = Question.objects.filter(*(arguments, )).order_by('asked_date')
         return queryset
 
     def get_context_data(self, **kwargs):

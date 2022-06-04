@@ -2,7 +2,8 @@ from django.test import TestCase, Client, RequestFactory
 from django.urls import reverse
 
 from django.contrib.auth.models import User
-from mindspace.views import MindspaceListView, NoteListView
+
+from mindspace.views import MindspaceListView, NoteListView, AjaxMindspaceSearch
 from profiles.models import Profile
 from mindspace.models import *
 
@@ -59,6 +60,10 @@ class TestMindspaceViews(TestCase):
             'description': 'TestMindspaceUpdate',
             'is_public': True
         })
+
+        self.mindspace_1.refresh_from_db()
+
+        self.assertEqual(self.mindspace_1.title, 'TestMindspaceUpdate')
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('mindspace:mindspace_detail', kwargs={'id': self.mindspace_1.id}))
 
@@ -84,20 +89,40 @@ class TestMindspaceViews(TestCase):
         self.assertTemplateUsed(response, 'mindspace/mindspace_detail.html')
 
     def test_mindspace_list_view(self):
-        request = self.factory.get(reverse('mindspace:mindspace_list'))
+        request = self.factory.get(reverse('mindspace:ajax_load_mindspace_lists'), data={
+            'my-mindspace-page': 1
+        },
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
         request.user = self.user_1
         view = MindspaceListView()
         view.setup(request)
-        view.object_list = view.get_queryset()
-        self.assertEqual(1, len(view.object_list))
+        view.context = view.get_context_data()
+        self.assertIn('is_viewing', view.context)
+        self.assertIn('page_obj', view.context)
+        self.assertIn('is_paginated', view.context)
+        self.assertEqual(len(view.context['page_obj'].object_list), 1)
+        self.assertEqual(view.template_name, 'mindspace/mindspace_list.html')
 
     def test_mindspace_search_view(self):
-        login = self.client.login(username='TestUser1', password='Test')
-        response = self.client.get(reverse('mindspace:ajax_load_search_results',), data={
+        request = self.factory.get(reverse('mindspace:ajax_load_search_results'), data={
             'keyword_query': 'Test',
-            'owner_query': '',
-        })
-        self.assertEqual(len(response.context['result_list']), 1)
+        },
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        request.user = self.user_1
+        view = AjaxMindspaceSearch()
+        view.setup(request)
+        view.object_list = view.get_queryset()
+        view.context = view.get_context_data()
+
+        self.assertEqual(len(view.object_list), 1)
+
+        self.assertIn('page_obj', view.context)
+        self.assertIn('is_paginated', view.context)
+        self.assertIn('filter_flag', view.context)
+        self.assertIn('keyword_query', view.context)
+        self.assertEqual(view.template_name, 'mindspace/ajax_mindspace_results.html')
 
     def test_resource_create_view(self):
         login = self.client.login(username='TestUser1', password='Test')
@@ -135,6 +160,9 @@ class TestMindspaceViews(TestCase):
             'quote': 'TestQuote'
         }, 
         HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.mindspace_1.resources.first().refresh_from_db()
+
         self.assertEqual(response.status_code, 302)
         self.assertEqual(self.mindspace_1.resources.first().title, 'TestResourceUpdate')
 
@@ -236,12 +264,16 @@ class TestMindspaceViews(TestCase):
             'belongs_to': self.mindspace_1.resources.first()
         },
         HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+
+        self.mindspace_1.resources.first().notes.all()[0].refresh_from_db()
+
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('mindspace:resource_detail', kwargs={
             'ms_id': self.mindspace_1.id,
             'id': self.mindspace_1.resources.first().id
         }))
         self.assertEqual(len(self.mindspace_1.resources.first().notes.all()), 1)
+        self.assertEqual(self.mindspace_1.resources.first().notes.all()[0].content, 'TestNoteUpdated')
 
     def test_note_delete_view(self):
         login = self.client.login(username='TestUser1', password='Test')
