@@ -35,6 +35,8 @@
                 </form>
             </div>
 
+            {{ form_create.media }}
+
             <div class="qna-search">
                 <h4> Search a Question </h4>
                 <form action="{% url 'qna:question_search' %}" id='id-question-search-form' autocomplete="off">

@@ -13,6 +13,8 @@
     {{object.title}}
 {% endblock title %}
 
+{% load markdown_extras %}
+
 {% block content %}
 
     <div class="main-container">
@@ -25,7 +27,7 @@
                 </div>
                 <div class="card-body bg-transparent">
                     <h5 class="card-title" id="id-mindspace-title-{{object.id}}"> {{object.title}} </h5>
-                    <p class="card-text"> {{object.description}} </p>
+                    <p class="card-text"> {{object.description|markdown|safe}} </p>
                 </div>
                 <div class="card-footer text-muted bg-transparent">
                     <small>Created at {{object.created_at|date:"l j M Y - H:i"}}</small>
