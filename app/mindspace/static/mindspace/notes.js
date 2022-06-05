@@ -49,27 +49,19 @@ $(document).ready(function() {
 
   });
 
-  $(document).on('click', '.edit', function(){
-    var id = $(this).attr("id");
-    var counter = id.split('-');
-    var uniq = counter[counter.length - 1];
+  $(document).on('click', '[id*=id-edit-icon-]', function(){
+    var id = $(this).attr("id").split("-").pop();
     var url = $(this).attr("edit-note-url");
-    var note = $(this).attr("data-object-id");
-    var content = "id-note-content-" + uniq;
-    var edit = "id-edit-icon-" + uniq;
-    var del = "id-delete-icon-" + uniq;
     
     $.ajax({
         url: url,
         data: {
-            'note_id': note
+            'note_id': id
         },
         success: function (data) {
-            $("#" + content).html(data);
+            $("#id-note-" + id).html(data);
         }
     });
-    document.getElementById(edit).style.display = "none";
-    document.getElementById(del).style.display = "none";
     document.getElementById("id-create-note-button").style.display = "none";
   });
 

@@ -1,10 +1,12 @@
 {% load crispy_forms_tags %}
 
-<form id="id-note-update-form" action='{% url 'mindspace:note_update' ms_id=object.belongs_to.belongs_to.id r_id=object.belongs_to.id id=object.id %}'>{% csrf_token %}
+<form id="id-note-update-form" action="{% url 'mindspace:note_update' ms_id=object.belongs_to.belongs_to.id r_id=object.belongs_to.id id=object.id %}">{% csrf_token %}
     {{form|crispy}}
     <input id="id-submit-button" type='submit' class='btn btn-success' value='Save'/>
     <a id="id-cancel-note-update-button" class="btn btn-secondary" role="button">Cancel</a>
 </form>
+
+{{ form.media }}
 
 <style>
     #id-cancel-note-update-button {

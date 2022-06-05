@@ -8,6 +8,8 @@ from .models import (
 
 from django.core.exceptions import ValidationError
 import magic
+from markdownx.fields import MarkdownxFormField
+from markdownx.widgets import MarkdownxWidget
 
 from django.forms.models import BaseModelFormSet
 from django.forms.formsets import DELETION_FIELD_NAME
@@ -25,6 +27,12 @@ class MindspaceModelForm(forms.ModelForm):
             'is_public': 'Public'
         }
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['description'].widget = MarkdownxWidget(attrs={
+            'placeholder': 'You can use Markdown here...'
+        })
+
 class ResourceModelForm(forms.ModelForm):
     class Meta:
         model = Resource
@@ -41,6 +49,9 @@ class ResourceModelForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['description'].widget = MarkdownxWidget(attrs={
+            'placeholder': 'You can use markdown here...'
+        })
         self.fields['res_format'].widget.attrs.update({'id': 'res_format_field'})
         self.fields['video'].widget.attrs.update({'id': 'video_field'})
         self.fields['image'].widget.attrs.update({'id': 'image_field'})
@@ -58,11 +69,19 @@ class ResourceModelForm(forms.ModelForm):
         return file
 
 class NoteModelForm(forms.ModelForm):
+    # myfield = MarkdownxFormField()
     class Meta:
         model = Note
         fields = [
             'content'
         ]
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['content'].widget = MarkdownxWidget(attrs={
+            'id': 'id-content',
+            'placeholder': 'You can use Markdown here as well...'
+        })
 
 class MindspaceSearchForm(forms.Form):
     keyword = forms.CharField(widget=forms.TextInput(attrs={

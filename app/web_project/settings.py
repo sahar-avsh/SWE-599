@@ -48,6 +48,7 @@ INSTALLED_APPS = [
     'qna',
     'crispy_forms',
     'embed_video',
+    'markdownx'
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'

@@ -30,6 +30,7 @@ from profiles.views import (
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('markdownx/', include('markdownx.urls')),
     path('mindspace/', include('mindspace.urls')),
     path('profiles/', include('profiles.urls')),
     path('questions/', include('qna.urls')),
