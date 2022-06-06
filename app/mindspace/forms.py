@@ -30,6 +30,7 @@ class MindspaceModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['description'].widget = MarkdownxWidget(attrs={
+            'class': 'markdown-field',
             'placeholder': 'You can use Markdown here...'
         })
 
@@ -50,6 +51,7 @@ class ResourceModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['description'].widget = MarkdownxWidget(attrs={
+            'class': 'markdown-field',
             'placeholder': 'You can use markdown here...'
         })
         self.fields['res_format'].widget.attrs.update({'id': 'res_format_field'})
@@ -80,6 +82,7 @@ class NoteModelForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['content'].widget = MarkdownxWidget(attrs={
             'id': 'id-content',
+            'class': 'markdown-field',
             'placeholder': 'You can use Markdown here as well...'
         })
 

@@ -1,7 +1,11 @@
-body{
+body {
     background-image: url('Q&A.jpg');
     color: rgb(77, 77, 77);
     margin: 0; height: 100%; overflow: hidden
+}
+
+#id_body {
+    height: 100px;
 }
 
 .main-container {
@@ -9,7 +13,7 @@ body{
 }
 
 .qna-sidebar {
-    width: 32.5%;
+    width: 45%;
     max-width: 100%;
     background-color: rgba(255, 248, 220, 0.623);
     padding: 10px;
@@ -19,13 +23,12 @@ body{
     padding-bottom: 20px;
     color: rgb(77, 77, 77);
     overflow-y: auto;
-    height : 100%;
-    height : 100vh; 
-    min-height : 750px;
+    height : 95vh;
+    /* height : 100vh;  */
 }
 
 .qna-results{
-    width: 70%;
+    width: 55%;
     background-color: rgba(255, 248, 220, 0.815);
     overflow-y: auto;
     height : 100%;
@@ -35,11 +38,13 @@ body{
   }
 
 .qna-create {
-    padding: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .qna-search {
-    padding: 20px;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 .question-title {
