@@ -4,6 +4,9 @@
 <script src="{% static 'qna/resource_dropdown_list.js' %}"></script>
 
 <h3> Update "{{object.title}}" </h3>
+
+{% include 'mindspace/markdown_toolbar.html' %}
+
 <form action="{% url 'qna:question_update' id=object.id %}" method="POST" id="id-question-update-form-{{object.id}}" data-resources-url="{% url 'qna:ajax_load_resources' %}" novalidate>
 {% csrf_token %}
     {{form|crispy}}

@@ -35,7 +35,7 @@ class QuestionModelForm(forms.ModelForm):
             'id': 'title_field',
             'placeholder': 'Enter your question title'})
         self.fields['body'].widget = MarkdownxWidget(attrs={
-            'id': 'body_field',
+            'class': 'markdown-field',
             'placeholder': 'Explain your question. You can use Markdown...'})
         self.fields['tagged_mindspace'].queryset = Mindspace.objects.filter(owner=profile)
         self.fields['tagged_resource'].queryset = Resource.objects.none()
@@ -66,6 +66,7 @@ class AnswerModelForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.fields['reply'].widget = MarkdownxWidget(attrs={
             'id': 'reply_field',
+            'class': 'markdown-field',
             'placeholder': 'Enter your reply. You can use Markdown...'})
         
         self.fields['tagged_mindspace'].widget.attrs.update({

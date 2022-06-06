@@ -2,6 +2,9 @@
 {% load static %}
 
 <h4> Create a new Resource </h4>
+
+{% include 'mindspace/markdown_toolbar.html' %}
+
 <form action="{% url 'mindspace:resource_create' ms_id=parent.id %}" id="id-create-resource-form" method='POST' enctype="multipart/form-data">{% csrf_token %}
     {{form.title|as_crispy_field}}
     {{form.description|as_crispy_field}}

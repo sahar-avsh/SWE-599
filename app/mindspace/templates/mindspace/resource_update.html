@@ -1,7 +1,10 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-<h4 style="margin-left: 20px; margin-top: 5px;"> Update {{object.title}} </h4>
+<h4 style="margin-top: 5px;"> Update {{object.title}} </h4>
+
+{% include 'mindspace/markdown_toolbar.html' %}
+
 <form action="{% url 'mindspace:resource_update' ms_id=object.belongs_to.id id=object.id %}" method='POST' id="id-form-edit-resource" enctype="multipart/form-data">{% csrf_token %}
   {{form.title|as_crispy_field}}
   {{form.description|as_crispy_field}}
@@ -28,9 +31,5 @@
 <style>
   #id_description {
     height: 100px !important;
-  }
-
-  #id-form-edit-resource {
-    padding: 20px;
   }
 </style>

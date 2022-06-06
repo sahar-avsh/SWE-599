@@ -29,6 +29,9 @@
         <div class="qna-sidebar">
             <div class="qna-create">
                 <h4> Create a new Question </h4>
+
+                {% include 'mindspace/markdown_toolbar.html' %}
+
                 <form action="{% url 'qna:question_create' %}" method="POST" id='id-question-form' data-resources-url="{% url 'qna:ajax_load_resources' %}" novalidate> {% csrf_token %}
                     {{form_create|crispy}}
                     <input type='submit' class='btn btn-secondary' value='Save'/>

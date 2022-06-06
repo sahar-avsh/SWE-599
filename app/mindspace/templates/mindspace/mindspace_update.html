@@ -1,10 +1,13 @@
 {% load crispy_forms_tags %}
 
-    <h1 style="margin-left: 20px;"> Update {{object.title}} </h1>
-    <form action="{% url 'mindspace:mindspace_update' id=object.id %}" method='POST' id="id-update-mindspace-form" style="margin: 20px; padding-bottom: 20px;">{% csrf_token %}
-        {{form|crispy}}
-        <input type='submit' class='btn btn-success' value='Save'/>
-        <button class="btn btn-secondary" id="id-cancel-mindspace-update" style="color: white;" data-dismiss="modal">Cancel</button>
+    <h1 style="margin-bottom: 10px;"> Update {{object.title}} </h1>
+
+    {% include 'mindspace/markdown_toolbar.html' %}
+
+    <form action="{% url 'mindspace:mindspace_update' id=object.id %}" method='POST' id="id-update-mindspace-form">{% csrf_token %}
+      {{form|crispy}}
+      <input type='submit' class='btn btn-success' value='Save'/>
+      <button class="btn btn-secondary" id="id-cancel-mindspace-update" style="color: white;" data-dismiss="modal">Cancel</button>
     </form>
 
     {{ form.media }}
