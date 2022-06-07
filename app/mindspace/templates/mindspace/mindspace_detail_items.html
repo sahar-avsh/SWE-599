@@ -4,8 +4,10 @@
 
     <div class="tab-pane fade show active" id="pills-resources" role="tabpanel" aria-labelledby="pills-resources-tab">
         {% if profile_has_edit_access or object.owner == request.user.profile %}
-            <button type="button" class="btn btn-outline-secondary btn-block" style="margin-bottom: 10px;" id="id-add-resource-link" data-toggle="modal" data-target="#id-mindspace-modal" href="{% url 'mindspace:resource_create' ms_id=object.id %}">Add Resource</button>
+            <button type="button" class="btn btn-outline-secondary btn-block" id="id-add-resource-link" data-toggle="modal" data-target="#id-mindspace-modal" href="{% url 'mindspace:resource_create' ms_id=object.id %}">Add Resource</button>
         {% endif %}
+        
+        {% include 'mindspace/sort_by_dropdown.html' %}
 
         {% for res in page_obj.object_list %}
             <p style="min-height: 20px;"> 

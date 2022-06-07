@@ -126,7 +126,8 @@ class LoadMindspaceDetailItems(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         if self.request.GET.get('category') == 'resources':
-            queryset = Mindspace.objects.get(id=self.request.GET.get('ms_id')).resources.all().order_by('updated_at')
+            sort_by = self.request.GET.get('sort_by')
+            queryset = Mindspace.objects.get(id=self.request.GET.get('ms_id')).resources.all().order_by('-' + sort_by)
         else:
             queryset = Mindspace.objects.get(id=self.request.GET.get('ms_id')).mindspace_questions.all().order_by('asked_date')
         return queryset
@@ -141,6 +142,7 @@ class LoadMindspaceDetailItems(LoginRequiredMixin, ListView):
 
         context['object'] = obj
         context['category'] = self.request.GET.get('category')
+        context['sort_by'] = self.request.GET.get('sort_by')
 
         if 'resources-page' in self.request.GET.keys(): 
             page_kwarg = 'resources-page'

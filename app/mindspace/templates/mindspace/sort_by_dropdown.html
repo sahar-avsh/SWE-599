@@ -1,0 +1,26 @@
+<div class="btn-group btn-block dropright" style="margin-bottom: 10px;">
+    <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        {% if sort_by == "updated_at" %}
+            Sorted by <u>last updated</u> 
+        {% elif sort_by == "created_at" %}
+            Sorted by <u>last created</u>
+        {% elif sort_by == "res_format" %}
+            Sorted by <u>format</u>
+        {% endif %}
+    </button>
+    <div class="dropdown-menu">
+        {% if sort_by == "updated_at" %}
+            <a id="id-sort-by-updated_at" class="dropdown-item active" href="{% url 'mindspace:ajax_load_mindspace_detail_items' %}">Last Updated</a>
+            <a id="id-sort-by-created_at" class="dropdown-item" href="{% url 'mindspace:ajax_load_mindspace_detail_items' %}">Last Created</a>
+            <a id="id-sort-by-res_format" class="dropdown-item" href="{% url 'mindspace:ajax_load_mindspace_detail_items' %}">Format</a>
+        {% elif sort_by == "created_at" %}
+            <a id="id-sort-by-updated_at" class="dropdown-item" href="{% url 'mindspace:ajax_load_mindspace_detail_items' %}">Last Updated</a>
+            <a id="id-sort-by-created_at" class="dropdown-item active" href="{% url 'mindspace:ajax_load_mindspace_detail_items' %}">Last Created</a>
+            <a id="id-sort-by-res_format" class="dropdown-item" href="{% url 'mindspace:ajax_load_mindspace_detail_items' %}">Format</a>
+        {% elif sort_by == "res_format" %}
+            <a id="id-sort-by-updated_at" class="dropdown-item" href="{% url 'mindspace:ajax_load_mindspace_detail_items' %}">Last Updated</a>
+            <a id="id-sort-by-created_at" class="dropdown-item" href="{% url 'mindspace:ajax_load_mindspace_detail_items' %}">Last Created</a>
+            <a id="id-sort-by-res_format" class="dropdown-item active" href="{% url 'mindspace:ajax_load_mindspace_detail_items' %}">Format</a>
+        {% endif %}
+    </div>
+</div>

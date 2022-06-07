@@ -1,16 +1,41 @@
 $(document).ready(function() {
+    $(document).on("click", "[id*=id-sort-by-]", function(e) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+
+        var data = {
+            'category': 'resources'
+        }
+        var sort_by = $(this).attr("id").split("-").pop();
+        data['sort_by'] = sort_by
+        var ms_id = window.location.pathname.split("/").filter(i => i).pop();
+        data['ms_id'] = ms_id
+
+        $.ajax({
+            type: 'GET',
+            url: $(this).attr("href"),
+            data: data,
+            success: function(response) {
+                $("#pills-tabContent").html(response);
+            }
+        });
+    });
+
     $(document).on("click", "#pills-resources-tab, #pills-questions-tab", function(e) {
         $(".spinner-border").show();
+        var data = {}
         var ms_id = window.location.pathname.split("/").filter(i => i).pop();
+        data['ms_id'] = ms_id
         var category = $(this).attr("id").split("-")[1];
+        data['category'] = category
+        if (category === "resources") {
+            data['sort_by'] = 'updated_at'
+        }
 
         $.ajax({
             type: 'GET',
             url: $(this).data("url"),
-            data: {
-                'ms_id': ms_id,
-                'category': category
-            },
+            data: data,
             success: function(response) {
                 $("#pills-tabContent").html(response);
                 $(".spinner-border").hide();
@@ -31,7 +56,10 @@ $(document).ready(function() {
 
         var is_viewing = $("#id-category").html();
         if (is_viewing === "resources") {
-            var data = {'resources-page': page}
+            var data = {
+                'resources-page': page,
+                'sort_by': $("[id*=id-sort-by-]").filter("[class*=active]")[0].id.split("-").pop(),
+            }
         } else if (is_viewing === "questions") {
             var data = {'questions-page': page}
         }
