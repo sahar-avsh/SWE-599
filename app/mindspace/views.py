@@ -228,7 +228,16 @@ class ShareMindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateVi
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         mindspace = Mindspace.objects.get(id=self.kwargs.get('id'))
-        sm = ShareMindspace.objects.filter(mindspace=mindspace)
+        if self.request.GET.get('username'):
+            username = self.request.GET.get('username')
+            context['searched_username'] = username
+            try:
+                profile = Profile.objects.get(created_by__username=username)
+                sm = ShareMindspace.objects.filter(mindspace=mindspace, shared_with=profile)
+            except (Profile.DoesNotExist, ShareMindspace.DoesNotExist):
+                pass
+        else:
+            sm = ShareMindspace.objects.filter(mindspace=mindspace)
         context['formset'] = ShareMindspaceModelFormSet(queryset=sm)
         context['mindspace'] = mindspace
         return context

@@ -1,5 +1,37 @@
 $(document).ready(function() {
 
+    $(document).on("click", "#id-search-profile-cancel-button", function(e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'GET',
+            url: $("#id-share-mindspace-form").attr("action"),
+            success: function(response) {
+                $("#id-mindspace-modal-body").html(response);
+                if ($("#id-search-profile-error-div").html() !== "") {
+                    $("#id-search-profile-error-div").html("");
+                }
+            }
+        });
+    });
+
+    $(document).on("click", "#id-search-profile-button", function(e) {
+        e.preventDefault();
+
+        $.ajax({
+            type: 'GET',
+            url: $("#id-share-mindspace-form").attr("action"),
+            data: {'username': $("#id-search-profile-in-share").val()},
+            success: function(response) {
+                $("#id-mindspace-modal-body").html(response);
+            },
+            error: function(response) {
+                if ($("#id-search-profile-error-div").html() === "") {
+                    $("#id-search-profile-error-div").append('<div class="alert alert-secondary">No information found with this username</div>');
+                }
+            }
+        });
+    });
+
     $(document).on("click", "#id-resource-created-by", function(e) {
         e.preventDefault();
         e.stopImmediatePropagation();

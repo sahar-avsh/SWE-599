@@ -3,6 +3,23 @@
 {% load get_item %}
 
 <h4 style="margin-left: 20px;"> Share {{mindspace.title}} </h4>
+
+<div class="input-group input-group-sm mb-3" style="margin-left: 20px;">
+  <input type="text" id="id-search-profile-in-share" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="id-search-profile-button">
+  <div class="input-group-append" style="margin-right: 20px">
+    <button class="btn btn-outline-secondary" type="button" id="id-search-profile-button">Search</button>
+    <button class="btn btn-outline-secondary" type="button" id="id-search-profile-cancel-button">Cancel</button>
+  </div>
+</div>
+
+{% if searched_username %} 
+  <div class="alert alert-info" role="alert" style="margin-left: 20px;">
+    <p style="margin-bottom: 0px;">Searhing {{searched_username}}...</p>
+  </div>
+{% endif %}
+
+<div id="id-search-profile-error-div" style="margin-left: 20px;"></div>
+
 <form action="{% url 'mindspace:mindspace_share' id=mindspace.id %}" id="id-share-mindspace-form" method='POST' style="margin: 20px; padding-bottom: 10px;">{% csrf_token %}
   {{formset.management_form|crispy}}
     {% for form in formset %}
