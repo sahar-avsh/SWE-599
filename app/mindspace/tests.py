@@ -67,6 +67,18 @@ class TestMindspaceViews(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertRedirects(response, reverse('mindspace:mindspace_detail', kwargs={'id': self.mindspace_1.id}))
 
+    def test_mindspace_share_view(self):
+        login = self.client.login(username='TestUser1', password='Test')
+        response = self.client.post(reverse('mindspace:mindspace_share', kwargs={'id': self.mindspace_1.id}), data={
+            'access_level': 'editor',
+            'shared_with_info': 'TestUser2',
+            'form-TOTAL_FORMS': 1, 
+            'form-INITIAL_FORMS': 0
+        },
+        HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        self.assertEqual(response.status_code, 302)
+        self.assertRedirects(response, reverse('mindspace:mindspace_detail', kwargs={'id': self.mindspace_1.id}))
+
     def test_mindspace_delete_form(self):
         login = self.client.login(username='TestUser1', password='Test')
         response = self.client.get(reverse('mindspace:mindspace_delete', kwargs={'id': self.mindspace_1.id}), **{'HTTP_X_REQUESTED_WITH': 'XMLHttpRequest'})
