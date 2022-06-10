@@ -26,6 +26,16 @@ class Mindspace(models.Model):
     def __str__(self):
         return self.title
 
+    def has_what_access(self, profile):
+        try:
+            access = ShareMindspace.objects.get(
+                shared_mindspace=self,
+                shared_with=profile
+            )
+            return access.access_level
+        except ShareMindspace.DoesNotExist:
+            return None
+
     @property
     def is_recent(self):
         # now = datetime.now(timezone.utc)

@@ -4,6 +4,11 @@ body {
     margin: 0; height: 100%; overflow: hidden
 }
 
+.card-body {
+    overflow-y: auto;
+    max-height: 30vh;
+}
+
 
 .main-container {
     display: flex;

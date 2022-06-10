@@ -129,6 +129,22 @@ class NotificationListView(LoginRequiredMixin, ListView):
         queryset.update(read_date=now)
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        wording_logic = {
+            'UA': 'updated the answer for your question',
+            'PA': 'posted an answer for your question',
+            'AE': 'added you as an editor for',
+            'RE': 'removed your edit access for',
+            'AV': 'added you as a viewer for',
+            'RV': 'removed your view access for',
+            'UV': 'upvoted your answer for',
+            'DV': 'downvoted your answer for',
+            'TV': 'took back their vote for your answer for'
+        }
+        context['wording'] = wording_logic
+        return context
+
 class GetNumOfUnseenNotifsAjax(View):
     def get(self, request):
         qs = Notification.objects.filter(received_by=request.user.profile, read_date__isnull=True)

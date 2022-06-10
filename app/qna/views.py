@@ -101,8 +101,8 @@ class QuestionListView(LoginRequiredMixin, TemplateView):
         my_questions = Question.objects.filter(owner=self.request.user.profile).order_by('-asked_date')
         answers = Answer.objects.filter(owner=self.request.user.profile).prefetch_related('question').order_by('-replied_date')
         my_answers = []
-        for answer in my_answers:
-            if answer.question not in answers:
+        for answer in answers:
+            if answer.question not in my_answers:
                 my_answers.append(answer.question)
 
         if 'community-questions-page' in self.request.GET.keys():

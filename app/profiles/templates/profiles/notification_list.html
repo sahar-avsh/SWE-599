@@ -1,5 +1,8 @@
 {% extends "mindspace/base.html" %} 
 
+{% load get_item %}
+{% load get_access_level %}
+
 {% load static %}
 {% block styles %}
   <link rel="stylesheet" type="text/css" href="{% static 'profiles/notification_list.css' %}">
@@ -71,68 +74,27 @@
             <small> {{object.sent_date|timesince}} ago </small>
           </div>
 
-          {% if object.notification_type == 'UA' %}
-              <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> updated the answer for your question <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
-              <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-secondary">Go to Question</a>
+          <p class="mb-1"> 
+            <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}>
+              {{object.sent_by.f_name}}
+            </a>
 
-          {% elif object.notification_type == 'PA' %}
-              <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> posted an answer for your question <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
-              <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-secondary">Go to Question</a>
+            {{wording|get_item:object.notification_type}}
 
-          {% elif object.notification_type == 'AE' %}
-              <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as an editor for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-              <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-
-          {% elif object.notification_type == 'RE' %}
-              {% if object.subject_mindspace.public %}
-                  <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from editors for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-                  <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-              {% else %}
-                  <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from editors for "{{object.subject_mindspace.title}}"</p>
-              {% endif %}
-
-          {% elif object.notification_type == 'AC' %}
-            <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as a commenter for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-            <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-
-          {% elif object.notification_type == 'RC' %}
-            {% if object.subject_mindspace.public %}
-              <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from commenters for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-              <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-            {% else %}
-              <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from commenters for "{{object.subject_mindspace.title}}"</p>
-            {% endif %}
-
-          {% elif object.notification_type == 'AV' %}
-            <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> added you as a viewer for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-            <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-
-          {% elif object.notification_type == 'RV' %}
-            {% if object.subject_mindspace.public %}
-              <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from viewers for <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a></p>
-              <a href="{{object.subject_mindspace.get_absolute_url}}" class="btn btn-primary">Go to Mindspace</a>
-            {% else %}
-              <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> removed you from viewers for "{{object.subject_mindspace.title}}"</p>
-            {% endif %}
-
-          {% elif object.notification_type == 'UV' %}
-            <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> upvoted your answer for <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
-            <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-secondary">Go to Question</a>
-          {% elif object.notification_type == 'DV' %}
-            <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> downvoted your answer for <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
-            <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-secondary">Go to Question</a>
-          {% elif object.notification_type == 'TV' %}
-            <p class="mb-1"> <a id="id-profile-name" data-toggle="modal" data-target="#id-profile-modal" href={% url 'profiles:profile_detail' id=object.sent_by.id %}> {{object.sent_by.f_name}}</a> took back their vote for your answer for <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a></p>
-            <a href="{{object.subject_answer.question.get_absolute_url}}" class="btn btn-secondary">Go to Question</a>
+            {% if object.subject_answer %}
+              <a href="{{object.subject_answer.question.get_absolute_url}}">{{object.subject_answer.question.title}}</a>
             
-          {% endif %}
+            {% else %}
 
+              {% if object.subject_mindspace.is_public or object.subject_mindspace|get_access_level:request.user.profile %}
+                <a href="{{object.subject_mindspace.get_absolute_url}}">{{object.subject_mindspace.title}}</a>
+              {% else %}
+                {{object.subject_mindspace.title}}
+              {% endif %}
+            
+            {% endif %}
+          </p>
         </div>
-
-          {% comment %} <div class="card-footer bg-transparent border-success">
-              <small class="text-muted"> {{object.sent_date|timesince}} ago </small>
-          </div>
-        </div> {% endcomment %}
       
       {% empty %}
         <p>You have no notifications.</p>

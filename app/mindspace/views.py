@@ -136,9 +136,11 @@ class LoadMindspaceDetailItems(LoginRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         obj = Mindspace.objects.get(id=self.request.GET.get('ms_id'))
 
-        shares = obj.shares.all()
-        edit_access = [i.shared_with for i in shares if i.access_level == 'editor']
-        context['profile_has_edit_access'] = self.request.user.profile in edit_access
+        context['profile_has_edit_access'] = ShareMindspace.objects.filter(
+            shared_mindspace=obj,
+            shared_with=self.request.user.profile,
+            access_level='editor'
+        ).exists()
 
         context['object'] = obj
         context['category'] = self.request.GET.get('category')
@@ -181,9 +183,11 @@ class MindspaceDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         obj = self.get_object()
-        shares = obj.shares.all()
-        edit_access = [i.shared_with for i in shares if i.access_level == 'editor']
-        context['profile_has_edit_access'] = self.request.user.profile in edit_access
+        context['profile_has_edit_access'] = ShareMindspace.objects.filter(
+            shared_mindspace=obj,
+            shared_with=self.request.user.profile,
+            access_level='editor'
+        ).exists()
         return context
 
     def dispatch(self, request, *args, **kwargs):
@@ -232,8 +236,8 @@ class ShareMindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateVi
             username = self.request.GET.get('username')
             context['searched_username'] = username
             try:
-                profile = Profile.objects.get(created_by__username=username)
-                sm = ShareMindspace.objects.filter(shared_mindspace=mindspace, shared_with=profile)
+                profiles = Profile.objects.filter(created_by__username__icontains=username)
+                sm = ShareMindspace.objects.filter(shared_mindspace=mindspace, shared_with__in=profiles)
             except (Profile.DoesNotExist, ShareMindspace.DoesNotExist):
                 pass
         else:
@@ -374,7 +378,17 @@ class ResourceDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         qs = Note.objects.filter(belongs_to=self.get_object())
-        context['notes'] = qs
+        context['notes'] = qs        
+        context['profile_has_edit_access'] = ShareMindspace.objects.filter(
+            shared_mindspace=self.get_object().belongs_to, 
+            access_level='editor', 
+            shared_with=self.request.user.profile
+        ).exists()
+        context['profile_has_view_access'] = ShareMindspace.objects.filter(
+            shared_mindspace=self.get_object().belongs_to, 
+            access_level='viewer', 
+            shared_with=self.request.user.profile
+        ).exists()
         return context
     
     def dispatch(self, request, *args, **kwargs):
