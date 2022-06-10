@@ -35,7 +35,8 @@ from django.views.generic import (
     View
 )
 
-from datetime import datetime, timezone
+from datetime import timedelta
+from django.utils import timezone
 
 class HomeView(TemplateView):
     template_name = 'profiles/home.html'
@@ -120,8 +121,11 @@ class NotificationListView(LoginRequiredMixin, ListView):
     paginate_by = 5
 
     def get_queryset(self):
-        queryset = self.model.objects.filter(received_by=self.request.user.profile).order_by('-sent_date')
-        now = datetime.now(timezone.utc)
+        now = timezone.now()
+        queryset = self.model.objects.filter(
+            received_by=self.request.user.profile,
+            sent_date__gte=now - timedelta(days=30)
+        ).order_by('-sent_date')
         queryset.update(read_date=now)
         return queryset
 
