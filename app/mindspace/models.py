@@ -3,7 +3,8 @@ from django.urls import reverse
 
 from django.contrib.contenttypes.fields import GenericRelation
 
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
+from django.utils import timezone
 
 # Create your models here.
 class Mindspace(models.Model):
@@ -27,7 +28,8 @@ class Mindspace(models.Model):
 
     @property
     def is_recent(self):
-        now = datetime.now(timezone.utc)
+        # now = datetime.now(timezone.utc)
+        now = timezone.now()
         return now - self.updated_at <= timedelta(seconds=60)
 
 FORMAT_CHOICES = (
@@ -64,7 +66,8 @@ class Resource(models.Model):
 
     @property
     def is_recent(self):
-        now = datetime.now(timezone.utc)
+        # now = datetime.now(timezone.utc)
+        now = timezone.now()
         return now - self.updated_at <= timedelta(seconds=60)
 
 class Note(models.Model):
@@ -81,13 +84,19 @@ class Note(models.Model):
     # def get_absolute_url(self):
     #     return reverse('mindspace:note_detail', \
     #         kwargs={'ms_id': self.belongs_to.belongs_to.id, 'r_id': self.belongs_to.id, 'id': self.id})
+
+    def save(self, *args, **kwargs):
+        """Override resource's updated_at attribute"""
+        Resource.objects.filter(id=self.belongs_to.id).update(updated_at=timezone.now())
+        super().save(*args, **kwargs)
     
     def __str__(self):
         return str(self.id) + ' - ' + self.belongs_to.title
 
     @property
     def is_recent(self):
-        now = datetime.now(timezone.utc)
+        # now = datetime.now(timezone.utc)
+        now = timezone.now()
         return now - self.updated_at <= timedelta(seconds=60)
 
 
