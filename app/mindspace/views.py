@@ -68,7 +68,7 @@ class MindspaceUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('id'))
-        allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile, access_level=ShareMindspace.editor).exists()
+        allowed = ShareMindspace.objects.filter(shared_mindspace=object, shared_with=request.user.profile, access_level=ShareMindspace.editor).exists()
         if request.user.profile != object.owner and not allowed:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
@@ -90,7 +90,7 @@ class MindspaceListView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
 
-        shared_with = [i.mindspace for i in ShareMindspace.objects.filter(shared_with=self.request.user.profile).order_by('shared_date')]
+        shared_with = [i.shared_mindspace for i in ShareMindspace.objects.filter(shared_with=self.request.user.profile).order_by('shared_date')]
         my_mindspaces = Mindspace.objects.filter(owner=self.request.user.profile).order_by('created_at')
 
         if 'shared-mindspace-page' in self.request.GET.keys():
@@ -188,7 +188,7 @@ class MindspaceDetailView(LoginRequiredMixin, DetailView):
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('id'))
-        allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile).exists()
+        allowed = ShareMindspace.objects.filter(shared_mindspace=object, shared_with=request.user.profile).exists()
         if not object.is_public:
             if request.user.profile != object.owner:
                 if not allowed:
@@ -233,11 +233,11 @@ class ShareMindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateVi
             context['searched_username'] = username
             try:
                 profile = Profile.objects.get(created_by__username=username)
-                sm = ShareMindspace.objects.filter(mindspace=mindspace, shared_with=profile)
+                sm = ShareMindspace.objects.filter(shared_mindspace=mindspace, shared_with=profile)
             except (Profile.DoesNotExist, ShareMindspace.DoesNotExist):
                 pass
         else:
-            sm = ShareMindspace.objects.filter(mindspace=mindspace)
+            sm = ShareMindspace.objects.filter(shared_mindspace=mindspace)
         context['formset'] = ShareMindspaceModelFormSet(queryset=sm)
         context['mindspace'] = mindspace
         return context
@@ -257,15 +257,16 @@ class ShareMindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateVi
                     instance.add_error('shared_with_info', 'This profile does not exist.')
                     return self.form_invalid(formset)
                 else:
-                    form = instance.save(commit=False)
-                    form.shared_by = self.request.user.profile
-                    try:
-                        profile = Profile.objects.get(created_by__email=instance.cleaned_data['shared_with_info'])
-                    except (Profile.DoesNotExist):
-                        profile = Profile.objects.get(created_by__username=instance.cleaned_data['shared_with_info'])
-                    form.shared_with = profile
-                    form.shared_with_info = profile.created_by.username
-                    form.mindspace = Mindspace.objects.get(id=self.kwargs.get('id'))
+                    if not instance.cleaned_data.get('DELETE', False):
+                        form = instance.save(commit=False)
+                        form.shared_by = self.request.user.profile
+                        try:
+                            profile = Profile.objects.get(created_by__email=instance.cleaned_data['shared_with_info'])
+                        except (Profile.DoesNotExist):
+                            profile = Profile.objects.get(created_by__username=instance.cleaned_data['shared_with_info'])
+                        form.shared_with = profile
+                        form.shared_with_info = profile.created_by.username
+                        form.shared_mindspace = Mindspace.objects.get(id=self.kwargs.get('id'))
         return super().form_valid(formset)
 
     def form_invalid(self, formset):
@@ -338,7 +339,7 @@ class ResourceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateView):
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('ms_id'))
-        allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile, access_level=ShareMindspace.editor).exists()
+        allowed = ShareMindspace.objects.filter(shared_mindspace=object, shared_with=request.user.profile, access_level=ShareMindspace.editor).exists()
         if request.user.profile != object.owner and not allowed:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
@@ -358,7 +359,7 @@ class ResourceUpdateView(SuccessMessageMixin, LoginRequiredMixin, UpdateView):
 
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('ms_id'))
-        allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile, access_level=ShareMindspace.editor).exists()
+        allowed = ShareMindspace.objects.filter(shared_mindspace=object, shared_with=request.user.profile, access_level=ShareMindspace.editor).exists()
         if request.user.profile != object.owner and not allowed:
             raise PermissionDenied
         return super().dispatch(request, *args, **kwargs)
@@ -378,7 +379,7 @@ class ResourceDetailView(LoginRequiredMixin, DetailView):
     
     def dispatch(self, request, *args, **kwargs):
         object = Mindspace.objects.get(id=self.kwargs.get('ms_id'))
-        allowed = ShareMindspace.objects.filter(mindspace=object, shared_with=request.user.profile).exists()
+        allowed = ShareMindspace.objects.filter(shared_mindspace=object, shared_with=request.user.profile).exists()
         if not object.is_public:
             if request.user.profile != object.owner:
                 if not allowed:

@@ -101,7 +101,7 @@ class Note(models.Model):
 
 
 class ShareMindspace(models.Model):
-    mindspace = models.ForeignKey(Mindspace, on_delete=models.CASCADE, related_name='shares')
+    shared_mindspace = models.ForeignKey(Mindspace, on_delete=models.CASCADE, related_name='shares')
     shared_by = models.ForeignKey('profiles.Profile', on_delete=models.CASCADE, related_name='shared_by')
     shared_with = models.ForeignKey('profiles.Profile', on_delete=models.CASCADE, related_name='shared_with')
     shared_with_info = models.CharField(max_length=100)
@@ -121,8 +121,8 @@ class ShareMindspace(models.Model):
     updated_date = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ('mindspace', 'shared_with')
+        unique_together = ('shared_mindspace', 'shared_with')
 
     def __str__(self):
-        return self.shared_by.f_name + ':' + self.mindspace.title + ':' + self.shared_with.f_name + ':' + self.access_level
+        return self.shared_by.f_name + ':' + self.shared_mindspace.title + ':' + self.shared_with.f_name + ':' + self.access_level
     

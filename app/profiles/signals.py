@@ -1,4 +1,4 @@
-from django.db.models.signals import post_save, post_delete
+from django.db.models.signals import post_save, pre_delete
 from django.dispatch import receiver
 
 from mindspace.models import *
@@ -16,10 +16,10 @@ def create_notif_share_mindspace(sender, instance, **kwargs):
         sent_by=instance.shared_by,
         received_by=instance.shared_with,
         notification_type=notification_type,
-        subject_mindspace=instance.mindspace
+        subject_mindspace=instance.shared_mindspace
     )
 
-@receiver(post_delete, sender=ShareMindspace)
+@receiver(pre_delete, sender=ShareMindspace)
 def create_notif_share_mindspace_remove(sender, instance, **kwargs):
     if instance.access_level == sender.editor:
         notification_type = Notification.REMOVE_EDITOR
@@ -30,7 +30,7 @@ def create_notif_share_mindspace_remove(sender, instance, **kwargs):
         sent_by=instance.shared_by,
         received_by=instance.shared_with,
         notification_type=notification_type,
-        subject_mindspace=instance.mindspace
+        subject_mindspace=instance.shared_mindspace
     )
 
 @receiver(post_save, sender=Answer)
@@ -64,7 +64,7 @@ def create_notification_vote_add(sender, instance, created, **kwargs):
         subject_answer=instance.answer
     )
 
-@receiver(post_delete, sender=Activity)
+@receiver(pre_delete, sender=Activity)
 def create_notif_vote_remove(sender, instance, **kwargs):
     notification_type = Notification.TAKE_VOTE
     

@@ -10,8 +10,8 @@ class Question(models.Model):
     owner = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE, related_name='questions')
     title = models.CharField(max_length=200)
     body = models.TextField()
-    tagged_mindspace = models.ForeignKey("mindspace.Mindspace", on_delete=models.CASCADE, related_name='mindspace_questions', null=True)
-    tagged_resource = models.ForeignKey("mindspace.Resource", on_delete=models.CASCADE, related_name='resource_questions', null=True)
+    tagged_mindspace = models.ForeignKey("mindspace.Mindspace", on_delete=models.SET_NULL, related_name='mindspace_questions', null=True)
+    tagged_resource = models.ForeignKey("mindspace.Resource", on_delete=models.SET_NULL, related_name='resource_questions', null=True)
     asked_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 
@@ -30,8 +30,8 @@ class Answer(models.Model):
     owner = models.ForeignKey("profiles.Profile", on_delete=models.CASCADE, related_name='profile_answers')
     question = models.ForeignKey("qna.Question", on_delete=models.CASCADE, related_name='answers')
     reply = models.TextField()
-    tagged_mindspace = models.ForeignKey("mindspace.Mindspace", on_delete=models.CASCADE, related_name='mindspace_answers', null=True)
-    tagged_resource = models.ForeignKey("mindspace.Resource", on_delete=models.CASCADE, related_name='resource_answers', null=True)
+    tagged_mindspace = models.ForeignKey("mindspace.Mindspace", on_delete=models.SET_NULL, related_name='mindspace_answers', null=True)
+    tagged_resource = models.ForeignKey("mindspace.Resource", on_delete=models.SET_NULL, related_name='resource_answers', null=True)
     replied_date = models.DateTimeField(auto_now_add=True)
     updated_date = models.DateTimeField(auto_now=True)
 

@@ -91,7 +91,7 @@ class TestProfilesViews(TestCase):
 
     def test_notification_view(self):
         sm = ShareMindspace.objects.create(
-            mindspace=self.mindspace_1,
+            shared_mindspace=self.mindspace_1,
             access_level=ShareMindspace.editor,
             shared_by=self.profile_1,
             shared_with_info='TestUser2',
