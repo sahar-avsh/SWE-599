@@ -5,7 +5,7 @@
 <h4 style="margin-left: 20px;"> Share {{mindspace.title}} </h4>
 
 <div class="input-group input-group-sm mb-3" style="margin-left: 20px;">
-  <input type="text" id="id-search-profile-in-share" class="form-control" placeholder="Recipient's username" aria-label="Recipient's username" aria-describedby="id-search-profile-button">
+  <input type="text" id="id-search-profile-in-share" class="form-control" placeholder="Search through users that already have access to this mindspace" aria-label="Recipient's username" aria-describedby="id-search-profile-button">
   <div class="input-group-append" style="margin-right: 20px">
     <button class="btn btn-outline-secondary" type="button" id="id-search-profile-button">Search</button>
     <button class="btn btn-outline-secondary" type="button" id="id-search-profile-cancel-button">Cancel</button>
@@ -14,7 +14,7 @@
 
 {% if searched_username %} 
   <div class="alert alert-info" role="alert" style="margin-left: 20px;">
-    <p style="margin-bottom: 0px;">Searching {{searched_username}}...</p>
+    <p style="margin-bottom: 0px;">Searched {{searched_username}}, {{results_found}} result(s) found!</p>
   </div>
 {% endif %}
 

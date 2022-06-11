@@ -16,6 +16,7 @@ $(document).ready(function() {
 
     $(document).on("click", "#id-search-profile-button", function(e) {
         e.preventDefault();
+        $("#id-spinner-in-modal").show();
 
         $.ajax({
             type: 'GET',
@@ -23,8 +24,10 @@ $(document).ready(function() {
             data: {'username': $("#id-search-profile-in-share").val()},
             success: function(response) {
                 $("#id-mindspace-modal-body").html(response);
+                $("#id-spinner-in-modal").hide();
             },
             error: function(response) {
+                $("#id-spinner-in-modal").hide();
                 if ($("#id-search-profile-error-div").html() === "") {
                     $("#id-search-profile-error-div").append('<div class="alert alert-secondary">No information found with this username</div>');
                 }
@@ -175,17 +178,24 @@ $(document).ready(function() {
 
     $(document).on("submit", "#id-share-mindspace-form", function(e) {
         e.preventDefault();
+        $("#id-spinner-in-modal").show();
         
         $.ajax({
             type: 'POST',
             url: $(this).attr("action"),
             data: $(this).serialize(),
             success: function(response) {
+                $("#id-spinner-in-modal").hide();
                 window.location.reload();
             },
             error: function(response) {
                 $.each(response.responseJSON.error, function(key, value) {
-                    $("#id-mindspace-modal-body").append('<div class="alert alert-warning" role="alert">' + value + '</div>');
+                    $("#id-spinner-in-modal").hide();
+                    if ($(".alert-warning").length) {
+                        $(".alert-warning").html(value);
+                    } else {
+                        $("#id-mindspace-modal-body").append('<div class="alert alert-warning" role="alert">' + value + '</div>');
+                    }
                 });
             }
         });

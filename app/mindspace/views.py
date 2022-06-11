@@ -238,6 +238,7 @@ class ShareMindspaceCreateView(SuccessMessageMixin, LoginRequiredMixin, CreateVi
             try:
                 profiles = Profile.objects.filter(created_by__username__icontains=username)
                 sm = ShareMindspace.objects.filter(shared_mindspace=mindspace, shared_with__in=profiles)
+                context['results_found'] = len(sm)
             except (Profile.DoesNotExist, ShareMindspace.DoesNotExist):
                 pass
         else:
